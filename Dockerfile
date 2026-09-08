@@ -1,7 +1,6 @@
-FROM php:8.4-cli
+FROM php:8.4-fpm
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    postgresql-client \
     libpq-dev \
     libzip-dev \
     supervisor \
@@ -25,11 +24,8 @@ WORKDIR /var/www/html
 
 COPY --chown=www:www . /var/www/html/
 
-ARG SUPERVISORD
-ENV SUPERVISORD=${SUPERVISORD}
-
-COPY --chown=www:www ./supervisord/${SUPERVISORD}.conf /etc/supervisord.conf
-
 USER www
 
-ENTRYPOINT ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisord.conf"]
+EXPOSE 80
+
+CMD ["php-fpm"]

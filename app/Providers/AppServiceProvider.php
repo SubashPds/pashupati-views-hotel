@@ -22,11 +22,9 @@ class AppServiceProvider extends ServiceProvider
         //
     }
 
-     private function bindRepo()
+    private function bindRepo()
     {
-        $repoClass = [
-            'Department',
-        ];
+        $repoClass = [];
         foreach ($repoClass as $repo_class) {
             $this->app->bind("App\Repositories\Interfaces\\{$repo_class}RepoInterface", "App\Repositories\\{$repo_class}Repo");
         }
