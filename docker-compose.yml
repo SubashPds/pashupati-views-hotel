@@ -2,7 +2,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile.web
+      dockerfile: Dockerfile
     container_name: pashupati-views-hotel-app
     restart: unless-stopped
     working_dir: /var/www/html
@@ -11,10 +11,7 @@ services:
     env_file:
       - .env
     depends_on:
-      postgres: 
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+      - mysql
     networks:
       - pashupati-views-hotel-network
  
@@ -32,9 +29,26 @@ services:
     networks:
       - pashupati-views-hotel-network
 
+  mysql:
+    image: mysql:8.0
+    container_name: pashupati-views-hotel-mysql
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-pashupatihotel}
+      MYSQL_USER: ${DB_USERNAME:-admin}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-pashupatihotel}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-pashupatihotel}
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - pashupati-views-hotel-network
+
 volumes:
-  redis_data:
-  postgres_data:
+  db-data:
 
 networks:
   pashupati-views-hotel-network:

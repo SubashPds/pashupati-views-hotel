@@ -1,19 +1,15 @@
 FROM php:8.4-fpm
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libpq-dev \
+    default-mysql-client \
     libzip-dev \
-    supervisor \
     unzip \
     zip \
     libssl-dev \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-install pdo_pgsql bcmath sockets zip pcntl \
+RUN docker-php-ext-install pdo_mysql bcmath sockets zip pcntl \
     && docker-php-ext-enable opcache
-
-RUN pecl install opentelemetry \
-    && docker-php-ext-enable opentelemetry
 
 RUN groupadd -g 1000 www \
     && useradd -u 1000 -ms /bin/bash -g www www
