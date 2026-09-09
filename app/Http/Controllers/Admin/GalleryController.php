@@ -1,0 +1,68 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\GalleryItem;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
+class GalleryController extends Controller
+{
+    public function index()
+    {
+        $items = GalleryItem::orderBy('sort_order')->get();
+        return view('admin.gallery.index', compact('items'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'images.*' => 'required|image|max:4096',
+            'title'    => 'nullable|string|max:255',
+            'badge_label' => 'nullable|string|max:100',
+            'section'  => 'nullable|string|max:100',
+        ]);
+
+        $lastOrder = GalleryItem::max('sort_order') ?? 0;
+
+        foreach ($request->file('images', []) as $i => $file) {
+            $path = $file->store('gallery', 'public');
+            GalleryItem::create([
+                'image_path'  => $path,
+                'title'       => $request->title,
+                'badge_label' => $request->badge_label,
+                'section'     => $request->section ?? 'general',
+                'is_active'   => true,
+                'sort_order'  => $lastOrder + $i + 1,
+            ]);
+        }
+
+        return back()->with('success', 'Photos uploaded successfully.');
+    }
+
+    public function update(Request $request, GalleryItem $galleryItem)
+    {
+        $request->validate([
+            'title'       => 'nullable|string|max:255',
+            'badge_label' => 'nullable|string|max:100',
+            'section'     => 'nullable|string|max:100',
+        ]);
+
+        $galleryItem->update($request->only('title', 'badge_label', 'section', 'sort_order'));
+        return back()->with('success', 'Gallery item updated.');
+    }
+
+    public function toggleStatus(GalleryItem $galleryItem)
+    {
+        $galleryItem->update(['is_active' => ! $galleryItem->is_active]);
+        return back()->with('success', 'Status updated.');
+    }
+
+    public function destroy(GalleryItem $galleryItem)
+    {
+        Storage::disk('public')->delete($galleryItem->image_path);
+        $galleryItem->delete();
+        return back()->with('success', 'Photo deleted.');
+    }
+}

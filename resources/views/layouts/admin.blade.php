@@ -40,7 +40,14 @@
 
                 @php
                     $navItems = [
-                        ['route' => 'admin.dashboard', 'icon' => '📊', 'label' => 'Dashboard'],
+                        ['route' => 'admin.dashboard',          'icon' => '📊', 'label' => 'Dashboard'],
+                        ['route' => 'admin.rooms.index',        'icon' => '🛏️', 'label' => 'Rooms'],
+                        ['route' => 'admin.experiences.index',  'icon' => '✨', 'label' => 'Experiences'],
+                        ['route' => 'admin.gallery.index',      'icon' => '🖼️', 'label' => 'Gallery'],
+                        ['route' => 'admin.services.index',     'icon' => '🛎️', 'label' => 'Services'],
+                        ['route' => 'admin.testimonials.index', 'icon' => '💬', 'label' => 'Testimonials'],
+                        ['route' => 'admin.enquiries.index',    'icon' => '📩', 'label' => 'Enquiries'],
+                        ['route' => 'admin.settings.index',     'icon' => '⚙️', 'label' => 'Site Settings'],
                     ];
                 @endphp
 
