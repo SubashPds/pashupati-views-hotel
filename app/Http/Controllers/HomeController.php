@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Enquiry;
 use App\Models\Experience;
 use App\Models\GalleryItem;
+use App\Models\Package;
 use App\Models\Room;
 use App\Models\Service;
 use App\Models\SiteSetting;
@@ -42,6 +43,9 @@ class HomeController extends Controller
         // Testimonials
         $testimonials = Testimonial::active()->orderBy('sort_order')->get();
 
+        // Packages
+        $packages = Package::active()->orderBy('sort_order')->get();
+
         return view('frontend.home', compact(
             'settings',
             'rooms',
@@ -49,6 +53,7 @@ class HomeController extends Controller
             'galleryItems',
             'services',
             'testimonials',
+            'packages',
         ));
     }
 

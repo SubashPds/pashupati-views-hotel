@@ -11,11 +11,15 @@
     {{-- ② Rooms ──────────────────────────────────────────────────────────── --}}
     @include('frontend.sections.rooms')
 
-    {{-- ③ Experience / Amenity highlights ────────────────────────────────── --}}
+    {{-- ③ Packages ──────────────────────────────────────────────────────── --}}
+    @include('frontend.sections.packages')
+
+    {{-- ④ Experience / Amenity highlights ────────────────────────────────── --}}
     @include('frontend.sections.experience')
 
-    {{-- ④ Services ───────────────────────────────────────────────────────── --}}
+    {{-- ⑤ Services ───────────────────────────────────────────────────────── --}}
     @include('frontend.sections.services')
+
 
     {{-- ⑤ Gallery ───────────────────────────────────────────────────────── --}}
     @include('frontend.sections.gallery')

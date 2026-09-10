@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\ExperienceController;
 use App\Http\Controllers\Admin\EnquiryController;
+use App\Http\Controllers\Admin\PackageController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HomeController;
@@ -74,6 +75,15 @@ Route::middleware('superadmin')->prefix('admin')->name('admin.')->group(function
     Route::put('/testimonials/{testimonial}',       [TestimonialController::class, 'update'])->name('testimonials.update');
     Route::patch('/testimonials/{testimonial}/status', [TestimonialController::class, 'toggleStatus'])->name('testimonials.toggle-status');
     Route::delete('/testimonials/{testimonial}',    [TestimonialController::class, 'destroy'])->name('testimonials.destroy');
+
+    // Packages
+    Route::get('/packages',                    [PackageController::class, 'index'])->name('packages.index');
+    Route::get('/packages/create',             [PackageController::class, 'create'])->name('packages.create');
+    Route::post('/packages',                   [PackageController::class, 'store'])->name('packages.store');
+    Route::get('/packages/{package}/edit',     [PackageController::class, 'edit'])->name('packages.edit');
+    Route::put('/packages/{package}',          [PackageController::class, 'update'])->name('packages.update');
+    Route::patch('/packages/{package}/status', [PackageController::class, 'toggleStatus'])->name('packages.toggle-status');
+    Route::delete('/packages/{package}',       [PackageController::class, 'destroy'])->name('packages.destroy');
 
     // Enquiries
     Route::get('/enquiries',                [EnquiryController::class, 'index'])->name('enquiries.index');

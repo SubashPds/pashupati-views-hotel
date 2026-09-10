@@ -59,6 +59,7 @@
                     @foreach([
                         ['#home',         'Home'],
                         ['#rooms',        'Rooms'],
+                        ['#packages',     'Packages'],
                         ['#experience',   'Experience'],
                         ['#services',     'Services'],
                         ['#gallery',      'Gallery'],
