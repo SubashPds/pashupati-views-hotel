@@ -11,10 +11,11 @@ use App\Http\Controllers\Admin\ExperienceController;
 use App\Http\Controllers\Admin\EnquiryController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\HomeController;
+
 // ── Public frontend ───────────────────────────────────────────────────────────
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::post('/enquire', [HomeController::class, 'enquire'])->name('enquire');
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
 Route::middleware('guest')->group(function () {

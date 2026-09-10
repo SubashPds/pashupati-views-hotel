@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Room extends Model
@@ -19,6 +20,8 @@ class Room extends Model
         'is_active'       => 'boolean',
         'price_per_night' => 'decimal:2',
     ];
+
+    protected $appends = ['cover_image_url'];
 
     protected static function boot(): void
     {
@@ -49,5 +52,16 @@ class Room extends Model
     public function getFormattedPriceAttribute(): string
     {
         return 'NPR ' . number_format($this->price_per_night, 0) . ' / night';
+    }
+
+    public function getCoverImageUrlAttribute(): string
+    {
+        if (empty($this->cover_image)) {
+            return '';
+        }
+        if (str_starts_with($this->cover_image, 'http') || str_starts_with($this->cover_image, '/')) {
+            return asset(ltrim($this->cover_image, '/'));
+        }
+        return Storage::url($this->cover_image);
     }
 }

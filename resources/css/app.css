@@ -6,9 +6,139 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    /* Typography */
+    --font-sans: 'Inter', 'Noto Sans Devanagari', ui-sans-serif, system-ui, sans-serif;
+
+    /* Admin palette */
     --color-primary: #7c3aed;
     --color-primary-light: #a855f7;
-    --color-gold: #d4a017;
-    --color-gold-light: #f0c040;
+
+    /* Hotel brand palette */
+    --color-navy: #0d1b2a;
+    --color-navy-mid: #1a2d42;
+    --color-navy-lt: #243d58;
+
+    --color-gold: #b8953b;
+    --color-gold-light: #d4af5b;
+    --color-gold-pale: #f0e0a8;
+
+    --color-ivory: #faf8f3;
+    --color-ivory-mid: #f5f1ea;
+
+    --color-champagne: #e8d5a3;
+}
+
+/* ── Hotel-specific utility classes ─────────────────────────────── */
+@layer utilities {
+
+    /* Gradient text used across headings */
+    .text-gold-gradient {
+        background: linear-gradient(135deg, #d4af5b 0%, #b8953b 60%, #d4af5b 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Subtle divider line */
+    .divider-gold {
+        display: block;
+        width: 3rem;
+        height: 2px;
+        background: linear-gradient(90deg, #b8953b, transparent);
+        border-radius: 9999px;
+    }
+
+    /* Section label (e.g. THE EXPERIENCE) */
+    .section-label {
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: #b8953b;
+    }
+
+    /* Card hover lift */
+    .card-lift {
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .card-lift:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+    }
+}
+
+/* ── Smooth scroll-snap for testimonial slider ────────────────── */
+.snap-scroll {
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+}
+
+.snap-item {
+    scroll-snap-align: start;
+}
+
+/* ── Star rating display ──────────────────────────────────────── */
+.stars {
+    color: #d4af5b;
+    letter-spacing: 0.05em;
+}
+
+/* ── Gallery masonry-style equal-height grid ─────────────────── */
+.gallery-grid img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.4s ease;
+}
+
+.gallery-grid .gallery-cell:hover img {
+    transform: scale(1.05);
+}
+
+/* ── Announcement banner ──────────────────────────────────────── */
+.announcement-bar {
+    background: linear-gradient(90deg, #0d1b2a 0%, #1a2d42 50%, #0d1b2a 100%);
+    border-bottom: 1px solid rgba(184, 149, 59, 0.20);
+}
+
+/* ── Booking modal ────────────────────────────────────────────── */
+dialog::backdrop {
+    background: rgba(13, 27, 42, 0.85);
+    backdrop-filter: blur(4px);
+}
+
+dialog[open] {
+    animation: dialog-in 0.25s ease forwards;
+}
+
+@keyframes dialog-in {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ── Devanagari text rendering ────────────────────────────────── */
+.deva {
+    font-family: 'Noto Sans Devanagari', ui-sans-serif, sans-serif;
+    line-height: 1.6;
+}
+
+/* ── Mobile sticky CTA bar ────────────────────────────────────── */
+.mobile-cta-bar {
+    display: none;
+}
+
+@media (max-width: 640px) {
+    .mobile-cta-bar {
+        display: flex;
+    }
 }

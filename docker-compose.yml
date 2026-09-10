@@ -20,7 +20,7 @@ services:
     container_name: pashupati-views-hotel-nginx
     restart: unless-stopped
     ports:
-      - 8080:80
+      - 9000:80
     volumes:
       - ./public:/var/www/html/public
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
