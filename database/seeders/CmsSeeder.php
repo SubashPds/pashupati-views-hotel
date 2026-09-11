@@ -34,6 +34,12 @@ class CmsSeeder extends Seeder
             ['key' => 'rooms_title',         'value' => 'Your own little sanctuary.',             'type' => 'text',     'group' => 'rooms', 'label' => 'Rooms Section Title',    'sort_order' => 2],
             ['key' => 'rooms_description',   'value' => 'A quiet corner for every kind of journey. Our rooms are designed for rest, reflection and a good night\'s sleep.', 'type' => 'textarea', 'group' => 'rooms', 'label' => 'Rooms Section Description', 'sort_order' => 3],
 
+            // Packages section
+            ['key' => 'packages_subtitle', 'value' => 'STAY EXPERIENCES', 'type' => 'text', 'group' => 'packages', 'label' => 'Packages Section Subtitle', 'sort_order' => 1],
+            ['key' => 'packages_title', 'value' => 'Curated Packages', 'type' => 'text', 'group' => 'packages', 'label' => 'Packages Section Title', 'sort_order' => 2],
+            ['key' => 'packages_description', 'value' => 'Tailored experiences that go beyond a simple room — moments designed around your purpose of visit.', 'type' => 'textarea', 'group' => 'packages', 'label' => 'Packages Section Description', 'sort_order' => 3],
+            ['key' => 'packages_note', 'value' => 'All packages can be customised. Contact us to tailor a package that perfectly fits your itinerary.', 'type' => 'textarea', 'group' => 'packages', 'label' => 'Packages Bottom Note', 'sort_order' => 4],
+
             // Experience section
             ['key' => 'experience_subtitle', 'value' => 'THE EXPERIENCE',     'type' => 'text',     'group' => 'experience', 'label' => 'Experience Section Subtitle', 'sort_order' => 1],
             ['key' => 'experience_title',    'value' => 'A quieter rhythm.',   'type' => 'text',     'group' => 'experience', 'label' => 'Experience Section Title',    'sort_order' => 2],

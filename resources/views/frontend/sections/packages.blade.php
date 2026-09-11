@@ -3,19 +3,32 @@
   Props: $packages (Collection<Package>), $settings
 --}}
 @if($packages->isNotEmpty())
+@php
+    $packageSettings = collect($settings);
+    $packageText = [
+        'subtitle' => $packageSettings->get('packages_subtitle', 'STAY EXPERIENCES'),
+        'title' => $packageSettings->get('packages_title', 'Curated Packages'),
+        'description' => $packageSettings->get('packages_description', 'Tailored experiences that go beyond a simple room — moments designed around your purpose of visit.'),
+        'note' => $packageSettings->get('packages_note', 'All packages can be customised. Contact us to tailor a package that perfectly fits your itinerary.'),
+    ];
+@endphp
 <section id="packages" class="py-24" style="background:linear-gradient(170deg,#0d1b2a 0%,#162435 60%,#0d1b2a 100%);">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {{-- Header --}}
         <div class="text-center mb-16">
-            <span class="section-label" style="color:#d4af5b;">STAY EXPERIENCES</span>
+            @if($packageText['subtitle'])
+            <span class="section-label" style="color:#d4af5b;">{{ $packageText['subtitle'] }}</span>
+            @endif
             <div class="divider-gold mx-auto my-3"></div>
             <h2 class="text-3xl sm:text-5xl font-bold mt-4 text-white">
-                Curated Packages
+                {{ $packageText['title'] }}
             </h2>
-            <p class="mt-4 text-base text-gray-400 max-w-xl mx-auto">
-                Tailored experiences that go beyond a simple room — moments designed around your purpose of visit.
+            @if($packageText['description'])
+            <p class="mt-4 text-base text-gray-400 max-w-xl mx-auto whitespace-pre-line">
+                {{ $packageText['description'] }}
             </p>
+            @endif
         </div>
 
         {{-- Package Cards Grid --}}
@@ -168,9 +181,11 @@
         </div>
 
         {{-- Bottom note --}}
-        <p class="text-center text-xs text-gray-300 mt-10">
-            All packages can be customised. Contact us to tailor a package that perfectly fits your itinerary.
+        @if($packageText['note'])
+        <p class="text-center text-xs text-gray-300 mt-10 whitespace-pre-line">
+            {{ $packageText['note'] }}
         </p>
+        @endif
     </div>
 </section>
 @foreach($packages as $pkg)

@@ -20,6 +20,7 @@
             'general'      => '🌐 General',
             'hero'         => '🦸 Hero',
             'rooms'        => '🛏️ Rooms',
+            'packages'     => '🎁 Packages',
             'experience'   => '✨ Experience',
             'gallery'      => '🖼️ Gallery',
             'services'     => '🛎️ Services',
