@@ -18,7 +18,8 @@ class GalleryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'images.*' => 'required|image|max:4096',
+            'images' => 'required|array|min:1',
+            'images.*' => 'required|file|mimetypes:image/jpeg,image/png,image/webp,image/gif,image/bmp,image/avif,video/mp4,video/webm|max:51200',
             'title'    => 'nullable|string|max:255',
             'badge_label' => 'nullable|string|max:100',
             'section'  => 'nullable|string|max:100',
@@ -38,7 +39,7 @@ class GalleryController extends Controller
             ]);
         }
 
-        return back()->with('success', 'Photos uploaded successfully.');
+        return back()->with('success', 'Gallery media uploaded successfully.');
     }
 
     public function update(Request $request, GalleryItem $galleryItem)
@@ -63,6 +64,6 @@ class GalleryController extends Controller
     {
         Storage::disk('public')->delete($galleryItem->image_path);
         $galleryItem->delete();
-        return back()->with('success', 'Photo deleted.');
+        return back()->with('success', 'Gallery item deleted.');
     }
 }

@@ -44,6 +44,24 @@ class Package extends Model
         return $query->where('is_active', true)->orderBy('sort_order');
     }
 
+    public function getFormattedPriceAttribute(): string
+    {
+        $label = trim($this->price_label ?? '');
+
+        if ($label === '') {
+            return $this->price_from !== null
+                ? 'From NPR ' . number_format($this->price_from, 0)
+                : 'Contact for pricing';
+        }
+
+        // Preserve explicit currencies and non-numeric labels such as "Price on request".
+        if (preg_match('/\p{Sc}|\b(?:NPR|USD|EUR|GBP|INR|AUD|CAD|Rs)\b|रु|रू/iu', $label)) {
+            return $label;
+        }
+
+        return preg_replace('/\p{N}/u', 'NPR $0', $label, 1);
+    }
+
     public function getCoverImageUrlAttribute(): string
     {
         if (empty($this->cover_image)) {

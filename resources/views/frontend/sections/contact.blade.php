@@ -113,7 +113,7 @@
                             <select id="c-cat" name="category"
                                     class="w-full px-4 py-3 text-sm rounded-xl border focus:outline-none transition-all bg-[#faf8f3]"
                                     style="border-color:rgba(184,149,59,0.25);">
-                                @foreach(['Room & stay','Dining','Events / Private functions','Airport transfer','General enquiry'] as $cat)
+                                @foreach(['Room & stay','Packages','Dining','Events / Private functions','Airport transfer','General enquiry'] as $cat)
                                 <option value="{{ $cat }}" {{ old('category') === $cat ? 'selected' : '' }}>{{ $cat }}</option>
                                 @endforeach
                             </select>

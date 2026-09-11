@@ -18,6 +18,15 @@ class GalleryItem extends Model
         return $query->where('is_active', true)->orderBy('sort_order');
     }
 
+    public function getMediaTypeAttribute(): string
+    {
+        $path = parse_url($this->image_path ?? '', PHP_URL_PATH) ?: '';
+
+        return in_array(strtolower(pathinfo($path, PATHINFO_EXTENSION)), ['mp4', 'webm'], true)
+            ? 'video'
+            : 'image';
+    }
+
     /**
      * Resolve public URL regardless of whether the path is:
      *  - a full https:// URL

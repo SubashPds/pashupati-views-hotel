@@ -36,12 +36,12 @@
                 $isPopular = strtolower($pkg->badge ?? '') === 'most popular';
             @endphp
 
-            <div class="group relative flex flex-col rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
+            <div class="package-card group relative flex flex-col rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
                  style="background:{{ $grad }}; border:1px solid rgba(212,175,91,0.12); box-shadow:0 4px 20px rgba(13,27,42,0.4);">
 
                 {{-- Popular ribbon --}}
                 @if($isPopular)
-                <div class="absolute top-0 right-0 z-10">
+                <div class="absolute top-0 right-0 z-10 pointer-events-none">
                     <div class="bg-amber-500 text-white text-xs font-bold px-4 py-1.5 rounded-bl-xl rounded-tr-xl shadow-lg">
                         ⭐ MOST POPULAR
                     </div>
@@ -144,20 +144,23 @@
                     {{-- Spacer --}}
                     <div class="flex-1"></div>
 
+                    <button type="button" data-package-details="package-details-{{ $pkg->id }}"
+                            aria-haspopup="dialog" aria-controls="package-details-{{ $pkg->id }}" aria-label="View details for {{ $pkg->name }}"
+                            class="package-details-trigger w-full cursor-pointer py-2 text-sm font-semibold text-gold-light">
+                        View details →
+                    </button>
+
                     {{-- Price + CTA --}}
                     <div class="flex items-end justify-between gap-3 pt-4"
                          style="border-top:1px solid rgba(212,175,91,0.1);">
                         <div>
-                            @if($pkg->price_label)
-                            <p class="text-base font-bold" style="color:#d4af5b;">{{ $pkg->price_label }}</p>
-                            @endif
+                            <p class="text-base font-bold" style="color:#d4af5b;">{{ $pkg->formatted_price }}</p>
                         </div>
-                        <button type="button"
-                                onclick="document.getElementById('enquiry-modal').classList.remove('hidden')"
-                                class="shrink-0 inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 hover:scale-105"
+                        <a href="#contact" data-package-enquiry="{{ $pkg->name }}"
+                                class="relative z-20 shrink-0 inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 hover:scale-105"
                                 style="background:linear-gradient(135deg,#d4af5b,#b8953b); color:#0d1b2a;">
                             Enquire ↗
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -165,9 +168,12 @@
         </div>
 
         {{-- Bottom note --}}
-        <p class="text-center text-xs text-gray-600 mt-10">
+        <p class="text-center text-xs text-gray-300 mt-10">
             All packages can be customised. Contact us to tailor a package that perfectly fits your itinerary.
         </p>
     </div>
 </section>
+@foreach($packages as $pkg)
+    @include('frontend.partials.package-details', ['pkg' => $pkg])
+@endforeach
 @endif

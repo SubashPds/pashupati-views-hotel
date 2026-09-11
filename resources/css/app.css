@@ -119,7 +119,8 @@
 
 /* ── Booking modal ────────────────────────────────────────────── */
 #booking-dialog,
-.room-details-dialog {
+.room-details-dialog,
+.package-details-dialog {
     position: fixed;
     inset: 0;
     margin: auto;
@@ -129,27 +130,48 @@
     overflow-y: auto;
 }
 
-.room-details-dialog {
+.room-details-dialog,
+.package-details-dialog {
     width: min(56rem, calc(100% - 2rem));
     overflow: hidden;
 }
 
-.room-details-dialog[open] {
+.room-details-dialog[open],
+.package-details-dialog[open] {
     display: flex;
     flex-direction: column;
 }
 
-.room-details-trigger::after {
+.room-details-trigger::after,
+.package-details-trigger::after {
     content: '';
     position: absolute;
     inset: 0;
     z-index: 10;
 }
 
-.room-details-trigger:focus-visible::after {
+.room-details-trigger:focus-visible::after,
+.package-details-trigger:focus-visible::after {
     outline: 2px solid #b8953b;
     outline-offset: -3px;
     border-radius: 1rem;
+}
+
+#gallery-viewer {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    width: min(96rem, calc(100% - 2rem));
+    max-width: none;
+    height: calc(100vh - 2rem);
+    height: calc(100dvh - 2rem);
+    max-height: none;
+    overflow: hidden;
+}
+
+#gallery-viewer[open] {
+    display: flex;
+    flex-direction: column;
 }
 
 dialog::backdrop {
