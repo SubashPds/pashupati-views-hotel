@@ -37,7 +37,7 @@
             class="sticky top-0 z-50 transition-all duration-300"
             style="background: rgba(13,27,42,0.97); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(184,149,59,0.15);">
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div data-navigation-bar class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16 lg:h-18">
 
                 {{-- Logo --}}
@@ -110,13 +110,14 @@
                 @foreach([
                     ['#home',       'Home'],
                     ['#rooms',      'Rooms'],
+                    ['#packages',   'Packages'],
                     ['#experience', 'Experience'],
                     ['#services',   'Services'],
                     ['#gallery',    'Gallery'],
                     ['#contact',    'Contact'],
                 ] as [$href, $label])
                 <a href="{{ $href }}"
-                   class="px-4 py-3 rounded-xl text-gray-300 hover:text-amber-300 hover:bg-white/5 transition-all"
+                   class="nav-link px-4 py-3 rounded-xl text-gray-300 hover:text-amber-300 hover:bg-white/5 transition-all"
                    onclick="closeMobileNav()">
                     {{ $label }}
                 </a>

@@ -99,7 +99,7 @@
                 @if($hasImage)
                 <button type="button" data-gallery-open data-media-src="{{ $item->image_url }}" data-media-type="{{ $item->media_type }}" data-media-title="{{ $item->title ?: ($item->media_type === 'video' ? 'Gallery video' : 'Gallery photo') }}"
                         aria-haspopup="dialog" aria-controls="gallery-viewer" aria-label="Enlarge {{ $item->title ?: ($item->media_type === 'video' ? 'gallery video' : 'gallery photo') }}"
-                        class="absolute inset-0 z-10 cursor-zoom-in rounded-xl focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-gold">
+                        class="absolute inset-0 z-10 cursor-pointer rounded-xl focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-gold">
                     <span class="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-navy/60 text-white transition-colors group-hover:bg-navy/90" aria-hidden="true">
                         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg>
                     </span>

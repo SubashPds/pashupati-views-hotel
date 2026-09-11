@@ -28,6 +28,27 @@
     --color-champagne: #e8d5a3;
 }
 
+@layer base {
+    :where(
+        a[href], button, summary, select,
+        input[type="button"], input[type="submit"], input[type="reset"],
+        input[type="checkbox"], input[type="radio"], input[type="file"],
+        input[type="range"], input[type="color"],
+        label[for], label:has(input, select, textarea),
+        [role="button"], [role="tab"], [onclick], #sidebar-overlay
+    ):not(:disabled):not([aria-disabled="true"]) {
+        cursor: pointer;
+    }
+
+    input:not(:disabled)::file-selector-button {
+        cursor: pointer;
+    }
+
+    :disabled, [aria-disabled="true"] {
+        cursor: not-allowed;
+    }
+}
+
 /* ── Hotel-specific utility classes ─────────────────────────────── */
 @layer utilities {
 
@@ -96,6 +117,15 @@
 
 .gallery-grid .gallery-cell:hover img {
     transform: scale(1.05);
+}
+
+#site-header .nav-link[aria-current="location"] {
+    color: #fcd34d;
+}
+
+#home,
+#home section[id] {
+    scroll-margin-top: calc(var(--navigation-height, 4.0625rem) + 1rem);
 }
 
 /* Fit the hero beneath the navigation and optional announcement. */
@@ -175,6 +205,7 @@
 }
 
 dialog::backdrop {
+    cursor: pointer;
     background: rgba(13, 27, 42, 0.85);
     backdrop-filter: blur(4px);
 }
