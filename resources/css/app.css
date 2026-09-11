@@ -118,6 +118,16 @@
 }
 
 /* ── Booking modal ────────────────────────────────────────────── */
+#booking-dialog {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    width: min(32rem, calc(100% - 2rem));
+    max-height: calc(100vh - 2rem);
+    max-height: calc(100dvh - 2rem);
+    overflow-y: auto;
+}
+
 dialog::backdrop {
     background: rgba(13, 27, 42, 0.85);
     backdrop-filter: blur(4px);
