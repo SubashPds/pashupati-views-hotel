@@ -98,6 +98,19 @@
     transform: scale(1.05);
 }
 
+/* Fit the hero beneath the navigation and optional announcement. */
+#hero-section {
+    --hero-top-height: 4.0625rem;
+    min-height: calc(100vh - var(--hero-top-height));
+    min-height: calc(100dvh - var(--hero-top-height));
+}
+
+@media (min-width: 64rem) {
+    #hero-section {
+        --hero-top-height: 4.5625rem;
+    }
+}
+
 /* ── Announcement banner ──────────────────────────────────────── */
 .announcement-bar {
     background: linear-gradient(90deg, #0d1b2a 0%, #1a2d42 50%, #0d1b2a 100%);

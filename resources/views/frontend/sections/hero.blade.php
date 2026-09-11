@@ -5,8 +5,32 @@
 --}}
 
 <section id="hero-section"
-         class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
+         class="relative flex flex-col items-center justify-center overflow-hidden pt-12 pb-24"
          style="background: linear-gradient(160deg, #0d1b2a 0%, #1a2d42 40%, #0d1b2a 100%);">
+
+    @if($heroSlides->isNotEmpty())
+    <div class="absolute inset-0" data-hero-carousel role="region" aria-roledescription="carousel" aria-label="Hotel highlights">
+        @foreach($heroSlides as $slide)
+        <div data-slide class="absolute inset-0" @if(!$loop->first) hidden @endif role="group" aria-roledescription="slide" aria-label="{{ $loop->iteration }} of {{ $heroSlides->count() }}: {{ $slide->title }}">
+            @if($slide->media_type === 'video')
+            <video class="w-full h-full object-cover" muted playsinline @if($heroSlides->count() === 1) loop @endif preload="{{ $loop->first ? 'metadata' : 'none' }}" aria-label="{{ $slide->title }}">
+                <source src="{{ $slide->media_url }}" type="{{ str_ends_with($slide->media_path, '.webm') ? 'video/webm' : 'video/mp4' }}">
+            </video>
+            @else
+            <img src="{{ $slide->media_url }}" alt="{{ $slide->title }}" class="w-full h-full object-cover" loading="{{ $loop->first ? 'eager' : 'lazy' }}">
+            @endif
+        </div>
+        @endforeach
+        <div class="absolute inset-0 pointer-events-none" style="background:rgba(5,15,25,.65)"></div>
+        <div class="absolute bottom-16 inset-x-0 z-20 flex flex-wrap justify-center items-center gap-3 px-4 text-white">
+            @if($heroSlides->count() > 1)
+            @foreach($heroSlides as $slide)
+            <button type="button" data-dot="{{ $loop->index }}" aria-label="Show slide {{ $loop->iteration }}" aria-current="{{ $loop->first ? 'true' : 'false' }}" class="h-2 w-2 rounded-full bg-black/50 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white" style="background-color:{{ $loop->first ? '#b8953b' : 'rgba(0,0,0,.5)' }}"></button>
+            @endforeach
+            @endif
+        </div>
+    </div>
+    @endif
 
     {{-- Ambient glow orbs --}}
     <div class="absolute inset-0 pointer-events-none" aria-hidden="true">

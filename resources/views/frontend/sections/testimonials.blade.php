@@ -84,7 +84,13 @@
     function scrollTo(idx) {
         const items = track.querySelectorAll('.snap-item');
         if (!items[idx]) return;
-        items[idx].scrollIntoView({ behavior:'smooth', block:'nearest', inline:'start' });
+        
+        // Scroll only the track horizontally to avoid jumping the whole page viewport
+        track.scrollTo({
+            left: items[idx].offsetLeft - track.offsetLeft,
+            behavior: 'smooth'
+        });
+        
         dots.forEach((d, i) => {
             d.style.background   = i === idx ? '#d4af5b' : 'rgba(255,255,255,0.2)';
             d.style.width        = i === idx ? '1.5rem' : '0.5rem';

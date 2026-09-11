@@ -44,6 +44,7 @@
                         ['route' => 'admin.rooms.index',        'icon' => '🛏️', 'label' => 'Rooms'],
                         ['route' => 'admin.packages.index',     'icon' => '🎁', 'label' => 'Packages'],
                         ['route' => 'admin.experiences.index',  'icon' => '✨', 'label' => 'Experiences'],
+                        ['route' => 'admin.hero-slides.index', 'icon' => '🎞️', 'label' => 'Home Carousel'],
                         ['route' => 'admin.gallery.index',      'icon' => '🖼️', 'label' => 'Gallery'],
                         ['route' => 'admin.services.index',     'icon' => '🛎️', 'label' => 'Services'],
                         ['route' => 'admin.testimonials.index', 'icon' => '💬', 'label' => 'Testimonials'],

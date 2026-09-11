@@ -29,6 +29,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // ── Admin (superadmin protected) ──────────────────────────────────────────────
 Route::middleware('superadmin')->prefix('admin')->name('admin.')->group(function () {
 
+    Route::resource('hero-slides', \App\Http\Controllers\Admin\HeroSlideController::class)->except('show');
+
     // Dashboard
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 

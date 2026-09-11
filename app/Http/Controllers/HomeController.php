@@ -21,6 +21,8 @@ class HomeController extends Controller
      */
     public function index(): View
     {
+        $heroSlides = \App\Models\HeroSlide::where('is_active', true)->orderBy('sort_order')->orderBy('id')->get();
+
         // Load settings as flat array
         $settings = SiteSetting::orderBy('sort_order')
             ->pluck('value', 'key');
@@ -47,6 +49,7 @@ class HomeController extends Controller
         $packages = Package::active()->orderBy('sort_order')->get();
 
         return view('frontend.home', compact(
+            'heroSlides',
             'settings',
             'rooms',
             'experiences',
