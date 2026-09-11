@@ -4,7 +4,7 @@ document.querySelectorAll('[data-room-details]').forEach((button) => {
         if (!dialog) return;
         dialog.dataset.previousOverflow = document.body.style.overflow;
         dialog.showModal();
-        dialog.scrollTop = 0;
+        dialog.querySelector('[data-room-body]').scrollTop = 0;
         document.body.style.overflow = 'hidden';
     });
 });

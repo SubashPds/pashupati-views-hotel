@@ -131,6 +131,12 @@
 
 .room-details-dialog {
     width: min(56rem, calc(100% - 2rem));
+    overflow: hidden;
+}
+
+.room-details-dialog[open] {
+    display: flex;
+    flex-direction: column;
 }
 
 .room-details-trigger::after {
