@@ -77,11 +77,16 @@
         <div class="space-y-6">
 
             {{-- Cover Image --}}
-            <div class="p-6 rounded-2xl bg-white/5 border border-white/8">
+            <div data-room-image-upload class="p-6 rounded-2xl bg-white/5 border border-white/8">
                 <h3 class="text-sm font-semibold text-gray-200 mb-4">Cover Image</h3>
                 @if($room->cover_image)
-                    <img src="{{ Storage::url($room->cover_image) }}" alt="Cover" class="w-full h-36 object-cover rounded-xl mb-3">
+                    <img data-saved-cover src="{{ $room->cover_image_url }}" alt="Current cover image" class="w-full h-36 object-contain bg-black/20 rounded-xl mb-3">
                 @endif
+                <div data-upload-preview hidden class="mb-3">
+                    <div data-preview-images class="grid grid-cols-1 gap-3"></div>
+                    <button type="button" data-clear-upload class="mt-2 text-xs text-violet-300 hover:text-violet-200">Clear selection</button>
+                </div>
+                <p data-upload-status class="sr-only" role="status"></p>
                 <label class="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-white/15 rounded-xl cursor-pointer hover:border-violet-400/50 transition-colors">
                     <span class="text-sm text-gray-400">Click to upload cover image</span>
                     <span class="text-xs text-gray-600 mt-1">JPG, PNG, WEBP (max 4MB)</span>
@@ -90,7 +95,7 @@
             </div>
 
             {{-- Gallery Images --}}
-            <div class="p-6 rounded-2xl bg-white/5 border border-white/8">
+            <div data-room-image-upload class="p-6 rounded-2xl bg-white/5 border border-white/8">
                 <h3 class="text-sm font-semibold text-gray-200 mb-4">Gallery Images</h3>
 
                 @if($room->exists && $room->images->isNotEmpty())
@@ -98,16 +103,19 @@
                     @foreach($room->images as $img)
                     <div class="relative group">
                         <img src="{{ Storage::url($img->image_path) }}" alt="Gallery" class="w-full h-20 object-cover rounded-lg">
-                        <form method="POST" action="{{ route('admin.rooms.images.destroy', $img) }}"
-                              class="absolute top-1 right-1 hidden group-hover:block"
-                              onsubmit="return confirm('Remove image?')">
-                            @csrf @method('DELETE')
-                            <button type="submit" class="w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full text-xs flex items-center justify-center">✕</button>
-                        </form>
+                        <button type="submit" form="delete-room-image-{{ $img->id }}" aria-label="Remove gallery image {{ $loop->iteration }}"
+                                class="absolute top-1 right-1 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full text-xs flex items-center justify-center">✕</button>
                     </div>
                     @endforeach
                 </div>
                 @endif
+
+                <div data-upload-preview hidden class="mb-4">
+                    <p class="mb-2 text-xs font-medium text-gray-400">Selected photos</p>
+                    <div data-preview-images class="grid grid-cols-2 gap-3"></div>
+                    <button type="button" data-clear-upload class="mt-2 text-xs text-violet-300 hover:text-violet-200">Clear selection</button>
+                </div>
+                <p data-upload-status class="sr-only" role="status"></p>
 
                 <label class="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-white/15 rounded-xl cursor-pointer hover:border-violet-400/50 transition-colors">
                     <span class="text-sm text-gray-400">Upload gallery photos</span>
@@ -142,6 +150,15 @@
         </div>
     </div>
 </form>
+
+@if($room->exists)
+    @foreach($room->images as $img)
+    <form id="delete-room-image-{{ $img->id }}" method="POST" action="{{ route('admin.rooms.images.destroy', $img) }}" onsubmit="return confirm('Remove image?')">
+        @csrf
+        @method('DELETE')
+    </form>
+    @endforeach
+@endif
 
 @push('scripts')
 <script type="module">
