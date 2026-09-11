@@ -118,7 +118,8 @@
 }
 
 /* ── Booking modal ────────────────────────────────────────────── */
-#booking-dialog {
+#booking-dialog,
+.room-details-dialog {
     position: fixed;
     inset: 0;
     margin: auto;
@@ -126,6 +127,23 @@
     max-height: calc(100vh - 2rem);
     max-height: calc(100dvh - 2rem);
     overflow-y: auto;
+}
+
+.room-details-dialog {
+    width: min(56rem, calc(100% - 2rem));
+}
+
+.room-details-trigger::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+}
+
+.room-details-trigger:focus-visible::after {
+    outline: 2px solid #b8953b;
+    outline-offset: -3px;
+    border-radius: 1rem;
 }
 
 dialog::backdrop {

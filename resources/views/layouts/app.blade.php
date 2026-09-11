@@ -361,6 +361,9 @@
         bookingDialog?.close();
         document.body.style.overflow = '';
     }
+    bookingDialog?.addEventListener('close', () => {
+        document.body.style.overflow = '';
+    });
     bookingDialog?.addEventListener('click', e => {
         const rect = bookingDialog.getBoundingClientRect();
         if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) closeBooking();

@@ -36,7 +36,7 @@
         {{-- Room Cards Grid --}}
         <div id="rooms-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($rooms as $room)
-            <article class="room-card card-lift flex flex-col rounded-2xl overflow-hidden shadow-md"
+            <article class="room-card card-lift group relative flex flex-col rounded-2xl overflow-hidden shadow-md"
                      data-category="{{ $room->category }}"
                      style="background:#fff; border:1px solid rgba(184,149,59,0.12);">
 
@@ -114,8 +114,13 @@
                     @endif
 
                     {{-- Actions --}}
-                    <button onclick="openBooking('{{ $room->name }}')"
-                            class="w-full py-3 text-sm font-bold text-white rounded-xl transition-all hover:brightness-110 active:scale-95"
+                    <button type="button" data-room-details="room-details-{{ $room->id }}"
+                            aria-haspopup="dialog" aria-controls="room-details-{{ $room->id }}" aria-label="View details for {{ $room->name }}"
+                            class="room-details-trigger mb-3 w-full py-2 text-sm font-semibold text-navy cursor-pointer">
+                        View details →
+                    </button>
+                    <button type="button" data-book-room="{{ $room->name }}"
+                            class="relative z-20 w-full py-3 text-sm font-bold text-white rounded-xl transition-all hover:brightness-110 active:scale-95"
                             style="background:linear-gradient(135deg,#0d1b2a,#1a2d42);">
                         Book this room ↗
                     </button>
@@ -125,6 +130,10 @@
         </div>
     </div>
 </section>
+
+@foreach($rooms as $room)
+    @include('frontend.partials.room-details', ['room' => $room])
+@endforeach
 
 @push('scripts')
 <script>

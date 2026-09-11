@@ -1,0 +1,75 @@
+@php
+    $photos = collect();
+    if ($room->cover_image_url) {
+        $photos->push(['url' => $room->cover_image_url, 'caption' => $room->name]);
+    }
+    foreach ($room->images as $image) {
+        $photos->push(['url' => Storage::url($image->image_path), 'caption' => $image->caption ?: $room->name]);
+    }
+    $photos = $photos->unique('url')->values();
+    $description = html_entity_decode(strip_tags(preg_replace('/<\s*(?:br\s*\/?|\/p|\/div|\/li|\/h[1-6])\s*>/i', "\n", $room->description ?: $room->short_description ?: '')), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+@endphp
+
+<dialog id="room-details-{{ $room->id }}" class="room-details-dialog rounded-2xl border border-gold/20 bg-ivory p-0 text-navy shadow-2xl" aria-labelledby="room-title-{{ $room->id }}">
+    <div class="flex items-start justify-between gap-4 border-b border-gold/20 px-6 py-5">
+        <div>
+            <p class="section-label mb-2">{{ ucfirst($room->category) }}</p>
+            <h2 id="room-title-{{ $room->id }}" class="text-2xl font-bold">{{ $room->name }}</h2>
+            @if($room->tagline)
+            <p class="mt-1 text-sm text-gray-500">{{ $room->tagline }}</p>
+            @endif
+        </div>
+        <button type="button" data-close-room autofocus aria-label="Close room details" class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-navy/5 text-2xl hover:bg-navy/10">&times;</button>
+    </div>
+
+    <div class="space-y-6 p-6">
+        @if($photos->isNotEmpty())
+        <figure>
+            <img data-room-photo src="{{ $photos[0]['url'] }}" alt="{{ $photos[0]['caption'] }}" class="aspect-[4/3] max-h-96 w-full rounded-xl bg-navy/5 object-contain" loading="lazy">
+            <figcaption data-room-caption class="mt-2 text-sm text-gray-500" aria-live="polite">{{ $photos[0]['caption'] }}</figcaption>
+        </figure>
+        @if($photos->count() > 1)
+        <div class="flex gap-3 overflow-x-auto p-1" aria-label="Room photos">
+            @foreach($photos as $photo)
+            <button type="button" data-room-thumbnail data-photo-src="{{ $photo['url'] }}" data-photo-caption="{{ $photo['caption'] }}"
+                    aria-label="Show photo {{ $loop->iteration }}: {{ $photo['caption'] }}" aria-pressed="{{ $loop->first ? 'true' : 'false' }}"
+                    class="shrink-0 overflow-hidden rounded-lg border-2 border-transparent aria-pressed:border-gold focus-visible:outline-2 focus-visible:outline-gold">
+                <img src="{{ $photo['url'] }}" alt="" class="h-16 w-24 object-cover" loading="lazy">
+            </button>
+            @endforeach
+        </div>
+        @endif
+        @else
+        <div class="rounded-xl bg-navy/5 p-10 text-center text-gray-500">Room photos coming soon.</div>
+        @endif
+
+        <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-600">
+            @if($room->size_sqm)<span>📐 {{ $room->size_sqm }} m²</span>@endif
+            @if($room->max_guests)<span>👥 Up to {{ $room->max_guests }} guests</span>@endif
+            @if($room->bed_type)<span>🛏 {{ $room->bed_type }}</span>@endif
+        </div>
+
+        @if(trim($description) !== '')
+        <div>
+            <h3 class="mb-2 font-semibold">About this room</h3>
+            <p class="whitespace-pre-line text-sm leading-relaxed text-gray-600">{{ trim($description) }}</p>
+        </div>
+        @endif
+
+        @if(!empty($room->amenities) && is_array($room->amenities))
+        <div>
+            <h3 class="mb-3 font-semibold">Amenities</h3>
+            <ul class="flex flex-wrap gap-2">
+                @foreach($room->amenities as $amenity)
+                <li class="rounded-lg border border-gold/20 bg-gold/5 px-3 py-2 text-sm">{{ $amenity }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
+        <div class="flex flex-wrap items-center justify-between gap-4 border-t border-gold/20 pt-5">
+            <p class="text-xl font-bold">NPR {{ number_format($room->price_per_night, 0) }} <span class="text-sm font-normal text-gray-500">/ night</span></p>
+            <button type="button" data-book-room="{{ $room->name }}" class="rounded-xl bg-navy px-6 py-3 text-sm font-bold text-white hover:bg-navy-mid">Book this room ↗</button>
+        </div>
+    </div>
+</dialog>
