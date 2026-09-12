@@ -1,0 +1,9 @@
+Existing test suite — recorded run summary
+Command:
+docker exec -e APP_ENV=testing -e DB_CONNECTION=sqlite -e DB_DATABASE=:memory: -e DB_URL= -e LARAVEL_STORAGE_PATH=/qa/storage -e VIEW_COMPILED_PATH=/qa/storage/framework/views hotel-dashboard-qa-20260912 php artisan test --do-not-cache-result
+
+Result: 18 passed, 102 assertions, exit code 0.
+Execution duration reported by PHPUnit: 0.33 seconds.
+Includes: Example unit test, PackagePriceTest, BlogTest, homepage ExampleTest, HeroCarouselTest.
+Database: guarded in-memory SQLite. Storage: QA-only /qa/storage.
+This file records the tool-run summary, not a full console transcript.

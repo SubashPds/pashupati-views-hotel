@@ -1,0 +1,345 @@
+{
+  "results": [
+    {
+      "id": "AUTH-01",
+      "name": "Unauthenticated admin access redirects to login",
+      "status": "PASS"
+    },
+    {
+      "id": "AUTH-02",
+      "name": "Incorrect credentials show a useful error",
+      "status": "PASS"
+    },
+    {
+      "id": "AUTH-03",
+      "name": "Reject inactive account",
+      "status": "PASS"
+    },
+    {
+      "id": "AUTH-04",
+      "name": "Reject guest account",
+      "status": "PASS"
+    },
+    {
+      "id": "AUTH-05",
+      "name": "Active admin can log in",
+      "status": "PASS"
+    },
+    {
+      "id": "PAGE-dashboard",
+      "name": "Open admin dashboard",
+      "status": "PASS"
+    },
+    {
+      "id": "PAGE-rooms",
+      "name": "Open admin rooms",
+      "status": "PASS"
+    },
+    {
+      "id": "PAGE-packages",
+      "name": "Open admin packages",
+      "status": "PASS"
+    },
+    {
+      "id": "PAGE-experiences",
+      "name": "Open admin experiences",
+      "status": "PASS"
+    },
+    {
+      "id": "PAGE-hero-slides",
+      "name": "Open admin hero-slides",
+      "status": "PASS"
+    },
+    {
+      "id": "PAGE-gallery",
+      "name": "Open admin gallery",
+      "status": "PASS"
+    },
+    {
+      "id": "PAGE-services",
+      "name": "Open admin services",
+      "status": "PASS"
+    },
+    {
+      "id": "PAGE-testimonials",
+      "name": "Open admin testimonials",
+      "status": "PASS"
+    },
+    {
+      "id": "PAGE-blogs",
+      "name": "Open admin blogs",
+      "status": "PASS"
+    },
+    {
+      "id": "PAGE-enquiries",
+      "name": "Open admin enquiries",
+      "status": "PASS"
+    },
+    {
+      "id": "PAGE-settings",
+      "name": "Open admin settings",
+      "status": "PASS"
+    },
+    {
+      "id": "ROOM-00",
+      "name": "Create room with optional amenities left blank",
+      "status": "FAIL",
+      "details": "Blank optional amenities produced HTTP 500\n\n500 !== 302\n"
+    },
+    {
+      "id": "ROOM-01",
+      "name": "Create room with image preview and remove one selected image",
+      "status": "PASS"
+    },
+    {
+      "id": "ROOM-02",
+      "name": "Edit and toggle room visibility",
+      "status": "PASS"
+    },
+    {
+      "id": "ROOM-03",
+      "name": "Duplicate room names produce validation instead of server error",
+      "status": "FAIL",
+      "details": "Duplicate existing name produced HTTP 500 (unique room slug).\n\n500 !== 302\n"
+    },
+    {
+      "id": "ROOM-04",
+      "name": "Room gallery rejects non-image uploads",
+      "status": "FAIL",
+      "details": "Non-image gallery upload was accepted and a room was created."
+    },
+    {
+      "id": "FORM-01",
+      "name": "Package price accepts decimal currency values",
+      "status": "FAIL",
+      "details": "{\"step\":null,\"stepMismatch\":true}\n\ntrue !== false\n"
+    },
+    {
+      "id": "PACKAGE-01",
+      "name": "Create and edit package",
+      "status": "PASS"
+    },
+    {
+      "id": "PACKAGE-02",
+      "name": "Package maximum guests cannot be below minimum",
+      "status": "FAIL",
+      "details": "Saved minimum 5 with maximum 2."
+    },
+    {
+      "id": "CRUD-experiences",
+      "name": "Create, edit, toggle, and delete experiences",
+      "status": "PASS"
+    },
+    {
+      "id": "CRUD-services",
+      "name": "Create, edit, toggle, and delete services",
+      "status": "PASS"
+    },
+    {
+      "id": "CRUD-testimonials",
+      "name": "Create, edit, toggle, and delete testimonials",
+      "status": "PASS"
+    },
+    {
+      "id": "GALLERY-01",
+      "name": "Upload image and reject invalid gallery media",
+      "status": "PASS"
+    },
+    {
+      "id": "GALLERY-02",
+      "name": "Existing gallery items have an edit action",
+      "status": "FAIL",
+      "details": "No edit control exists for uploaded gallery caption, badge, or section."
+    },
+    {
+      "id": "BLOG-01",
+      "name": "Create draft, publish, edit, and delete blog",
+      "status": "PASS"
+    },
+    {
+      "id": "ENQUIRY-01",
+      "name": "Status filter survives pagination",
+      "status": "PASS"
+    },
+    {
+      "id": "ENQUIRY-02",
+      "name": "Opening enquiry marks it read; status update persists",
+      "status": "PASS"
+    },
+    {
+      "id": "SETTINGS-01",
+      "name": "Map location saves and renders in public map",
+      "status": "PASS"
+    },
+    {
+      "id": "UX-01",
+      "name": "Sidebar keeps Rooms active while editing",
+      "status": "FAIL",
+      "details": "Rooms sidebar item is not active on its edit page."
+    },
+    {
+      "id": "UX-02",
+      "name": "Required fields have native required semantics",
+      "status": "FAIL",
+      "details": "Room Name has a required star but no required attribute.\n\nfalse !== true\n"
+    },
+    {
+      "id": "UX-03",
+      "name": "Room upload controls are keyboard reachable",
+      "status": "FAIL",
+      "details": "Room cover input is display:none and its wrapping label has no keyboard activation."
+    },
+    {
+      "id": "UX-04",
+      "name": "Mobile sidebar closes with Escape",
+      "status": "FAIL",
+      "details": "Escape did not close the mobile sidebar."
+    },
+    {
+      "id": "UX-05",
+      "name": "Closed mobile sidebar does not receive keyboard focus",
+      "status": "FAIL",
+      "details": "First Tab focuses a link inside the offscreen sidebar.\n\ntrue !== false\n"
+    },
+    {
+      "id": "MOBILE-rooms",
+      "name": "Mobile rooms actions are reachable without clipping",
+      "status": "FAIL",
+      "details": "Clipped actions: Active, Edit, Delete, Inactive\n\n15 !== 0\n"
+    },
+    {
+      "id": "MOBILE-packages",
+      "name": "Mobile packages actions are reachable without clipping",
+      "status": "PASS"
+    },
+    {
+      "id": "MOBILE-experiences",
+      "name": "Mobile experiences actions are reachable without clipping",
+      "status": "FAIL",
+      "details": "Clipped actions: Active, Edit, Delete\n\n18 !== 0\n"
+    },
+    {
+      "id": "MOBILE-services",
+      "name": "Mobile services actions are reachable without clipping",
+      "status": "FAIL",
+      "details": "Clipped actions: Active, Edit, Delete\n\n9 !== 0\n"
+    },
+    {
+      "id": "MOBILE-testimonials",
+      "name": "Mobile testimonials actions are reachable without clipping",
+      "status": "PASS"
+    },
+    {
+      "id": "MOBILE-blogs",
+      "name": "Mobile blogs actions are reachable without clipping",
+      "status": "PASS"
+    },
+    {
+      "id": "MOBILE-enquiries",
+      "name": "Mobile enquiries actions are reachable without clipping",
+      "status": "FAIL",
+      "details": "Clipped actions: View, Delete\n\n40 !== 0\n"
+    },
+    {
+      "id": "UX-06",
+      "name": "Mobile save displays success feedback",
+      "status": "FAIL",
+      "details": "Success message exists but is hidden below 640px.\n\nfalse !== true\n"
+    },
+    {
+      "id": "AUTH-06",
+      "name": "Logout ends session and blocks admin",
+      "status": "PASS"
+    }
+  ],
+  "inventory": [
+    {
+      "section": "dashboard",
+      "title": "Dashboard — Pashupati Views Hotel",
+      "unlabeled": []
+    },
+    {
+      "section": "rooms",
+      "title": "Rooms — Pashupati Views Hotel",
+      "unlabeled": []
+    },
+    {
+      "section": "packages",
+      "title": "Packages — Pashupati Views Hotel",
+      "unlabeled": []
+    },
+    {
+      "section": "experiences",
+      "title": "Experiences — Pashupati Views Hotel",
+      "unlabeled": []
+    },
+    {
+      "section": "hero-slides",
+      "title": "Home Carousel — Pashupati Views Hotel",
+      "unlabeled": []
+    },
+    {
+      "section": "gallery",
+      "title": "Gallery — Pashupati Views Hotel",
+      "unlabeled": [
+        "section"
+      ]
+    },
+    {
+      "section": "services",
+      "title": "Services — Pashupati Views Hotel",
+      "unlabeled": []
+    },
+    {
+      "section": "testimonials",
+      "title": "Testimonials — Pashupati Views Hotel",
+      "unlabeled": []
+    },
+    {
+      "section": "blogs",
+      "title": "Blogs — Pashupati Views Hotel",
+      "unlabeled": []
+    },
+    {
+      "section": "enquiries",
+      "title": "Enquiries — Pashupati Views Hotel",
+      "unlabeled": []
+    },
+    {
+      "section": "settings",
+      "title": "Site Settings — Pashupati Views Hotel",
+      "unlabeled": [
+        "contact_phone",
+        "contact_whatsapp",
+        "contact_email",
+        "contact_address",
+        "contact_map_location",
+        "experience_subtitle",
+        "experience_title",
+        "footer_disclaimer",
+        "gallery_subtitle",
+        "gallery_title",
+        "site_name",
+        "site_tagline",
+        "announcement_bar",
+        "hero_badge",
+        "hero_heading",
+        "hero_subheading",
+        "hero_body",
+        "hero_cta_primary",
+        "packages_subtitle",
+        "packages_title",
+        "packages_description",
+        "packages_note",
+        "rooms_subtitle",
+        "rooms_title",
+        "rooms_description",
+        "services_subtitle",
+        "services_title",
+        "testimonials_subtitle",
+        "testimonials_title"
+      ]
+    }
+  ],
+  "errors": []
+}

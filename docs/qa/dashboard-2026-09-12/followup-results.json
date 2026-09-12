@@ -1,0 +1,117 @@
+{
+  "results": [
+    {
+      "id": "CSRF-01",
+      "name": "State-changing requests without CSRF token are rejected",
+      "status": "PASS"
+    },
+    {
+      "id": "VALIDATION-01",
+      "name": "Negative room price and out-of-range testimonial rating rejected",
+      "status": "PASS"
+    },
+    {
+      "id": "UPLOAD-01",
+      "name": "Room cover rejects non-images and images above 4 MB",
+      "status": "PASS"
+    },
+    {
+      "id": "HERO-01",
+      "name": "Carousel media create, replace, visibility and delete",
+      "status": "PASS"
+    },
+    {
+      "id": "GALLERY-03",
+      "name": "Gallery video upload, toggle, and delete",
+      "status": "PASS"
+    },
+    {
+      "id": "BLOG-02",
+      "name": "Blog cover preview supports clearing selection",
+      "status": "PASS"
+    },
+    {
+      "id": "SETTINGS-02",
+      "name": "Validation preserves unsaved changes in other settings tabs",
+      "status": "FAIL",
+      "details": "Unsaved textarea value reverted after validation error in Map Location.\n+ actual - expected\n\n+ 'Make room for meaningful moments. A thoughtfully imagined stay at Pashupati Views Hotel.'\n- 'QA unsaved body that should survive validation'\n"
+    },
+    {
+      "id": "UX-07",
+      "name": "Settings fields have programmatically associated labels",
+      "status": "FAIL",
+      "details": "29 settings controls lack associated labels.\n\n29 !== 0\n"
+    },
+    {
+      "id": "UX-08",
+      "name": "Room upload helper text has readable contrast",
+      "status": "FAIL",
+      "details": "Measured 2.44:1 for 12px helper text."
+    },
+    {
+      "id": "TABLET-768",
+      "name": "Tablet room actions fit available content width at 768",
+      "status": "FAIL",
+      "details": "{\"table\":673.640625,\"container\":464,\"overflow\":\"hidden\"}"
+    },
+    {
+      "id": "TABLET-1024",
+      "name": "Tablet room actions fit available content width at 1024",
+      "status": "PASS"
+    },
+    {
+      "id": "UX-09",
+      "name": "Mobile menu button exposes expanded state",
+      "status": "FAIL",
+      "details": "Expected values to be strictly equal:\n\nnull !== 'true'\n"
+    }
+  ],
+  "metrics": {
+    "unlabeledSettings": [
+      "contact_phone",
+      "contact_whatsapp",
+      "contact_email",
+      "contact_address",
+      "contact_map_location",
+      "experience_subtitle",
+      "experience_title",
+      "footer_disclaimer",
+      "gallery_subtitle",
+      "gallery_title",
+      "site_name",
+      "site_tagline",
+      "announcement_bar",
+      "hero_badge",
+      "hero_heading",
+      "hero_subheading",
+      "hero_body",
+      "hero_cta_primary",
+      "packages_subtitle",
+      "packages_title",
+      "packages_description",
+      "packages_note",
+      "rooms_subtitle",
+      "rooms_title",
+      "rooms_description",
+      "services_subtitle",
+      "services_title",
+      "testimonials_subtitle",
+      "testimonials_title"
+    ],
+    "uploadHelperContrast": {
+      "foreground": [
+        74,
+        85,
+        101,
+        1
+      ],
+      "background": [
+        15.847058823529412,
+        19.64313725490196,
+        30.08235294117647
+      ],
+      "ratio": 2.4412145585158567,
+      "fontSize": "12px"
+    }
+  }
+}
