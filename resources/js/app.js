@@ -7,3 +7,5 @@ import './room-details';
 import './package-details';
 import './room-image-preview';
 import './gallery-viewer';
+
+import './blog-cover-preview';

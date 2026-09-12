@@ -55,7 +55,7 @@
                 </a>
 
                 {{-- Desktop Nav --}}
-                <nav class="hidden md:flex items-center gap-1 text-sm font-medium" aria-label="Main navigation">
+                <nav class="hidden xl:flex items-center gap-1 text-sm font-medium" aria-label="Main navigation">
                     @foreach([
                         ['#home',         'Home'],
                         ['#rooms',        'Rooms'],
@@ -63,9 +63,11 @@
                         ['#experience',   'Experience'],
                         ['#services',     'Services'],
                         ['#gallery',      'Gallery'],
+                        [route('blogs.index'),        'Blogs'],
                         ['#contact',      'Contact'],
                     ] as [$href, $label])
-                    <a href="{{ $href }}"
+                    <a href="{{ str_starts_with($href, '#') && !request()->routeIs('home') ? route('home') . $href : $href }}"
+                       @if($href === route('blogs.index') && request()->routeIs('blogs.*')) aria-current="location" @endif
                        class="nav-link px-3 py-2 rounded-lg text-gray-300 hover:text-amber-300 hover:bg-white/5 transition-all">
                         {{ $label }}
                     </a>
@@ -93,7 +95,7 @@
 
                     {{-- Hamburger --}}
                     <button id="nav-toggle"
-                            class="md:hidden p-2 rounded-lg hover:bg-white/10 transition-colors text-gray-300"
+                            class="xl:hidden p-2 rounded-lg hover:bg-white/10 transition-colors text-gray-300"
                             aria-expanded="false" aria-label="Toggle navigation">
                         <svg id="icon-menu"  class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                         <svg id="icon-close" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -104,7 +106,7 @@
 
         {{-- Mobile Nav Drawer --}}
         <div id="mobile-nav"
-             class="hidden md:hidden border-t"
+             class="hidden xl:hidden border-t"
              style="border-color:rgba(184,149,59,0.15); background:rgba(13,27,42,0.98);">
             <div class="px-4 py-4 flex flex-col gap-1 text-sm font-medium">
                 @foreach([
@@ -114,9 +116,11 @@
                     ['#experience', 'Experience'],
                     ['#services',   'Services'],
                     ['#gallery',    'Gallery'],
+                    [route('blogs.index'),      'Blogs'],
                     ['#contact',    'Contact'],
                 ] as [$href, $label])
-                <a href="{{ $href }}"
+                <a href="{{ str_starts_with($href, '#') && !request()->routeIs('home') ? route('home') . $href : $href }}"
+                       @if($href === route('blogs.index') && request()->routeIs('blogs.*')) aria-current="location" @endif
                    class="nav-link px-4 py-3 rounded-xl text-gray-300 hover:text-amber-300 hover:bg-white/5 transition-all"
                    onclick="closeMobileNav()">
                     {{ $label }}
@@ -187,8 +191,8 @@
                 <div>
                     <h4 class="text-white font-semibold text-xs uppercase tracking-widest mb-4" style="color:#b8953b;">Explore</h4>
                     <ul class="space-y-2.5 text-sm text-gray-400">
-                        @foreach([['#rooms','Rooms & Suites'],['#experience','Experiences'],['#services','Services'],['#gallery','Gallery'],['#contact','Contact']] as [$h,$l])
-                        <li><a href="{{ $h }}" class="hover:text-amber-300 transition-colors">{{ $l }}</a></li>
+                        @foreach([['#rooms','Rooms & Suites'],['#experience','Experiences'],['#services','Services'],['#gallery','Gallery'],[route('blogs.index'),'Blogs'],['#contact','Contact']] as [$h,$l])
+                        <li><a href="{{ str_starts_with($h, '#') && !request()->routeIs('home') ? route('home') . $h : $h }}" class="hover:text-amber-300 transition-colors">{{ $l }}</a></li>
                         @endforeach
                     </ul>
                 </div>

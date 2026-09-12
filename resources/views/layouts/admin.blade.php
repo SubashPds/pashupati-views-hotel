@@ -19,7 +19,7 @@
         {{-- ===== SIDEBAR ===== --}}
         <aside id="sidebar"
                class="flex flex-col w-64 shrink-0 bg-gray-900 border-r border-white/5 transition-transform duration-300 ease-in-out
-                      fixed inset-y-0 left-0 z-50
+                      fixed inset-y-0 left-0 z-50 -translate-x-full
                       md:relative md:translate-x-0"
                aria-label="Sidebar navigation">
 
@@ -48,6 +48,7 @@
                         ['route' => 'admin.gallery.index',      'icon' => '🖼️', 'label' => 'Gallery'],
                         ['route' => 'admin.services.index',     'icon' => '🛎️', 'label' => 'Services'],
                         ['route' => 'admin.testimonials.index', 'icon' => '💬', 'label' => 'Testimonials'],
+                        ['route' => 'admin.blogs.index',        'icon' => '📝', 'label' => 'Blogs', 'active' => 'admin.blogs.*'],
                         ['route' => 'admin.enquiries.index',    'icon' => '📩', 'label' => 'Enquiries'],
                         ['route' => 'admin.settings.index',     'icon' => '⚙️', 'label' => 'Site Settings'],
                     ];
@@ -56,7 +57,7 @@
                 @foreach($navItems as $item)
                     <a href="{{ route($item['route']) }}"
                        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
-                              {{ request()->routeIs($item['route'])
+                              {{ request()->routeIs($item['active'] ?? $item['route'])
                                     ? 'bg-violet-600/20 text-violet-300 ring-1 ring-violet-500/30'
                                     : 'text-gray-400 hover:bg-white/5 hover:text-gray-100' }}">
                         <span class="text-base leading-none">{{ $item['icon'] }}</span>

@@ -16,6 +16,8 @@ use App\Http\Controllers\HomeController;
 
 // ── Public frontend ───────────────────────────────────────────────────────────
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/blogs', [\App\Http\Controllers\BlogController::class, 'index'])->name('blogs.index');
+Route::get('/blogs/{slug}', [\App\Http\Controllers\BlogController::class, 'show'])->name('blogs.show');
 Route::post('/enquire', [HomeController::class, 'enquire'])->name('enquire');
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
@@ -28,6 +30,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // ── Admin (superadmin protected) ──────────────────────────────────────────────
 Route::middleware('superadmin')->prefix('admin')->name('admin.')->group(function () {
+
+    Route::resource('blogs', \App\Http\Controllers\Admin\BlogController::class)->except('show');
 
     Route::resource('hero-slides', \App\Http\Controllers\Admin\HeroSlideController::class)->except('show');
 
