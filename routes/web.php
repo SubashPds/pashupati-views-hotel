@@ -34,6 +34,7 @@ Route::middleware('superadmin')->prefix('admin')->name('admin.')->group(function
     Route::resource('blogs', \App\Http\Controllers\Admin\BlogController::class)->except('show');
 
     Route::resource('hero-slides', \App\Http\Controllers\Admin\HeroSlideController::class)->except('show');
+    Route::resource('promotions', \App\Http\Controllers\Admin\PromotionController::class)->except('show');
 
     // Dashboard
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
@@ -60,6 +61,7 @@ Route::middleware('superadmin')->prefix('admin')->name('admin.')->group(function
     // Gallery
     Route::get('/gallery',                  [GalleryController::class, 'index'])->name('gallery.index');
     Route::post('/gallery',                 [GalleryController::class, 'store'])->name('gallery.store');
+    Route::get('/gallery/{galleryItem}/edit', [GalleryController::class, 'edit'])->name('gallery.edit');
     Route::put('/gallery/{galleryItem}',    [GalleryController::class, 'update'])->name('gallery.update');
     Route::patch('/gallery/{galleryItem}/status', [GalleryController::class, 'toggleStatus'])->name('gallery.toggle-status');
     Route::delete('/gallery/{galleryItem}', [GalleryController::class, 'destroy'])->name('gallery.destroy');

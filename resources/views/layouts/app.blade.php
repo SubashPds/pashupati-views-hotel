@@ -434,6 +434,8 @@
         Thank you! We've received your enquiry and will respond within 24 hours.
     </div>
 
+    @include('frontend.sections.offer')
+
     @stack('scripts')
 
 </body>

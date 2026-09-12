@@ -1,9 +1,11 @@
 # Dashboard QA and UX report
 
+> **Remediation update — 12 September 2026:** All 14 confirmed findings are fixed. Retesting passed 61 browser/UX scenarios and 24 automated tests (151 assertions). See the [retest report](retest/RETEST_REPORT.md) for closure details and evidence. The original assessment below is retained as the before-fix record.
+
 **Project:** Pashupati Views Hotel  
 **Date:** 12 September 2026  
 **Reviewed revision:** `6ff0fe36de78917f413c57ba40e5be01ac572982`  
-**Assessment:** Needs fixes before routine mobile administration and dependable room creation.
+**Original assessment:** Needs fixes before routine mobile administration and dependable room creation.
 
 ## Results at a glance
 
@@ -19,7 +21,7 @@ The failed scenarios are grouped by underlying problem: for example, clipped act
 
 The main risks are reproducible server errors during room creation, missing validation on room gallery uploads, and administrative actions that cannot be reached on smaller screens. Login, role checks, major content-management flows, blog publishing, enquiry status changes, and several upload checks passed with synthetic data.
 
-**No production application code was changed. No hotel database records or live uploads were changed during this QA task.** Findings remain open; this deliverable is a test report, not a remediation release. Temporary build output was restored after recording a successful build.
+**During the original QA-only task, no production code, hotel records, or live uploads were changed.** The findings below were open at that point. The subsequent remediation and verified closure are documented in the retest report linked above.
 
 ## Test environment and method
 

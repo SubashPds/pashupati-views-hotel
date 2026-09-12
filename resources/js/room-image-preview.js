@@ -4,13 +4,20 @@ document.querySelectorAll('[data-room-image-upload]').forEach((upload) => {
     const images = upload.querySelector('[data-preview-images]');
     const savedCover = upload.querySelector('[data-saved-cover]');
     const status = upload.querySelector('[data-upload-status]');
+    let selectedFiles = [...input.files];
     let urls = [];
+
+    function syncFiles() {
+        const transfer = new DataTransfer();
+        selectedFiles.forEach((file) => transfer.items.add(file));
+        input.files = transfer.files;
+    }
 
     function renderPreview() {
         urls.forEach((url) => URL.revokeObjectURL(url));
         urls = [];
         images.replaceChildren();
-        const files = [...input.files];
+        const files = selectedFiles;
         preview.hidden = files.length === 0;
         if (savedCover) savedCover.hidden = files.length > 0;
         status.textContent = files.length ? `${files.length} ${files.length === 1 ? 'image' : 'images'} selected. Save the room to upload.` : '';
@@ -38,12 +45,9 @@ document.querySelectorAll('[data-room-image-upload]').forEach((upload) => {
             remove.textContent = '×';
             remove.setAttribute('aria-label', `Remove ${file.name}`);
             remove.addEventListener('click', () => {
-                const remaining = new DataTransfer();
-                files.forEach((selected, selectedIndex) => {
-                    if (selectedIndex !== index) remaining.items.add(selected);
-                });
-                input.files = remaining.files;
-                input.dispatchEvent(new Event('change', { bubbles: true }));
+                selectedFiles = selectedFiles.filter((_, selectedIndex) => selectedIndex !== index);
+                syncFiles();
+                renderPreview();
                 status.textContent = `${file.name} removed. ${input.files.length} images selected.`;
                 const buttons = images.querySelectorAll('[data-remove-preview]');
                 buttons[Math.min(index, buttons.length - 1)]?.focus();
@@ -53,11 +57,29 @@ document.querySelectorAll('[data-room-image-upload]').forEach((upload) => {
         });
     }
 
-    input.addEventListener('change', renderPreview);
+    input.addEventListener('change', () => {
+        const incoming = [...input.files];
+        if (input.multiple) {
+            incoming.forEach((file) => {
+                const alreadySelected = selectedFiles.some((selected) =>
+                    selected.name === file.name && selected.size === file.size &&
+                    selected.type === file.type && selected.lastModified === file.lastModified);
+                if (!alreadySelected) selectedFiles.push(file);
+            });
+        } else {
+            selectedFiles = incoming;
+        }
+        syncFiles();
+        renderPreview();
+    });
     upload.querySelector('[data-clear-upload]').addEventListener('click', () => {
+        selectedFiles = [];
         input.value = '';
         renderPreview();
     });
-    input.form?.addEventListener('reset', () => setTimeout(renderPreview, 0));
+    input.form?.addEventListener('reset', () => setTimeout(() => {
+        selectedFiles = [...input.files];
+        renderPreview();
+    }, 0));
     renderPreview();
 });

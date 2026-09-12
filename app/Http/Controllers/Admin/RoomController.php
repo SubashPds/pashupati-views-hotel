@@ -8,6 +8,7 @@ use App\Models\RoomImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class RoomController extends Controller
 {
@@ -26,12 +27,19 @@ class RoomController extends Controller
     {
         $validated = $this->validate($request);
 
+        $slug = Str::slug($validated['name']);
+        if (Room::where('slug', $slug)->exists()) {
+            throw ValidationException::withMessages([
+                'name' => 'A room with this name or a similar name already exists. Please choose a different name.',
+            ]);
+        }
+
         if ($request->hasFile('cover_image')) {
             $validated['cover_image'] = $request->file('cover_image')->store('rooms', 'public');
         }
 
         $validated['amenities'] = $this->parseAmenities($request->input('amenities_raw', ''));
-        $validated['slug'] = Str::slug($validated['name']);
+        $validated['slug'] = $slug;
 
         $room = Room::create($validated);
 
@@ -86,7 +94,7 @@ class RoomController extends Controller
 
     private function validate(Request $request): array
     {
-        return $request->validate([
+        $validated = $request->validate([
             'name'              => 'required|string|max:255',
             'category'          => 'required|in:deluxe,premium,suite',
             'tagline'           => 'nullable|string|max:255',
@@ -97,14 +105,21 @@ class RoomController extends Controller
             'short_description' => 'nullable|string|max:500',
             'description'       => 'nullable|string',
             'cover_image'       => 'nullable|image|max:4096',
+            'gallery_images'    => 'nullable|array',
+            'gallery_images.*'  => 'required|image|mimes:jpg,jpeg,png,webp|max:4096',
+            'amenities_raw'     => 'nullable|string',
             'is_active'         => 'boolean',
             'sort_order'        => 'integer|min:0',
         ]);
+
+        unset($validated['gallery_images'], $validated['amenities_raw']);
+
+        return $validated;
     }
 
-    private function parseAmenities(string $raw): array
+    private function parseAmenities(?string $raw): array
     {
-        return array_filter(array_map('trim', explode("\n", $raw)));
+        return array_values(array_filter(array_map('trim', explode("\n", $raw ?? '')), fn ($value) => $value !== ''));
     }
 
     private function handleGalleryUploads(Request $request, Room $room): void

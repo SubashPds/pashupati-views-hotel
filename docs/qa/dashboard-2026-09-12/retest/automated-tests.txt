@@ -1,0 +1,19 @@
+Dashboard remediation — recorded automated test summary
+
+Command:
+docker exec -e APP_ENV=testing -e DB_CONNECTION=sqlite -e DB_DATABASE=:memory: -e DB_URL= -e LARAVEL_STORAGE_PATH=/qa/storage -e VIEW_COMPILED_PATH=/qa/storage/framework/views hotel-dashboard-qa-fixes php artisan test --do-not-cache-result
+
+Result: 24 tests passed; 151 assertions; exit code 0.
+Duration reported by PHPUnit: 0.56 seconds.
+
+Includes all 18 prior tests plus six DashboardQaRegressionTest scenarios:
+- Optional room amenities create/update/clear.
+- Duplicate normalized names rejected before storing cover files.
+- Invalid gallery files reject whole create/update without changing records/files.
+- Gallery file size/type/array validation and valid multi-image upload.
+- Invalid package guest limits rejected; unlimited maximum supported.
+- Gallery metadata editing preserves existing media and validates sort order.
+
+Database: guarded in-memory SQLite.
+Filesystem: QA-only /qa/storage.
+This is the recorded tool-run summary, not a full console transcript.

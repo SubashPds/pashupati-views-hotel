@@ -24,6 +24,7 @@ class SettingController extends Controller
             $contactSettings->push(new SiteSetting(self::MAP_SETTING));
         }
         $settings->put('contact', $contactSettings);
+        $settings->forget('offers');
 
         return view('admin.settings.index', compact('settings'));
     }
@@ -39,12 +40,13 @@ class SettingController extends Controller
             );
         }
 
-        $data = $request->except(['_token', '_method', 'contact_map_location']);
+        $data = $request->except(['_token', '_method', '_settings_tab', 'contact_map_location']);
 
         foreach ($data as $key => $value) {
-            SiteSetting::where('key', $key)->update(['value' => $value]);
+            SiteSetting::where('group', '!=', 'offers')->where('key', $key)->update(['value' => $value]);
         }
 
-        return back()->with('success', 'Settings saved successfully.');
+        return back()->with('success', 'Settings saved successfully.')
+            ->with('settings_tab', $request->input('_settings_tab'));
     }
 }

@@ -9,7 +9,8 @@
     <a href="{{ route('admin.experiences.create') }}" class="px-4 py-2 text-sm font-semibold bg-violet-600 hover:bg-violet-500 text-white rounded-xl transition-colors">+ Add</a>
 </div>
 
-<div class="rounded-2xl bg-white/5 border border-white/8 overflow-hidden">
+<p class="mb-2 text-xs text-gray-400 lg:hidden">Scroll sideways to see all columns and actions.</p>
+<div role="region" aria-label="Experiences table" tabindex="0" class="rounded-2xl bg-white/5 border border-white/8 overflow-x-auto focus-visible:outline-2 focus-visible:outline-violet-400">
     <table class="w-full text-sm">
         <thead>
             <tr class="border-b border-white/8 text-xs text-gray-400 uppercase tracking-wide">

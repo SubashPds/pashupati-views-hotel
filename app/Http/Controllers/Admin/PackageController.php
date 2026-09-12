@@ -90,7 +90,7 @@ class PackageController extends Controller
             'price_from'        => 'nullable|numeric|min:0',
             'duration'          => 'nullable|string|max:100',
             'min_guests'        => 'nullable|integer|min:1',
-            'max_guests'        => 'nullable|integer|min:1',
+            'max_guests'        => ['nullable', 'integer', 'min:1', ...($request->filled('min_guests') ? ['gte:min_guests'] : [])],
             'cover_image'       => 'nullable|image|max:4096',
             'is_active'         => 'nullable|boolean',
             'sort_order'        => 'nullable|integer',

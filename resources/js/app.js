@@ -9,3 +9,7 @@ import './room-image-preview';
 import './gallery-viewer';
 
 import './blog-cover-preview';
+import './offer-image-preview';
+import './promotions';
+
+import "./admin-sidebar";

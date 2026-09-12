@@ -19,7 +19,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        \Illuminate\Support\Facades\View::composer('layouts.app', function ($view) {
+            $view->with('promotions', \App\Models\Promotion::visible()->orderBy('sort_order')->orderBy('id')->get());
+        });
     }
 
     private function bindRepo()

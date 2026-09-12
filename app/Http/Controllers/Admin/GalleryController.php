@@ -42,16 +42,22 @@ class GalleryController extends Controller
         return back()->with('success', 'Gallery media uploaded successfully.');
     }
 
+    public function edit(GalleryItem $galleryItem)
+    {
+        return view('admin.gallery.form', compact('galleryItem'));
+    }
+
     public function update(Request $request, GalleryItem $galleryItem)
     {
-        $request->validate([
+        $validated = $request->validate([
+            'sort_order' => 'sometimes|required|integer|min:0',
             'title'       => 'nullable|string|max:255',
             'badge_label' => 'nullable|string|max:100',
             'section'     => 'nullable|string|max:100',
         ]);
 
-        $galleryItem->update($request->only('title', 'badge_label', 'section', 'sort_order'));
-        return back()->with('success', 'Gallery item updated.');
+        $galleryItem->update($validated);
+        return redirect()->route('admin.gallery.index')->with('success', 'Gallery item updated.');
     }
 
     public function toggleStatus(GalleryItem $galleryItem)

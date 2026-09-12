@@ -1,0 +1,92 @@
+{
+  "results": [
+    {
+      "id": "CSRF-01",
+      "name": "State-changing requests without CSRF token are rejected",
+      "status": "PASS"
+    },
+    {
+      "id": "VALIDATION-01",
+      "name": "Negative room price and out-of-range testimonial rating rejected",
+      "status": "PASS"
+    },
+    {
+      "id": "UPLOAD-01",
+      "name": "Room cover rejects non-images and images above 4 MB",
+      "status": "PASS"
+    },
+    {
+      "id": "HERO-01",
+      "name": "Carousel media create, replace, visibility and delete",
+      "status": "PASS"
+    },
+    {
+      "id": "GALLERY-03",
+      "name": "Gallery video upload, toggle, and delete",
+      "status": "PASS"
+    },
+    {
+      "id": "GALLERY-04",
+      "name": "Gallery metadata edit persists without replacing image",
+      "status": "PASS"
+    },
+    {
+      "id": "BLOG-02",
+      "name": "Blog cover preview supports clearing selection",
+      "status": "PASS"
+    },
+    {
+      "id": "SETTINGS-02",
+      "name": "Validation preserves unsaved changes in other settings tabs",
+      "status": "PASS"
+    },
+    {
+      "id": "UX-07",
+      "name": "Settings fields have programmatically associated labels",
+      "status": "PASS"
+    },
+    {
+      "id": "UX-08",
+      "name": "Room upload helper text has readable contrast",
+      "status": "PASS"
+    },
+    {
+      "id": "TABLET-768",
+      "name": "Tablet room actions fit available content width at 768",
+      "status": "PASS"
+    },
+    {
+      "id": "TABLET-1024",
+      "name": "Tablet room actions fit available content width at 1024",
+      "status": "PASS"
+    },
+    {
+      "id": "UX-09",
+      "name": "Mobile menu button exposes expanded state",
+      "status": "PASS"
+    },
+    {
+      "id": "UX-10",
+      "name": "Mobile focus stays in open navigation and restores on close",
+      "status": "PASS"
+    }
+  ],
+  "metrics": {
+    "unlabeledSettings": [],
+    "uploadHelperContrast": {
+      "foreground": [
+        153,
+        161,
+        175,
+        1
+      ],
+      "background": [
+        15.847058823529412,
+        19.64313725490196,
+        30.08235294117647
+      ],
+      "ratio": 7.091671671134061,
+      "fontSize": "12px"
+    }
+  }
+}

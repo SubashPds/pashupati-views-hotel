@@ -44,7 +44,7 @@
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
-                    <x-admin.field label="Price per Night (NPR)" name="price_per_night" type="number" :value="$room->price_per_night" required />
+                    <x-admin.field label="Price per Night (NPR)" name="price_per_night" type="number" step="0.01" min="0" :value="$room->price_per_night" required />
                     <x-admin.field label="Max Guests" name="max_guests" type="number" :value="$room->max_guests ?? 2" required />
                 </div>
 
@@ -87,10 +87,10 @@
                     <button type="button" data-clear-upload class="mt-2 text-xs text-violet-300 hover:text-violet-200">Clear selection</button>
                 </div>
                 <p data-upload-status class="sr-only" role="status"></p>
-                <label class="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-white/15 rounded-xl cursor-pointer hover:border-violet-400/50 transition-colors">
+                <label class="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-white/15 rounded-xl cursor-pointer hover:border-violet-400/50 focus-within:ring-2 focus-within:ring-violet-400 transition-colors">
                     <span class="text-sm text-gray-400">Click to upload cover image</span>
-                    <span class="text-xs text-gray-600 mt-1">JPG, PNG, WEBP (max 4MB)</span>
-                    <input type="file" name="cover_image" class="hidden" accept="image/*">
+                    <span class="text-xs text-gray-400 mt-1">JPG, PNG, WEBP (max 4MB)</span>
+                    <input type="file" name="cover_image" class="sr-only" accept="image/jpeg,image/png,image/webp">
                 </label>
             </div>
 
@@ -117,11 +117,12 @@
                 </div>
                 <p data-upload-status class="sr-only" role="status"></p>
 
-                <label class="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-white/15 rounded-xl cursor-pointer hover:border-violet-400/50 transition-colors">
+                <label class="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-white/15 rounded-xl cursor-pointer hover:border-violet-400/50 focus-within:ring-2 focus-within:ring-violet-400 transition-colors">
                     <span class="text-sm text-gray-400">Upload gallery photos</span>
-                    <span class="text-xs text-gray-600 mt-1">Select multiple files</span>
-                    <input type="file" name="gallery_images[]" class="hidden" accept="image/*" multiple>
+                    <span class="text-xs text-gray-400 mt-1">JPG, PNG, WEBP · Max 4 MB per image</span>
+                    <input type="file" name="gallery_images[]" class="sr-only" accept="image/jpeg,image/png,image/webp" multiple>
                 </label>
+                <p class="mt-2 text-xs text-gray-400">Select more photos to add to your current selection.</p>
             </div>
 
             {{-- Meta --}}
