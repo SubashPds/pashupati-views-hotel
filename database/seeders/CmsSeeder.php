@@ -61,6 +61,7 @@ class CmsSeeder extends Seeder
             ['key' => 'contact_whatsapp',  'value' => '+977XXXXXXXXX',               'type' => 'text', 'group' => 'contact', 'label' => 'WhatsApp Number',   'sort_order' => 2],
             ['key' => 'contact_email',     'value' => 'info@pashupativiews.com',     'type' => 'text', 'group' => 'contact', 'label' => 'Email Address',     'sort_order' => 3],
             ['key' => 'contact_address',   'value' => 'Pashupatinath, Kathmandu, Nepal', 'type' => 'text', 'group' => 'contact', 'label' => 'Address',      'sort_order' => 4],
+            ['key' => 'contact_map_location', 'value' => '', 'type' => 'text', 'group' => 'contact', 'label' => 'Map Location (full address or latitude, longitude)', 'sort_order' => 5],
 
             // Footer
             ['key' => 'footer_disclaimer', 'value' => 'Private concept · Pashupati Views Hotel. No live reservations or payments.', 'type' => 'textarea', 'group' => 'footer', 'label' => 'Footer Disclaimer', 'sort_order' => 1],

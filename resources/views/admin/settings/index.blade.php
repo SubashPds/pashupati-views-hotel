@@ -67,9 +67,12 @@
                         <span class="text-sm text-gray-300">Enabled</span>
                     </label>
                 @else
-                    <input type="text" name="{{ $setting->key }}" value="{{ $setting->value }}"
+                    <input type="text" name="{{ $setting->key }}" value="{{ old($setting->key, $setting->value) }}"
                            class="w-full px-4 py-3 text-sm bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500
                                   focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 transition-all">
+                @endif
+                @if($setting->key === 'contact_map_location')
+                    <p class="mt-2 text-xs text-gray-400">Enter the exact hotel address or its latitude and longitude. Leave blank to use the hotel name and contact address.</p>
                 @endif
             </div>
             @endforeach

@@ -2,91 +2,71 @@
   Section: Contact / Get in Touch
   Props: $settings
 --}}
-<section id="contact" class="py-24" style="background:#faf8f3;">
+<section id="contact" class="bg-ivory py-16 sm:py-20">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-
-            {{-- Left: info --}}
+        <div class="mb-9 grid gap-5 lg:grid-cols-2 lg:items-end lg:gap-12">
             <div>
-                <span class="section-label">GET IN TOUCH</span>
-                <div class="divider-gold my-3"></div>
-                <h2 class="text-3xl sm:text-4xl font-bold mt-3 mb-5" style="color:#0d1b2a;">We'd love to hear from you.</h2>
-                <p class="text-gray-500 leading-relaxed mb-8">
-                    Whether you have a question about our rooms, would like to plan your stay, or simply want to learn more — our team is here to help.
-                </p>
+                <span class="section-label" style="color:#856534;">GET IN TOUCH</span>
+                <h2 class="mt-3 text-3xl font-semibold leading-tight tracking-tight text-navy sm:text-4xl">A warm welcome awaits.</h2>
+            </div>
+            <p class="max-w-lg text-sm leading-relaxed text-gray-600">A question about your stay, a special request, or a little help finding us — we’re here for you.</p>
+        </div>
 
-                <ul class="space-y-4 mb-8">
-                    @if(!empty($settings['contact_address']))
-                    <li class="flex items-start gap-4">
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 text-lg"
-                             style="background:rgba(184,149,59,0.10); color:#b8953b;">📍</div>
-                        <div>
-                            <p class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-0.5">Address</p>
-                            <p class="text-sm text-gray-700">{{ $settings['contact_address'] }}</p>
-                        </div>
-                    </li>
-                    @endif
+        <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-8">
+            <div class="min-w-0 space-y-5">
+                @include('frontend.sections.location-map')
+
+                @if(!empty($settings['contact_phone']) || !empty($settings['contact_email']))
+                <ul class="grid gap-4 sm:grid-cols-2">
                     @if(!empty($settings['contact_phone']))
-                    <li class="flex items-start gap-4">
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 text-lg"
-                             style="background:rgba(184,149,59,0.10); color:#b8953b;">📞</div>
-                        <div>
-                            <p class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-0.5">Phone</p>
-                            <a href="tel:{{ $settings['contact_phone'] }}" class="text-sm text-gray-700 hover:text-amber-600 transition-colors">{{ $settings['contact_phone'] }}</a>
-                        </div>
+                    <li class="min-w-0">
+                        <a href="tel:{{ $settings['contact_phone'] }}" class="group flex items-start gap-3 rounded-xl p-2 transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-gold">
+                            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gold/20 text-[#856534]" aria-hidden="true">
+                                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6.5 3h3l1.5 5-2 1.5a14 14 0 0 0 5.5 5.5l1.5-2 5 1.5v3a3 3 0 0 1-3 3A16 16 0 0 1 3.5 6a3 3 0 0 1 3-3Z"/></svg>
+                            </span>
+                            <span class="min-w-0"><span class="block text-[11px] font-semibold uppercase tracking-widest text-[#856534]">Call us</span><span class="mt-1 block break-words text-sm text-navy group-hover:text-[#856534]">{{ $settings['contact_phone'] }}</span></span>
+                        </a>
                     </li>
                     @endif
                     @if(!empty($settings['contact_email']))
-                    <li class="flex items-start gap-4">
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 text-lg"
-                             style="background:rgba(184,149,59,0.10); color:#b8953b;">✉️</div>
-                        <div>
-                            <p class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-0.5">Email</p>
-                            <a href="mailto:{{ $settings['contact_email'] }}" class="text-sm text-gray-700 hover:text-amber-600 transition-colors">{{ $settings['contact_email'] }}</a>
-                        </div>
+                    <li class="min-w-0">
+                        <a href="mailto:{{ $settings['contact_email'] }}" class="group flex items-start gap-3 rounded-xl p-2 transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-gold">
+                            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gold/20 text-[#856534]" aria-hidden="true">
+                                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><path stroke-linecap="round" stroke-linejoin="round" d="m3 7 9 6 9-6"/></svg>
+                            </span>
+                            <span class="min-w-0"><span class="block text-[11px] font-semibold uppercase tracking-widest text-[#856534]">Email us</span><span class="mt-1 block break-words text-sm text-navy group-hover:text-[#856534]">{{ $settings['contact_email'] }}</span></span>
+                        </a>
                     </li>
                     @endif
                 </ul>
+                @endif
 
-                {{-- Direct action buttons --}}
-                <div class="flex flex-wrap gap-3">
-                    @if(!empty($settings['contact_whatsapp']))
-                    <a href="https://wa.me/{{ preg_replace('/\D/', '', $settings['contact_whatsapp']) }}"
-                       target="_blank" rel="noopener"
-                       class="inline-flex items-center gap-2 px-5 py-3 text-sm font-semibold text-white rounded-xl transition-all hover:brightness-110 shadow-sm"
-                       style="background:#25d366;">
-                        💬 WhatsApp ↗
-                    </a>
-                    @endif
-                    @if(!empty($settings['contact_phone']))
-                    <a href="tel:{{ $settings['contact_phone'] }}"
-                       class="inline-flex items-center gap-2 px-5 py-3 text-sm font-semibold rounded-xl border transition-all hover:bg-gray-50"
-                       style="color:#0d1b2a; border-color:rgba(13,27,42,0.2);">
-                        📞 Call Us ↗
-                    </a>
-                    @endif
-                </div>
+                @if(!empty($settings['contact_whatsapp']))
+                <a href="https://wa.me/{{ preg_replace('/\D/', '', $settings['contact_whatsapp']) }}" target="_blank" rel="noopener noreferrer"
+                   class="inline-flex items-center gap-2 px-2 py-1 text-sm font-medium text-[#856534] underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-gold">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 9 9 0 0 1-4-.9L3 21l1.9-5.5a9 9 0 0 1-.9-4A8.5 8.5 0 0 1 12.5 3 8.5 8.5 0 0 1 21 11.5Z"/></svg>
+                    Chat with us on WhatsApp <span aria-hidden="true">↗</span>
+                </a>
+                @endif
             </div>
 
             {{-- Right: Enquiry form --}}
-            <div class="rounded-2xl overflow-hidden shadow-xl"
-                 style="background:#fff; border:1px solid rgba(184,149,59,0.12);">
+            <div class="min-w-0 overflow-hidden rounded-2xl border border-gold/15 bg-white shadow-sm">
 
                 @if(session('enquiry_success'))
                 <div class="p-8 text-center">
-                    <div class="text-5xl mb-4">✅</div>
+                    <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-ivory text-2xl text-[#856534]" aria-hidden="true">✓</div>
                     <h3 class="text-xl font-bold mb-2" style="color:#0d1b2a;">Message Received!</h3>
                     <p class="text-gray-500">Thank you for reaching out. We'll get back to you within 24 hours.</p>
                 </div>
                 @else
 
-                <div class="px-6 py-5 border-b" style="border-color:rgba(184,149,59,0.10); background:#faf8f3;">
-                    <h3 class="font-bold text-base" style="color:#0d1b2a;">Send us a message</h3>
+                <div class="px-6 pt-6 sm:px-7 sm:pt-7">
+                    <h3 class="text-xl font-semibold text-navy">Send us a message</h3>
                     <p class="text-xs text-gray-500 mt-0.5">We respond within 24 hours.</p>
                 </div>
 
-                <form method="POST" action="{{ route('enquire') }}" class="px-6 py-6 space-y-4" novalidate>
+                <form method="POST" action="{{ route('enquire') }}" class="space-y-4 px-6 pb-6 pt-5 sm:px-7 sm:pb-7" novalidate>
                     @csrf
 
                     @if($errors->has('contact'))
@@ -97,22 +77,22 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label for="c-name" class="block text-xs font-semibold uppercase tracking-wider mb-1.5" style="color:#b8953b;">
+                            <label for="c-name" class="block text-xs font-semibold uppercase tracking-wider mb-1.5" style="color:#856534;">
                                 Name <span class="text-red-400">*</span>
                             </label>
                             <input id="c-name" type="text" name="guest_name" required
                                    value="{{ old('guest_name') }}"
                                    placeholder="Your full name"
-                                   class="w-full px-4 py-3 text-sm rounded-xl border focus:outline-none transition-all {{ $errors->has('guest_name') ? 'border-red-300' : '' }}"
-                                   style="border-color:rgba(184,149,59,0.25); background:#faf8f3;"
+                                   class="w-full px-4 py-3 text-sm rounded-xl border focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all {{ $errors->has('guest_name') ? 'border-red-300' : '' }}"
+                                   style="border-color:rgba(133,101,52,0.18); background:#fdfcf9;"
                                    autocomplete="name">
                             @error('guest_name') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
                         </div>
                         <div>
-                            <label for="c-cat" class="block text-xs font-semibold uppercase tracking-wider mb-1.5" style="color:#b8953b;">Enquiry Type</label>
+                            <label for="c-cat" class="block text-xs font-semibold uppercase tracking-wider mb-1.5" style="color:#856534;">Enquiry Type</label>
                             <select id="c-cat" name="category"
-                                    class="w-full px-4 py-3 text-sm rounded-xl border focus:outline-none transition-all bg-[#faf8f3]"
-                                    style="border-color:rgba(184,149,59,0.25);">
+                                    class="w-full px-4 py-3 text-sm rounded-xl border focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all bg-[#fdfcf9]"
+                                    style="border-color:rgba(133,101,52,0.18);">
                                 @foreach(['Room & stay','Packages','Dining','Events / Private functions','Airport transfer','General enquiry'] as $cat)
                                 <option value="{{ $cat }}" {{ old('category') === $cat ? 'selected' : '' }}>{{ $cat }}</option>
                                 @endforeach
@@ -122,37 +102,36 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label for="c-phone" class="block text-xs font-semibold uppercase tracking-wider mb-1.5" style="color:#b8953b;">Phone</label>
+                            <label for="c-phone" class="block text-xs font-semibold uppercase tracking-wider mb-1.5" style="color:#856534;">Phone</label>
                             <input id="c-phone" type="tel" name="phone"
                                    value="{{ old('phone') }}"
                                    placeholder="+977…"
-                                   class="w-full px-4 py-3 text-sm rounded-xl border focus:outline-none transition-all"
-                                   style="border-color:rgba(184,149,59,0.25); background:#faf8f3;"
+                                   class="w-full px-4 py-3 text-sm rounded-xl border focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all"
+                                   style="border-color:rgba(133,101,52,0.18); background:#fdfcf9;"
                                    autocomplete="tel">
                         </div>
                         <div>
-                            <label for="c-email" class="block text-xs font-semibold uppercase tracking-wider mb-1.5" style="color:#b8953b;">Email</label>
+                            <label for="c-email" class="block text-xs font-semibold uppercase tracking-wider mb-1.5" style="color:#856534;">Email</label>
                             <input id="c-email" type="email" name="email"
                                    value="{{ old('email') }}"
                                    placeholder="your@email.com"
-                                   class="w-full px-4 py-3 text-sm rounded-xl border focus:outline-none transition-all"
-                                   style="border-color:rgba(184,149,59,0.25); background:#faf8f3;"
+                                   class="w-full px-4 py-3 text-sm rounded-xl border focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all"
+                                   style="border-color:rgba(133,101,52,0.18); background:#fdfcf9;"
                                    autocomplete="email">
                         </div>
                     </div>
 
                     <div>
-                        <label for="c-msg" class="block text-xs font-semibold uppercase tracking-wider mb-1.5" style="color:#b8953b;">Message</label>
+                        <label for="c-msg" class="block text-xs font-semibold uppercase tracking-wider mb-1.5" style="color:#856534;">Message</label>
                         <textarea id="c-msg" name="message" rows="4"
                                   placeholder="Tell us how we can help…"
-                                  class="w-full px-4 py-3 text-sm rounded-xl border focus:outline-none transition-all resize-none"
-                                  style="border-color:rgba(184,149,59,0.25); background:#faf8f3;"
+                                  class="w-full px-4 py-3 text-sm rounded-xl border focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all resize-y"
+                                  style="border-color:rgba(133,101,52,0.18); background:#fdfcf9;"
                         >{{ old('message') }}</textarea>
                     </div>
 
                     <button type="submit"
-                            class="w-full py-3.5 text-sm font-bold text-white rounded-xl transition-all hover:brightness-110 active:scale-[0.99] shadow-md"
-                            style="background:linear-gradient(135deg,#b8953b,#d4af5b);">
+                            class="w-full rounded-xl bg-[#856534] py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#71552c] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold">
                         <span data-lang="en">Send Message →</span>
                         <span data-lang="ne" class="deva" style="display:none;">सन्देश पठाउनुहोस् →</span>
                         <span data-lang="hi" class="deva" style="display:none;">संदेश भेजें →</span>
