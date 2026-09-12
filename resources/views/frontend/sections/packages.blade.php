@@ -12,20 +12,20 @@
         'note' => $packageSettings->get('packages_note', 'All packages can be customised. Contact us to tailor a package that perfectly fits your itinerary.'),
     ];
 @endphp
-<section id="packages" class="py-24" style="background:linear-gradient(170deg,#0d1b2a 0%,#162435 60%,#0d1b2a 100%);">
+<section id="packages" class="py-24 bg-ivory">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {{-- Header --}}
         <div class="text-center mb-16">
             @if($packageText['subtitle'])
-            <span class="section-label" style="color:#d4af5b;">{{ $packageText['subtitle'] }}</span>
+            <span class="section-label" style="color:#856534;">{{ $packageText['subtitle'] }}</span>
             @endif
             <div class="divider-gold mx-auto my-3"></div>
-            <h2 class="text-3xl sm:text-5xl font-bold mt-4 text-white">
+            <h2 class="text-3xl sm:text-5xl font-bold mt-4 text-navy">
                 {{ $packageText['title'] }}
             </h2>
             @if($packageText['description'])
-            <p class="mt-4 text-base text-gray-400 max-w-xl mx-auto whitespace-pre-line">
+            <p class="mt-4 text-base text-gray-600 max-w-xl mx-auto whitespace-pre-line">
                 {{ $packageText['description'] }}
             </p>
             @endif
@@ -36,12 +36,12 @@
             @foreach($packages as $pkg)
             @php
                 $gradients = [
-                    'linear-gradient(135deg,#1a2d42 0%,#243d58 100%)',
-                    'linear-gradient(135deg,#2a1f0d 0%,#3d2d10 100%)',
-                    'linear-gradient(135deg,#1a1a2d 0%,#2d1a3d 100%)',
-                    'linear-gradient(135deg,#1a2d1a 0%,#243d24 100%)',
-                    'linear-gradient(135deg,#2d1a2a 0%,#3d2438 100%)',
-                    'linear-gradient(135deg,#1a2a2d 0%,#24383d 100%)',
+                    'linear-gradient(135deg,#e8dfd0,#f7f3eb)',
+                    'linear-gradient(135deg,#efe4d4,#faf4ea)',
+                    'linear-gradient(135deg,#e9e4dc,#f8f5ef)',
+                    'linear-gradient(135deg,#e6e3d8,#f7f5ed)',
+                    'linear-gradient(135deg,#eee0d9,#faf3ed)',
+                    'linear-gradient(135deg,#e4e5df,#f6f5ef)',
                 ];
                 $emojis = ['🛕','✈️','👨‍👩‍👧‍👦','💑','🏡','🚗'];
                 $grad   = $gradients[$loop->index % count($gradients)];
@@ -49,8 +49,8 @@
                 $isPopular = strtolower($pkg->badge ?? '') === 'most popular';
             @endphp
 
-            <div class="package-card group relative flex flex-col rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
-                 style="background:{{ $grad }}; border:1px solid rgba(212,175,91,0.12); box-shadow:0 4px 20px rgba(13,27,42,0.4);">
+            <div class="package-card group relative flex flex-col rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                 style="background:#fff; border:1px solid rgba(133,101,52,.15); box-shadow:0 4px 20px rgba(13,27,42,.05);">
 
                 {{-- Popular ribbon --}}
                 @if($isPopular)
@@ -80,14 +80,10 @@
                         </div>
                     @endif
 
-                    {{-- Dark gradient overlay --}}
-                    <div class="absolute inset-0 pointer-events-none"
-                         style="background:linear-gradient(to bottom, transparent 50%, rgba(13,27,42,0.8) 100%);"></div>
-
                     {{-- Tagline pill --}}
                     @if($pkg->tagline)
                     <div class="absolute bottom-3 left-4">
-                        <span class="text-xs font-bold tracking-widest" style="color:#d4af5b;">
+                        <span class="inline-flex rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold tracking-widest" style="color:#73582f;">
                             {{ strtoupper($pkg->tagline) }}
                         </span>
                     </div>
@@ -96,8 +92,8 @@
                     {{-- Badge (non-popular) --}}
                     @if($pkg->badge && !$isPopular)
                     <div class="absolute top-3 left-4">
-                        <span class="px-2.5 py-1 text-xs font-semibold rounded-full text-white"
-                              style="background:rgba(13,27,42,0.75); backdrop-filter:blur(6px); border:1px solid rgba(212,175,91,0.3);">
+                        <span class="px-2.5 py-1 text-xs font-semibold rounded-full text-navy"
+                              style="background:rgba(255,255,255,.94); backdrop-filter:blur(6px); border:1px solid rgba(133,101,52,.15);">
                             {{ $pkg->badge }}
                         </span>
                     </div>
@@ -109,10 +105,10 @@
 
                     {{-- Name + Meta --}}
                     <div>
-                        <h3 class="text-lg font-bold text-white leading-snug">{{ $pkg->name }}</h3>
+                        <h3 class="text-lg font-bold text-navy leading-snug">{{ $pkg->name }}</h3>
                         <div class="flex items-center gap-3 mt-2 flex-wrap">
                             @if($pkg->duration)
-                            <span class="flex items-center gap-1 text-xs text-gray-400">
+                            <span class="flex items-center gap-1 text-xs text-gray-600">
                                 <svg class="w-3.5 h-3.5 text-amber-500/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                           d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -121,7 +117,7 @@
                             </span>
                             @endif
                             @if($pkg->min_guests)
-                            <span class="flex items-center gap-1 text-xs text-gray-400">
+                            <span class="flex items-center gap-1 text-xs text-gray-600">
                                 <svg class="w-3.5 h-3.5 text-amber-500/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                           d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -134,15 +130,15 @@
 
                     {{-- Short description --}}
                     @if($pkg->short_description)
-                    <p class="text-sm text-gray-400 leading-relaxed line-clamp-2">{{ $pkg->short_description }}</p>
+                    <p class="text-sm text-gray-600 leading-relaxed line-clamp-2">{{ $pkg->short_description }}</p>
                     @endif
 
                     {{-- Includes list (top 4) --}}
                     @if(!empty($pkg->includes))
                     <ul class="space-y-1.5">
                         @foreach(array_slice($pkg->includes, 0, 4) as $item)
-                        <li class="flex items-start gap-2 text-xs text-gray-300">
-                            <svg class="w-3.5 h-3.5 shrink-0 mt-0.5" style="color:#d4af5b;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <li class="flex items-start gap-2 text-xs text-gray-600">
+                            <svg class="w-3.5 h-3.5 shrink-0 mt-0.5" style="color:#856534;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
                             </svg>
                             {{ $item }}
@@ -159,7 +155,7 @@
 
                     <button type="button" data-package-details="package-details-{{ $pkg->id }}"
                             aria-haspopup="dialog" aria-controls="package-details-{{ $pkg->id }}" aria-label="View details for {{ $pkg->name }}"
-                            class="package-details-trigger w-full cursor-pointer py-2 text-sm font-semibold text-gold-light">
+                            class="package-details-trigger w-full cursor-pointer py-2 text-sm font-semibold text-navy">
                         View details →
                     </button>
 
@@ -167,7 +163,7 @@
                     <div class="flex items-end justify-between gap-3 pt-4"
                          style="border-top:1px solid rgba(212,175,91,0.1);">
                         <div>
-                            <p class="text-base font-bold" style="color:#d4af5b;">{{ $pkg->formatted_price }}</p>
+                            <p class="text-base font-bold" style="color:#856534;">{{ $pkg->formatted_price }}</p>
                         </div>
                         <a href="#contact" data-package-enquiry="{{ $pkg->name }}"
                                 class="relative z-20 shrink-0 inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 hover:scale-105"
@@ -182,7 +178,7 @@
 
         {{-- Bottom note --}}
         @if($packageText['note'])
-        <p class="text-center text-xs text-gray-300 mt-10 whitespace-pre-line">
+        <p class="text-center text-xs text-gray-600 mt-10 whitespace-pre-line">
             {{ $packageText['note'] }}
         </p>
         @endif
