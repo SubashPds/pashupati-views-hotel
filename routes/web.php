@@ -15,9 +15,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 
 // ── Public frontend ───────────────────────────────────────────────────────────
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/blogs', [\App\Http\Controllers\BlogController::class, 'index'])->name('blogs.index');
-Route::get('/blogs/{slug}', [\App\Http\Controllers\BlogController::class, 'show'])->name('blogs.show');
+Route::get('/', [HomeController::class, 'index'])->name('home')->middleware(\App\Http\Middleware\SelectDisplayCurrency::class);
+Route::get('/blogs', [\App\Http\Controllers\BlogController::class, 'index'])->name('blogs.index')->middleware(\App\Http\Middleware\SelectDisplayCurrency::class);
+Route::get('/blogs/{slug}', [\App\Http\Controllers\BlogController::class, 'show'])->name('blogs.show')->middleware(\App\Http\Middleware\SelectDisplayCurrency::class);
 Route::post('/enquire', [HomeController::class, 'enquire'])->name('enquire');
 
 // ── Auth ──────────────────────────────────────────────────────────────────────

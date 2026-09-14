@@ -28,6 +28,7 @@
         if (!in_array($activeGroup, $groups, true)) $activeGroup = $groups[0] ?? 'general';
         $groupLabels = [
             'general'      => '🌐 General',
+            'currency'     => '💱 Currency',
             'hero'         => '🦸 Hero',
             'rooms'        => '🛏️ Rooms',
             'packages'     => '🎁 Packages',
@@ -55,13 +56,21 @@
     <div id="tab-{{ $group }}" class="settings-panel {{ $group === $activeGroup ? '' : 'hidden' }}">
         <div class="p-6 rounded-2xl bg-white/5 border border-white/8 space-y-5">
             <h3 class="text-sm font-semibold text-gray-200 mb-2">{{ $groupLabels[$group] ?? ucfirst($group) }}</h3>
+            @if($group === 'currency')
+                <p class="text-sm text-gray-400">Keep room and package base prices in NPR. Visitors in Nepal see NPR, visitors in India see INR, and visitors elsewhere see USD. Converted price = NPR price ÷ the rate below.</p>
+                <p class="text-xs text-gray-400">Choose the rates your hotel wants to use. Initial reference values are 1 INR = NPR 1.60 and 1 USD = NPR 153.01 (NRB USD selling rate published 11 September 2026). Rates change only when you update these settings.</p>
+            @endif
             @foreach($items->sortBy('sort_order') as $setting)
             <div>
                 <label id="label_{{ $setting->key }}" for="setting_{{ $setting->key }}" class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">
                     {{ $setting->label }}
                 </label>
 
-                @if($setting->type === 'richtext')
+                @if($setting->group === 'currency' && $setting->type === 'number')
+                    <input id="setting_{{ $setting->key }}" type="number" name="{{ $setting->key }}" value="{{ old($setting->key, $setting->value) }}"
+                           min="0.0001" max="1000000" step="any" inputmode="decimal"
+                           class="w-full px-4 py-3 text-sm bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20">
+                @elseif($setting->type === 'richtext')
                     <textarea id="setting_{{ $setting->key }}" name="{{ $setting->key }}" class="ck-setting">{{ old($setting->key, $setting->value) }}</textarea>
                 @elseif($setting->type === 'textarea')
                     <textarea id="setting_{{ $setting->key }}" name="{{ $setting->key }}" rows="3"

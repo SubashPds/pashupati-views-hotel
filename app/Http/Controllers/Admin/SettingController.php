@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\SiteSetting;
+use App\Support\CurrencySettings;
 use Illuminate\Http\Request;
 
 class SettingController extends Controller
@@ -25,13 +26,28 @@ class SettingController extends Controller
         }
         $settings->put('contact', $contactSettings);
         $settings->forget('offers');
+        $currencySettings = $settings->get('currency', collect());
+        foreach (CurrencySettings::definitions() as $definition) {
+            if (!$currencySettings->contains('key', $definition['key'])) $currencySettings->push(new SiteSetting($definition));
+        }
+        $settings->put('currency', $currencySettings);
 
         return view('admin.settings.index', compact('settings'));
     }
 
     public function update(Request $request)
     {
-        $request->validate(['contact_map_location' => 'nullable|string|max:500']);
+        $request->validate([
+            'contact_map_location' => 'nullable|string|max:500',
+            'currency_npr_per_inr' => 'sometimes|required|numeric|between:0.0001,1000000',
+            'currency_npr_per_usd' => 'sometimes|required|numeric|between:0.0001,1000000',
+        ]);
+
+        foreach (CurrencySettings::definitions() as $definition) {
+            if ($request->exists($definition['key'])) {
+                SiteSetting::updateOrCreate(['key' => $definition['key']], array_merge($definition, ['value' => $request->input($definition['key'])]));
+            }
+        }
 
         if ($request->exists('contact_map_location')) {
             SiteSetting::updateOrCreate(
@@ -40,7 +56,7 @@ class SettingController extends Controller
             );
         }
 
-        $data = $request->except(['_token', '_method', '_settings_tab', 'contact_map_location']);
+        $data = $request->except(array_merge(['_token', '_method', '_settings_tab', 'contact_map_location'], array_keys(CurrencySettings::defaults())));
 
         foreach ($data as $key => $value) {
             SiteSetting::where('group', '!=', 'offers')->where('key', $key)->update(['value' => $value]);

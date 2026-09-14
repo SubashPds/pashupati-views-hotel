@@ -76,16 +76,6 @@
 
                 {{-- Right actions --}}
                 <div class="flex items-center gap-2">
-                    {{-- Language switcher --}}
-                    <div class="hidden sm:flex items-center gap-0.5 border border-white/10 rounded-lg overflow-hidden text-xs font-medium">
-                        <button onclick="setLang('en')" id="lang-en"
-                                class="lang-btn px-2.5 py-1.5 text-amber-300 bg-white/10 transition-colors" aria-label="English">EN</button>
-                        <button onclick="setLang('ne')" id="lang-ne"
-                                class="lang-btn px-2.5 py-1.5 text-gray-400 hover:text-amber-300 transition-colors" aria-label="Nepali">ने</button>
-                        <button onclick="setLang('hi')" id="lang-hi"
-                                class="lang-btn px-2.5 py-1.5 text-gray-400 hover:text-amber-300 transition-colors" aria-label="Hindi">हि</button>
-                    </div>
-
                     {{-- Book Now CTA --}}
                     <button onclick="openBooking()"
                             class="hidden md:inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-white rounded-lg transition-all hover:brightness-110 shadow-md"
@@ -126,13 +116,6 @@
                     {{ $label }}
                 </a>
                 @endforeach
-
-                {{-- Mobile language --}}
-                <div class="flex gap-2 mt-2 pt-3 border-t" style="border-color:rgba(184,149,59,0.15);">
-                    <button onclick="setLang('en')" class="lang-btn flex-1 py-2 text-xs font-semibold text-center rounded-lg text-amber-300 bg-white/10">EN</button>
-                    <button onclick="setLang('ne')" class="lang-btn flex-1 py-2 text-xs font-semibold text-center rounded-lg text-gray-400 hover:text-amber-300 hover:bg-white/5 transition-colors">नेपाली</button>
-                    <button onclick="setLang('hi')" class="lang-btn flex-1 py-2 text-xs font-semibold text-center rounded-lg text-gray-400 hover:text-amber-300 hover:bg-white/5 transition-colors">हिन्दी</button>
-                </div>
 
                 <button onclick="openBooking(); closeMobileNav()"
                         class="mt-2 py-3 px-6 text-sm font-bold text-center text-white rounded-xl transition-all"
@@ -394,22 +377,6 @@
             iconClose?.classList.remove('hidden');
         }
     });
-
-    // ── Language switcher ──────────────────────────────────────────
-    let currentLang = localStorage.getItem('pvh_lang') || 'en';
-    function setLang(lang) {
-        currentLang = lang;
-        localStorage.setItem('pvh_lang', lang);
-        document.querySelectorAll('[data-lang]').forEach(el => {
-            el.style.display = el.dataset.lang === lang ? '' : 'none';
-        });
-        document.querySelectorAll('.lang-btn').forEach(b => {
-            const isActive = b.id === 'lang-' + lang || b.textContent.trim() === { en: 'EN', ne: 'ने', hi: 'हि' }[lang];
-            b.style.background = isActive ? 'rgba(255,255,255,0.12)' : '';
-            b.style.color = isActive ? '#fbbf24' : '';
-        });
-    }
-    document.addEventListener('DOMContentLoaded', () => setLang(currentLang));
 
     // ── Sticky nav shadow on scroll ────────────────────────────────
     const header = document.getElementById('site-header');

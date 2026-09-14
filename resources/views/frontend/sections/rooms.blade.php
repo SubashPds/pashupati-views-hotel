@@ -64,7 +64,7 @@
                     <div class="absolute bottom-3 right-3">
                         <span class="px-3 py-1.5 text-xs font-bold rounded-lg text-white"
                               style="background:rgba(13,27,42,0.85); backdrop-filter:blur(8px);">
-                            NPR {{ number_format($room->price_per_night, 0) }}<span class="font-normal opacity-75"> /night</span>
+                            {{ $currency->format($room->price_per_night) }}<span class="font-normal opacity-75"> /night</span>
                         </span>
                     </div>
                 </div>

@@ -56,7 +56,7 @@
                            hint="e.g. NPR 12,000 / night" />
             <x-admin.field label="Price From (numeric)" name="price_from" type="number" step="0.01"
                            :value="old('price_from', $package->price_from)"
-                           hint="For sorting only" />
+                           hint="Base price in NPR; used when Price Label is blank." />
             <div class="grid grid-cols-2 gap-3">
                 <x-admin.field label="Min Guests" name="min_guests" type="number"
                                :value="old('min_guests', $package->min_guests ?? 1)" />

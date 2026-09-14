@@ -7,9 +7,9 @@
         <div class="mb-9 grid gap-5 lg:grid-cols-2 lg:items-end lg:gap-12">
             <div>
                 <span class="section-label" style="color:#856534;">GET IN TOUCH</span>
-                <h2 class="mt-3 text-3xl font-semibold leading-tight tracking-tight text-navy sm:text-4xl">A warm welcome awaits.</h2>
+                <h2 class="mt-3 text-3xl font-semibold leading-tight tracking-tight text-navy sm:text-4xl">A peaceful stay near the sacred heart of Kathmandu.</h2>
             </div>
-            <p class="max-w-lg text-sm leading-relaxed text-gray-600">A question about your stay, a special request, or a little help finding us — we’re here for you.</p>
+            <p class="max-w-lg text-sm leading-relaxed text-gray-600">Whether you are planning a spiritual retreat, a family getaway, or a premium city stay, our team is here to help you choose the perfect experience.</p>
         </div>
 
         <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-8">
@@ -132,9 +132,7 @@
 
                     <button type="submit"
                             class="w-full rounded-xl bg-[#856534] py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#71552c] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold">
-                        <span data-lang="en">Send Message →</span>
-                        <span data-lang="ne" class="deva" style="display:none;">सन्देश पठाउनुहोस् →</span>
-                        <span data-lang="hi" class="deva" style="display:none;">संदेश भेजें →</span>
+                        <span>Send Message →</span>
                     </button>
                 </form>
                 @endif

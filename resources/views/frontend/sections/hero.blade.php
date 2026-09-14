@@ -50,26 +50,18 @@
         <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest border"
              style="color:#d4af5b; background:rgba(184,149,59,0.08); border-color:rgba(184,149,59,0.20);">
             <span aria-hidden="true">✦</span>
-            <span data-lang="en">{{ $settings['hero_badge'] }}</span>
-            <span data-lang="ne" class="deva" style="display:none;">{{ $settings['hero_badge'] }}</span>
-            <span data-lang="hi" class="deva" style="display:none;">{{ $settings['hero_badge'] }}</span>
+            <span>{{ $settings['hero_badge'] }}</span>
         </div>
         @endif
 
         {{-- Main heading --}}
         <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.08] mb-5 text-white">
-            <span data-lang="en">
+            <span>
                 @if(!empty($settings['hero_heading']))
                     {!! nl2br(e($settings['hero_heading'])) !!}
                 @else
-                    Where comfort meets <span class="text-gold-gradient">devotion.</span>
+                    Stay beside the sacred <span class="text-gold-gradient">Pashupatinath Temple.</span>
                 @endif
-            </span>
-            <span data-lang="ne" class="deva" style="display:none;">
-                जहाँ आराम र <span class="text-gold-gradient">भक्ति</span> मिल्छन्।
-            </span>
-            <span data-lang="hi" class="deva" style="display:none;">
-                जहाँ आराम और <span class="text-gold-gradient">भक्ति</span> मिलते हैं।
             </span>
         </h1>
 
@@ -83,9 +75,7 @@
         {{-- Body text --}}
         @if(!empty($settings['hero_body']))
         <p class="text-base sm:text-lg text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-            <span data-lang="en">{{ $settings['hero_body'] }}</span>
-            <span data-lang="ne" class="deva" style="display:none;">पशुपतिनाथ मन्दिरको छेउमा अवस्थित, एक सावधानीपूर्वक कल्पना गरिएको बसाइ।</span>
-            <span data-lang="hi" class="deva" style="display:none;">पशुपतिनाथ मंदिर के निकट, एक सोच-समझकर तैयार किया गया प्रवास।</span>
+            <span>{{ $settings['hero_body'] }}</span>
         </p>
         @endif
 
@@ -94,14 +84,12 @@
             <button onclick="openBooking()"
                     class="inline-flex items-center gap-2 px-8 py-4 text-sm font-bold text-white rounded-xl shadow-xl transition-all hover:brightness-110 active:scale-95"
                     style="background:linear-gradient(135deg,#b8953b,#d4af5b); box-shadow:0 8px 32px rgba(184,149,59,0.30);">
-                {{ $settings['hero_cta_primary'] ?? 'Plan your stay ↗' }}
+                {{ $settings['hero_cta_primary'] ?? 'Book your stay ↗' }}
             </button>
             <a href="#rooms"
                class="inline-flex items-center gap-2 px-8 py-4 text-sm font-semibold rounded-xl border transition-all hover:bg-white/5 active:scale-95"
                style="color:#d4af5b; border-color:rgba(184,149,59,0.30);">
-                <span data-lang="en">Explore rooms ↓</span>
-                <span data-lang="ne" class="deva" style="display:none;">कोठाहरू हेर्नुहोस् ↓</span>
-                <span data-lang="hi" class="deva" style="display:none;">कमरे देखें ↓</span>
+                <span>Explore rooms ↓</span>
             </a>
         </div>
 
