@@ -92,6 +92,11 @@
                 @endif
                 @if($setting->key === 'contact_map_location')
                     <p class="mt-2 text-xs text-gray-400">Enter the exact hotel address or its latitude and longitude. Leave blank to use the hotel name and contact address.</p>
+                @elseif($setting->key === 'contact_email')
+                    <p class="mt-2 text-xs text-gray-400">Every new enquiry is emailed to each address listed here. Enter up to 20 addresses, separated by commas or new lines. Duplicate addresses receive one notification. These are also the website's contact email addresses.</p>
+                    @if(in_array(config('mail.default'), ['log', 'array'], true))
+                        <p class="mt-2 text-xs text-amber-300">Email delivery is not enabled on this server yet. Configure SMTP to send enquiry notifications to these inboxes.</p>
+                    @endif
                 @endif
                 @error($setting->key)
                     <p role="alert" class="mt-2 text-sm text-red-300">{{ $message }}</p>

@@ -30,12 +30,16 @@
                     @endif
                     @if(!empty($settings['contact_email']))
                     <li class="min-w-0">
-                        <a href="mailto:{{ $settings['contact_email'] }}" class="group flex items-start gap-3 rounded-xl p-2 transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-gold">
+                        <div class="flex items-start gap-3 rounded-xl p-2">
                             <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gold/20 text-[#856534]" aria-hidden="true">
                                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><path stroke-linecap="round" stroke-linejoin="round" d="m3 7 9 6 9-6"/></svg>
                             </span>
-                            <span class="min-w-0"><span class="block text-[11px] font-semibold uppercase tracking-widest text-[#856534]">Email us</span><span class="mt-1 block break-words text-sm text-navy group-hover:text-[#856534]">{{ $settings['contact_email'] }}</span></span>
-                        </a>
+                            <span class="min-w-0"><span class="block text-[11px] font-semibold uppercase tracking-widest text-[#856534]">Email us</span>
+                                @foreach(\App\Support\EmailAddresses::valid($settings['contact_email']) as $contactEmail)
+                                    <a href="mailto:{{ $contactEmail }}" class="mt-1 block break-all text-sm text-navy hover:text-[#856534] focus-visible:outline-2 focus-visible:outline-gold">{{ $contactEmail }}</a>
+                                @endforeach
+                            </span>
+                        </div>
                     </li>
                     @endif
                 </ul>

@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\SiteSetting;
 use App\Support\CurrencySettings;
+use App\Support\EmailAddresses;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class SettingController extends Controller
 {
@@ -17,12 +19,21 @@ class SettingController extends Controller
         'sort_order' => 5,
     ];
 
+    private const EMAIL_SETTING = [
+        'key' => 'contact_email', 'type' => 'textarea', 'group' => 'contact',
+        'label' => 'Email addresses (enquiry notifications)', 'sort_order' => 3,
+    ];
+
     public function index()
     {
         $settings = SiteSetting::orderBy('group')->orderBy('sort_order')->get()->groupBy('group');
         $contactSettings = $settings->get('contact', collect());
         if (! $contactSettings->contains('key', 'contact_map_location')) {
             $contactSettings->push(new SiteSetting(self::MAP_SETTING));
+        }
+        if (!$contactSettings->contains('key', 'contact_email')) $contactSettings->push(new SiteSetting(self::EMAIL_SETTING));
+        foreach ($contactSettings as $setting) {
+            if ($setting->key === 'contact_email') $setting->fill(['label' => self::EMAIL_SETTING['label'], 'type' => 'textarea']);
         }
         $settings->put('contact', $contactSettings);
         $settings->forget('offers');
@@ -39,9 +50,21 @@ class SettingController extends Controller
     {
         $request->validate([
             'contact_map_location' => 'nullable|string|max:500',
+            'contact_email' => ['nullable', 'string', 'max:3000', function ($attribute, $value, $fail) {
+                if (!is_string($value)) return;
+                if (Validator::make(['emails' => EmailAddresses::parse($value)], ['emails' => 'array|max:20', 'emails.*' => 'required|email:rfc|max:254'])->fails()) {
+                    $fail('Enter up to 20 valid email addresses, separated by commas or new lines.');
+                }
+            }],
             'currency_npr_per_inr' => 'sometimes|required|numeric|between:0.0001,1000000',
             'currency_npr_per_usd' => 'sometimes|required|numeric|between:0.0001,1000000',
         ]);
+
+        if ($request->exists('contact_email')) {
+            SiteSetting::updateOrCreate(['key' => 'contact_email'], array_merge(self::EMAIL_SETTING, [
+                'value' => implode(', ', EmailAddresses::parse($request->input('contact_email'))),
+            ]));
+        }
 
         foreach (CurrencySettings::definitions() as $definition) {
             if ($request->exists($definition['key'])) {
@@ -56,7 +79,7 @@ class SettingController extends Controller
             );
         }
 
-        $data = $request->except(array_merge(['_token', '_method', '_settings_tab', 'contact_map_location'], array_keys(CurrencySettings::defaults())));
+        $data = $request->except(array_merge(['_token', '_method', '_settings_tab', 'contact_map_location', 'contact_email'], array_keys(CurrencySettings::defaults())));
 
         foreach ($data as $key => $value) {
             SiteSetting::where('group', '!=', 'offers')->where('key', $key)->update(['value' => $value]);

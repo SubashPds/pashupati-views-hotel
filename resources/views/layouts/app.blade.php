@@ -199,7 +199,11 @@
                         @if(!empty($settings['contact_email']))
                         <li class="flex items-center gap-2">
                             <span>✉️</span>
-                            <a href="mailto:{{ $settings['contact_email'] }}" class="hover:text-amber-300 transition-colors">{{ $settings['contact_email'] }}</a>
+                            <span class="min-w-0">
+                                @foreach(\App\Support\EmailAddresses::valid($settings['contact_email']) as $contactEmail)
+                                    <a href="mailto:{{ $contactEmail }}" class="block break-all hover:text-amber-300 transition-colors">{{ $contactEmail }}</a>
+                                @endforeach
+                            </span>
                         </li>
                         @endif
                     </ul>

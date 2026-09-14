@@ -10,9 +10,11 @@ use App\Models\Room;
 use App\Models\Service;
 use App\Models\SiteSetting;
 use App\Models\Testimonial;
+use App\Services\EnquiryEmailNotifier;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Validation\Rule;
 
 class HomeController extends Controller
 {
@@ -63,7 +65,7 @@ class HomeController extends Controller
     /**
      * Handle enquiry / contact form submission.
      */
-    public function enquire(Request $request): RedirectResponse
+    public function enquire(Request $request, EnquiryEmailNotifier $notifier): RedirectResponse
     {
         $validated = $request->validate([
             'guest_name' => 'required|string|max:255',
@@ -71,6 +73,9 @@ class HomeController extends Controller
             'phone'      => 'nullable|string|max:30',
             'category'   => 'nullable|string|max:100',
             'message'    => 'nullable|string|max:3000',
+            'checkin'    => 'nullable|date_format:Y-m-d',
+            'checkout'   => array_filter(['nullable', 'date_format:Y-m-d', $request->filled('checkin') ? 'after_or_equal:checkin' : null]),
+            'guests'     => ['nullable', Rule::in(['1', '2', '3', '4', '5+'])],
         ]);
 
         if (empty($validated['email']) && empty($validated['phone'])) {
@@ -79,7 +84,15 @@ class HomeController extends Controller
                 ->withErrors(['contact' => 'Please provide at least an email address or phone number.']);
         }
 
-        Enquiry::create($validated);
+        $stayDetails = [];
+        foreach (['checkin' => 'Check-in', 'checkout' => 'Check-out', 'guests' => 'Guests'] as $key => $label) {
+            if (!empty($validated[$key])) $stayDetails[] = $label.': '.$validated[$key];
+            unset($validated[$key]);
+        }
+        if ($stayDetails) $validated['message'] = trim(($validated['message'] ?? '')."\n\n".implode("\n", $stayDetails));
+
+        $enquiry = Enquiry::create($validated);
+        $notifier->send($enquiry);
 
         return back()->with('enquiry_success', true);
     }
