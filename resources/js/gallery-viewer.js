@@ -1,11 +1,33 @@
 const viewer = document.getElementById('gallery-viewer');
+const gallery = document.getElementById('gallery');
+const filters = gallery?.querySelector('[data-gallery-filters]');
+
+if (filters) {
+    const cells = [...gallery.querySelectorAll('[data-gallery-category]')];
+    const buttons = [...filters.querySelectorAll('[data-gallery-filter]')];
+    const count = gallery.querySelector('[data-gallery-count]');
+    filters.hidden = false;
+    buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+            const category = button.dataset.galleryFilter;
+            buttons.forEach((filter) => filter.setAttribute('aria-pressed', String(filter === button)));
+            cells.forEach((cell) => {
+                cell.hidden = category !== '' && cell.dataset.galleryCategory !== category;
+                if (cell.hidden) cell.querySelectorAll('video').forEach((video) => video.pause());
+            });
+            const visibleCount = cells.filter((cell) => !cell.hidden).length;
+            count.textContent = `${button.textContent.trim()}: ${visibleCount} gallery ${visibleCount === 1 ? 'item' : 'items'}`;
+        });
+    });
+}
 
 if (viewer) {
     const photo = viewer.querySelector('[data-gallery-image]');
     const video = viewer.querySelector('[data-gallery-video]');
     const title = viewer.querySelector('#gallery-viewer-title');
     const error = viewer.querySelector('[data-gallery-error]');
-    const items = [...document.querySelectorAll('[data-gallery-open]')];
+    const allItems = [...document.querySelectorAll('[data-gallery-open]')];
+    let items = allItems;
     const previous = viewer.querySelector('[data-gallery-prev]');
     const next = viewer.querySelector('[data-gallery-next]');
     let index = 0;
@@ -40,12 +62,14 @@ if (viewer) {
         }
     }
 
-    items.forEach((button, itemIndex) => {
+    allItems.forEach((button) => {
         button.addEventListener('click', () => {
+            items = allItems.filter((item) => !item.closest('[data-gallery-category]')?.hidden);
+            previous.hidden = next.hidden = items.length < 2;
             previousOverflow = document.body.style.overflow;
             viewer.showModal();
             document.body.style.overflow = 'hidden';
-            showMedia(itemIndex);
+            showMedia(items.indexOf(button));
         });
     });
 

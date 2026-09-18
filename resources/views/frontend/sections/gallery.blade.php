@@ -14,8 +14,19 @@
             </h2>
         </div>
 
+        @php
+            $galleryCategories = $galleryItems->map(fn ($item) => strtolower(trim($item->section ?? '')) ?: 'general')->unique()->values();
+        @endphp
+        <div data-gallery-filters hidden role="group" aria-label="Filter gallery by category" class="mb-8 text-center">
+            <button type="button" data-gallery-filter="" aria-pressed="true" aria-controls="gallery-grid">All</button>
+            @foreach($galleryCategories as $category)
+            <button type="button" data-gallery-filter="{{ $category }}" aria-pressed="false" aria-controls="gallery-grid">{{ \Illuminate\Support\Str::headline($category) }}</button>
+            @endforeach
+        </div>
+        <p data-gallery-count class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
+
         {{-- Masonry-style grid via CSS columns --}}
-        <div class="gallery-grid" style="columns:2; column-gap:1rem; orphans:1; widows:1;">
+        <div id="gallery-grid" class="gallery-grid" style="columns:2; column-gap:1rem; orphans:1; widows:1;">
             @php
                 $placeholderEmojis = ['🛏️','🌄','🌿','🍽️','🏛️','🌅','🛕','🏔️','🌸','🎋'];
                 $placeholderGrads  = [
@@ -36,6 +47,7 @@
                 $hasImage = !empty($item->image_url);
             @endphp
             <div class="gallery-cell break-inside-avoid mb-4 rounded-xl overflow-hidden group relative"
+                 data-gallery-category="{{ strtolower(trim($item->section ?? '')) ?: 'general' }}"
                  style="border:1px solid rgba(184,149,59,0.12); box-shadow:0 2px 8px rgba(13,27,42,0.08);">
 
                 <div class="relative overflow-hidden" style="height:{{ $h }};">
@@ -110,8 +122,12 @@
             @endforeach
         </div>
 
-        @php $smColStart = 2; @endphp
         <style>
+            [data-gallery-filters] button { margin:0.25rem; padding:0.6rem 1.1rem; border:1px solid rgba(133,101,52,0.3); border-radius:999px; color:#856534; font-size:0.875rem; font-weight:600; cursor:pointer; }
+            [data-gallery-filters] button:hover { background:#ebe3d5; }
+            [data-gallery-filters] button[aria-pressed="true"] { background:#0d1b2a; color:#fff; border-color:#0d1b2a; }
+            [data-gallery-filters] button:focus-visible { outline:2px solid #856534; outline-offset:3px; }
+            .gallery-cell[hidden] { display:none; }
             @media(min-width:640px) { .gallery-grid { columns:3 !important; } }
             @media(min-width:1024px){ .gallery-grid { columns:4 !important; } }
         </style>
