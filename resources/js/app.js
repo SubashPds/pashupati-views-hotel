@@ -5,6 +5,7 @@ import './hero-layout';
 import './active-navigation';
 import './room-details';
 import './package-details';
+import './detail-photos';
 import './room-image-preview';
 import './gallery-viewer';
 

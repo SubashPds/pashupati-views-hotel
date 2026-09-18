@@ -204,6 +204,44 @@
     flex-direction: column;
 }
 
+[data-detail-photos] [data-photo-thumbnails] {
+    scrollbar-width: thin;
+    scrollbar-color: #b8953b transparent;
+}
+
+[data-detail-photos] [data-photo-thumbnails]::-webkit-scrollbar {
+    height: 4px;
+}
+
+[data-detail-photos] [data-photo-thumbnails]::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+[data-detail-photos] [data-photo-thumbnails]::-webkit-scrollbar-thumb {
+    background: #b8953b;
+    border-radius: 999px;
+}
+
+#detail-photo-viewer {
+    position: fixed;
+    inset: 0;
+    margin: 0;
+    width: 100%;
+    max-width: none;
+    height: 100vh;
+    height: 100dvh;
+    max-height: none;
+    overflow: hidden;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+#detail-photo-viewer[open] {
+    display: flex;
+    flex-direction: column;
+}
+
+#detail-photo-viewer [hidden] { display: none; }
+
 dialog::backdrop {
     cursor: pointer;
     background: rgba(13, 27, 42, 0.85);

@@ -23,17 +23,7 @@ document.querySelectorAll('.room-details-dialog').forEach((dialog) => {
             document.body.style.overflow = dialog.dataset.previousOverflow || '';
         }
     });
-    dialog.querySelectorAll('[data-room-thumbnail]').forEach((thumbnail) => {
-        thumbnail.addEventListener('click', () => {
-            const photo = dialog.querySelector('[data-room-photo]');
-            photo.src = thumbnail.dataset.photoSrc;
-            photo.alt = thumbnail.dataset.photoCaption;
-            dialog.querySelector('[data-room-caption]').textContent = thumbnail.dataset.photoCaption;
-            dialog.querySelectorAll('[data-room-thumbnail]').forEach((button) => {
-                button.setAttribute('aria-pressed', String(button === thumbnail));
-            });
-        });
-    });
+
 });
 
 document.querySelectorAll('[data-book-room]').forEach((button) => {

@@ -33,4 +33,6 @@
     {{-- ⑦ Contact ──────────────────────────────────────────────────────── --}}
     @include('frontend.sections.contact')
 
+    @include('frontend.partials.detail-photo-viewer')
+
 @endsection

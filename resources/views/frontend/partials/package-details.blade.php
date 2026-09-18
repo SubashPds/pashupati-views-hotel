@@ -22,25 +22,7 @@
     </div>
 
     <div data-package-body class="min-h-0 overflow-y-auto overscroll-contain space-y-6 p-4 sm:p-6">
-        @if($photos->isNotEmpty())
-        <figure>
-            <img data-package-photo src="{{ $photos[0]['url'] }}" alt="{{ $photos[0]['caption'] }}" class="aspect-[4/3] max-h-96 w-full rounded-xl bg-navy/5 object-contain" loading="lazy">
-            <figcaption data-package-caption class="mt-2 text-sm text-gray-500" aria-live="polite">{{ $photos[0]['caption'] }}</figcaption>
-        </figure>
-        @if($photos->count() > 1)
-        <div class="flex gap-3 overflow-x-auto p-1" aria-label="Package photos">
-            @foreach($photos as $photo)
-            <button type="button" data-package-thumbnail data-photo-src="{{ $photo['url'] }}" data-photo-caption="{{ $photo['caption'] }}"
-                    aria-label="Show photo {{ $loop->iteration }}: {{ $photo['caption'] }}" aria-pressed="{{ $loop->first ? 'true' : 'false' }}"
-                    class="shrink-0 overflow-hidden rounded-lg border-2 border-transparent aria-pressed:border-gold focus-visible:outline-2 focus-visible:outline-gold">
-                <img src="{{ $photo['url'] }}" alt="" class="h-16 w-24 object-cover" loading="lazy">
-            </button>
-            @endforeach
-        </div>
-        @endif
-        @else
-        <div class="rounded-xl bg-navy/5 p-10 text-center text-gray-500">Package photos coming soon.</div>
-        @endif
+        @include('frontend.partials.detail-photos', ['kind' => 'package'])
 
         @if($pkg->badge || $pkg->tagline)
         <div class="flex flex-wrap items-center gap-3">

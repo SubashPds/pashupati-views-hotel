@@ -22,25 +22,7 @@
     </div>
 
     <div data-room-body class="min-h-0 overflow-y-auto overscroll-contain space-y-6 p-4 sm:p-6">
-        @if($photos->isNotEmpty())
-        <figure>
-            <img data-room-photo src="{{ $photos[0]['url'] }}" alt="{{ $photos[0]['caption'] }}" class="aspect-[4/3] max-h-96 w-full rounded-xl bg-navy/5 object-contain" loading="lazy">
-            <figcaption data-room-caption class="mt-2 text-sm text-gray-500" aria-live="polite">{{ $photos[0]['caption'] }}</figcaption>
-        </figure>
-        @if($photos->count() > 1)
-        <div class="flex gap-3 overflow-x-auto p-1" aria-label="Room photos">
-            @foreach($photos as $photo)
-            <button type="button" data-room-thumbnail data-photo-src="{{ $photo['url'] }}" data-photo-caption="{{ $photo['caption'] }}"
-                    aria-label="Show photo {{ $loop->iteration }}: {{ $photo['caption'] }}" aria-pressed="{{ $loop->first ? 'true' : 'false' }}"
-                    class="shrink-0 overflow-hidden rounded-lg border-2 border-transparent aria-pressed:border-gold focus-visible:outline-2 focus-visible:outline-gold">
-                <img src="{{ $photo['url'] }}" alt="" class="h-16 w-24 object-cover" loading="lazy">
-            </button>
-            @endforeach
-        </div>
-        @endif
-        @else
-        <div class="rounded-xl bg-navy/5 p-10 text-center text-gray-500">Room photos coming soon.</div>
-        @endif
+        @include('frontend.partials.detail-photos', ['kind' => 'room'])
 
         @if($room->tagline)
         <p class="text-sm font-medium text-navy/70">{{ $room->tagline }}</p>
