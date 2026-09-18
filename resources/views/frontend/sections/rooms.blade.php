@@ -3,11 +3,11 @@
   Props: $rooms (Collection<Room>), $settings
 --}}
 @if($rooms->isNotEmpty())
-<section id="rooms" class="py-24" style="background:#faf8f3;">
+<section id="rooms" class="py-10 sm:py-12" style="background:#faf8f3;">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {{-- Header --}}
-        <div class="text-center mb-14">
+        <div data-scroll-reveal class="text-center mb-8 sm:mb-10">
             <span class="section-label">{{ $settings['rooms_subtitle'] ?? 'REST, BEAUTIFULLY REIMAGINED' }}</span>
             <div class="divider-gold mx-auto my-3"></div>
             <h2 class="text-3xl sm:text-4xl font-bold mt-3" style="color:#0d1b2a;">
@@ -23,7 +23,7 @@
         {{-- Category Filter --}}
         @php $categories = $rooms->pluck('category')->unique()->values(); @endphp
         @if($categories->count() > 1)
-        <div class="flex flex-wrap items-center justify-center gap-2 mb-10" role="tablist" aria-label="Filter rooms by category">
+        <div class="flex flex-wrap items-center justify-center gap-2 mb-6 sm:mb-8" role="tablist" aria-label="Filter rooms by category">
             <button class="room-filter-btn active-filter px-5 py-2 text-xs font-semibold rounded-full transition-all"
                     data-filter="all" role="tab" aria-selected="true">All rooms</button>
             @foreach($categories as $cat)
@@ -36,7 +36,7 @@
         {{-- Room Cards Grid --}}
         <div id="rooms-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($rooms as $room)
-            <article class="room-card card-lift group relative flex flex-col rounded-2xl overflow-hidden shadow-md"
+            <article data-scroll-reveal class="room-card card-lift group relative flex flex-col rounded-2xl overflow-hidden shadow-md"
                      data-category="{{ $room->category }}"
                      style="background:#fff; border:1px solid rgba(184,149,59,0.12);">
 

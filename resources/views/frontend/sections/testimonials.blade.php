@@ -3,10 +3,10 @@
   Props: $testimonials (Collection<Testimonial>), $settings
 --}}
 @if($testimonials->isNotEmpty())
-<section id="testimonials" class="py-24 overflow-hidden bg-ivory">
+<section id="testimonials" class="py-10 sm:py-12 overflow-hidden bg-ivory">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        <div class="text-center mb-12">
+        <div data-scroll-reveal class="text-center mb-8 sm:mb-10">
             <span class="section-label" style="color:#856534;">{{ $settings['testimonials_subtitle'] ?? 'MOMENTS TO REMEMBER' }}</span>
             <div class="divider-gold mx-auto my-3"></div>
             <h2 class="text-3xl sm:text-4xl font-bold text-navy mt-3">
@@ -21,7 +21,7 @@
                  style="-ms-overflow-style:none; scrollbar-width:none;">
 
                 @foreach($testimonials as $t)
-                <div class="snap-item flex-shrink-0 w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]
+                <div data-scroll-reveal class="snap-item flex-shrink-0 w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]
                             p-7 rounded-2xl border border-gold/15 flex flex-col"
                      style="background:#fff; box-shadow:0 8px 24px rgba(13,27,42,0.04);">
 

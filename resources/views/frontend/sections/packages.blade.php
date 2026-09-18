@@ -12,11 +12,11 @@
         'note' => $packageSettings->get('packages_note', 'All packages can be customised. Contact us to tailor a package that perfectly fits your itinerary.'),
     ];
 @endphp
-<section id="packages" class="py-24 bg-ivory">
+<section id="packages" class="py-10 sm:py-12 bg-ivory">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {{-- Header --}}
-        <div class="text-center mb-16">
+        <div data-scroll-reveal class="text-center mb-8 sm:mb-10">
             @if($packageText['subtitle'])
             <span class="section-label" style="color:#856534;">{{ $packageText['subtitle'] }}</span>
             @endif
@@ -25,9 +25,7 @@
                 {{ $packageText['title'] }}
             </h2>
             @if($packageText['description'])
-            <p class="mt-4 text-base text-gray-600 max-w-xl mx-auto whitespace-pre-line">
-                {{ $packageText['description'] }}
-            </p>
+            <p class="mt-4 text-base text-gray-600 max-w-xl mx-auto whitespace-pre-line">{{ $packageText['description'] }}</p>
             @endif
         </div>
 
@@ -49,7 +47,7 @@
                 $isPopular = strtolower($pkg->badge ?? '') === 'most popular';
             @endphp
 
-            <div class="package-card group relative flex flex-col rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+            <div data-scroll-reveal class="package-card group relative flex flex-col rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
                  style="background:#fff; border:1px solid rgba(133,101,52,.15); box-shadow:0 4px 20px rgba(13,27,42,.05);">
 
                 {{-- Popular ribbon --}}
@@ -178,9 +176,7 @@
 
         {{-- Bottom note --}}
         @if($packageText['note'])
-        <p class="text-center text-xs text-gray-600 mt-10 whitespace-pre-line">
-            {{ $packageText['note'] }}
-        </p>
+        <p class="text-center text-xs text-gray-600 mt-8 whitespace-pre-line">{{ $packageText['note'] }}</p>
         @endif
     </div>
 </section>

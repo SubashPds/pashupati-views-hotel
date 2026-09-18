@@ -3,10 +3,10 @@
   Props: $galleryItems (Collection<GalleryItem>), $settings
 --}}
 @if($galleryItems->isNotEmpty())
-<section id="gallery" class="py-24" style="background:#f5f1ea;">
+<section id="gallery" class="py-10 sm:py-12" style="background:#f5f1ea;">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        <div class="text-center mb-14">
+        <div data-scroll-reveal class="text-center mb-8 sm:mb-10">
             <span class="section-label">{{ $settings['gallery_subtitle'] ?? 'A GLIMPSE INSIDE' }}</span>
             <div class="divider-gold mx-auto my-3"></div>
             <h2 class="text-3xl sm:text-4xl font-bold mt-3" style="color:#0d1b2a;">
@@ -46,7 +46,7 @@
                 $grad     = $placeholderGrads[$loop->index % count($placeholderGrads)];
                 $hasImage = !empty($item->image_url);
             @endphp
-            <div class="gallery-cell break-inside-avoid mb-4 rounded-xl overflow-hidden group relative"
+            <div data-scroll-reveal class="gallery-cell break-inside-avoid mb-4 rounded-xl overflow-hidden group relative"
                  data-gallery-category="{{ strtolower(trim($item->section ?? '')) ?: 'general' }}"
                  style="border:1px solid rgba(184,149,59,0.12); box-shadow:0 2px 8px rgba(13,27,42,0.08);">
 

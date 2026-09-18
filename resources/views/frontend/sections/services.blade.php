@@ -3,10 +3,10 @@
   Props: $services (Collection<Service>), $settings
 --}}
 @if($services->isNotEmpty())
-<section id="services" class="py-24" style="background:#fff;">
+<section id="services" class="py-10 sm:py-12" style="background:#fff;">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        <div class="text-center mb-14">
+        <div data-scroll-reveal class="text-center mb-8 sm:mb-10">
             <span class="section-label">{{ $settings['services_subtitle'] ?? 'SERVICES & CONVENIENCES' }}</span>
             <div class="divider-gold mx-auto my-3"></div>
             <h2 class="text-3xl sm:text-4xl font-bold mt-3" style="color:#0d1b2a;">
@@ -16,7 +16,7 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach($services as $service)
-            <div class="relative group p-6 rounded-2xl border transition-all duration-300 card-lift"
+            <div data-scroll-reveal class="relative group p-6 rounded-2xl border transition-all duration-300 card-lift"
                  style="background:#faf8f3; border-color:rgba(184,149,59,0.15);">
                 <div class="text-4xl mb-4 transition-transform duration-300 group-hover:scale-110">
                     {{ $service->icon ?? '✦' }}

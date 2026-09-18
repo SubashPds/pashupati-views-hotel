@@ -2,9 +2,9 @@
   Section: Contact / Get in Touch
   Props: $settings
 --}}
-<section id="contact" class="bg-ivory py-16 sm:py-20">
+<section id="contact" class="bg-ivory py-10 sm:py-12">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="mb-9 grid gap-5 lg:grid-cols-2 lg:items-end lg:gap-12">
+        <div data-scroll-reveal class="mb-8 sm:mb-10 grid gap-5 lg:grid-cols-2 lg:items-end lg:gap-12">
             <div>
                 <span class="section-label" style="color:#856534;">GET IN TOUCH</span>
                 <h2 class="mt-3 text-3xl font-semibold leading-tight tracking-tight text-navy sm:text-4xl">A peaceful stay near the sacred heart of Kathmandu.</h2>
@@ -13,7 +13,7 @@
         </div>
 
         <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 lg:gap-8">
-            <div class="min-w-0 space-y-5">
+            <div data-scroll-reveal class="min-w-0 space-y-5">
                 @include('frontend.sections.location-map')
 
                 @if(!empty($settings['contact_phone']) || !empty($settings['contact_email']))
@@ -55,7 +55,7 @@
             </div>
 
             {{-- Right: Enquiry form --}}
-            <div class="min-w-0 overflow-hidden rounded-2xl border border-gold/15 bg-white shadow-sm">
+            <div data-scroll-reveal class="min-w-0 overflow-hidden rounded-2xl border border-gold/15 bg-white shadow-sm">
 
                 @if(session('enquiry_success'))
                 <div class="p-8 text-center">

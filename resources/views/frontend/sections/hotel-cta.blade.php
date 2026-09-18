@@ -2,9 +2,9 @@
     $stay = collect(\App\Support\StaySettings::defaults())->merge($settings);
 @endphp
 @if($stay['stay_enabled'])
-<section class="bg-[#f9f4eb] py-20">
+<section class="bg-[#f9f4eb] py-10 sm:py-12">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="rounded-[32px] border border-[#d9c58f]/50 bg-white p-6 shadow-[0_20px_60px_rgba(13,27,42,0.06)] sm:p-8 lg:p-10">
+        <div data-scroll-reveal class="rounded-[32px] border border-[#d9c58f]/50 bg-white p-6 shadow-[0_20px_60px_rgba(13,27,42,0.06)] sm:p-8 lg:p-10">
             <div class="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
                 <div class="max-w-2xl">
                     <span class="inline-flex rounded-full border border-[#856534]/20 bg-[#f4ebd7] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#856534]">
@@ -33,7 +33,7 @@
                 </div>
             </div>
 
-            <div class="mt-10 grid gap-5 md:grid-cols-3">
+            <div class="mt-8 grid gap-5 md:grid-cols-3">
                 @foreach([1, 2, 3] as $card)
                 <div class="rounded-2xl border border-gray-200 bg-[#fffdf8] p-5">
                     <p class="text-xs font-semibold uppercase tracking-[0.16em] text-[#856534]">{{ $stay['stay_card_'.$card.'_label'] }}</p>
