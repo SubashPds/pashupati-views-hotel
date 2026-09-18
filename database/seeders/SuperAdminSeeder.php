@@ -3,14 +3,14 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 class SuperAdminSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('users')->updateOrInsert(
+        User::updateOrCreate(
             ['email' => 'superadmin@pashupativiews.com'],
             [
                 'name'       => 'Super Admin',
@@ -18,8 +18,6 @@ class SuperAdminSeeder extends Seeder
                 'role'       => 'superadmin',
                 'is_active'  => true,
                 'password'   => Hash::make('PashuAdmin@2026'),
-                'created_at' => now(),
-                'updated_at' => now(),
             ]
         );
     }

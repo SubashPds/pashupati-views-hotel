@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\TracksUserChanges;
 use Illuminate\Database\Eloquent\Model;
 
 class Enquiry extends Model
 {
+    use TracksUserChanges;
+
     protected $fillable = ['guest_name', 'email', 'phone', 'category', 'message', 'status', 'read_at'];
 
     protected $casts = ['read_at' => 'datetime'];

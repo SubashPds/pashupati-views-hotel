@@ -30,7 +30,7 @@ class RolePermissionsTest extends TestCase
     {
         $this->signIn($this->account('superadmin'));
         $this->get(route('admin.users.create'))->assertOk();
-        $data = ['name' => 'Reception', 'email' => 'Reception@example.test', 'role' => 'admin', 'is_active' => '1', 'password' => 'Strong-password-2026', 'password_confirmation' => 'Strong-password-2026'];
+        $data = ['name' => 'Reception', 'email' => 'Reception@example.test', 'role' => 'admin', 'is_active' => '1', 'password' => 'Strong-pass-2026', 'password_confirmation' => 'Strong-pass-2026'];
         $this->post(route('admin.users.store'), $data)->assertSessionHasNoErrors()->assertRedirect(route('admin.users.index'));
         $user = User::where('email', 'reception@example.test')->firstOrFail();
         $this->assertTrue(Hash::check($data['password'], $user->password));
@@ -40,8 +40,8 @@ class RolePermissionsTest extends TestCase
         $this->put(route('admin.users.update', $user), array_merge($data, ['role' => 'user', 'password' => '', 'password_confirmation' => '']))->assertSessionHasNoErrors();
         $this->assertSame($hash, $user->fresh()->password);
         $this->assertSame('user', $user->fresh()->role);
-        $this->put(route('admin.users.update', $user), array_merge($data, ['password' => 'Another-password-2026', 'password_confirmation' => 'Another-password-2026']))->assertSessionHasNoErrors();
-        $this->assertTrue(Hash::check('Another-password-2026', $user->fresh()->password));
+        $this->put(route('admin.users.update', $user), array_merge($data, ['password' => 'New-pass-2026', 'password_confirmation' => 'New-pass-2026']))->assertSessionHasNoErrors();
+        $this->assertTrue(Hash::check('New-pass-2026', $user->fresh()->password));
     }
 
     public function test_all_roles_can_log_in_but_inactive_accounts_cannot(): void

@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\TracksUserChanges;
 use Illuminate\Database\Eloquent\Model;
 
 class SiteSetting extends Model
 {
+    use TracksUserChanges;
+
     protected $fillable = ['key', 'value', 'type', 'group', 'label', 'sort_order'];
 
     /**
@@ -21,7 +24,7 @@ class SiteSetting extends Model
      */
     public static function set(string $key, mixed $value): void
     {
-        static::where('key', $key)->update(['value' => $value]);
+        static::where('key', $key)->first()?->update(['value' => $value]);
     }
 
     /**

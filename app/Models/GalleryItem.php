@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\TracksUserChanges;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
 class GalleryItem extends Model
 {
+    use TracksUserChanges;
+
     protected $fillable = ['title', 'image_path', 'badge_label', 'section', 'is_active', 'sort_order'];
 
     protected $casts = ['is_active' => 'boolean'];

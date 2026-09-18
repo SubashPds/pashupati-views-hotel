@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\TracksUserChanges;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -9,6 +10,8 @@ use Illuminate\Support\Str;
 
 class Blog extends Model
 {
+    use TracksUserChanges;
+
     protected $fillable = ['title', 'slug', 'excerpt', 'content', 'cover_image', 'is_published', 'published_at'];
 
     protected $casts = ['is_published' => 'boolean', 'published_at' => 'datetime'];

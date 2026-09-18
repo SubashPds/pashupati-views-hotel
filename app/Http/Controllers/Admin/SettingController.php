@@ -94,8 +94,9 @@ class SettingController extends Controller
 
         $data = $request->except(array_merge(['_token', '_method', '_settings_tab', 'contact_map_location', 'contact_email'], array_keys(CurrencySettings::defaults()), array_keys(StaySettings::defaults())));
 
+        $editableSettings = SiteSetting::where('group', '!=', 'offers')->whereIn('key', array_keys($data))->get()->keyBy('key');
         foreach ($data as $key => $value) {
-            SiteSetting::where('group', '!=', 'offers')->where('key', $key)->update(['value' => $value]);
+            $editableSettings->get($key)?->update(['value' => $value]);
         }
 
         return back()->with('success', 'Settings saved successfully.')

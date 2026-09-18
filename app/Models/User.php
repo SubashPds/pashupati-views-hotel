@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\TracksUserChanges;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,7 +10,7 @@ use App\Support\Permissions;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, TracksUserChanges;
 
     protected $fillable = [
         'name',

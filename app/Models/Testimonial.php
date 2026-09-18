@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\TracksUserChanges;
 use Illuminate\Database\Eloquent\Model;
 
 class Testimonial extends Model
 {
+    use TracksUserChanges;
+
     protected $fillable = ['author_name', 'author_date', 'rating', 'review', 'tag', 'is_active', 'sort_order'];
 
     protected $casts = ['is_active' => 'boolean'];

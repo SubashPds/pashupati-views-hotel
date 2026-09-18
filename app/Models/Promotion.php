@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\TracksUserChanges;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
 
 class Promotion extends Model
 {
+    use TracksUserChanges;
+
     public const TIMEZONE = 'Asia/Kathmandu';
 
     protected $fillable = ['title', 'label', 'description', 'image_path', 'image_alt', 'button_text', 'button_url', 'is_active', 'sort_order', 'end_date'];

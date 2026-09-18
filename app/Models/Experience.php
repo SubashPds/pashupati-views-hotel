@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\TracksUserChanges;
 use Illuminate\Database\Eloquent\Model;
 
 class Experience extends Model
 {
+    use TracksUserChanges;
+
     protected $fillable = ['title', 'description', 'icon', 'image', 'is_active', 'sort_order'];
 
     protected $casts = ['is_active' => 'boolean'];

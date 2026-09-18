@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\TracksUserChanges;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
@@ -9,6 +10,8 @@ use Illuminate\Support\Str;
 
 class Room extends Model
 {
+    use TracksUserChanges;
+
     protected $fillable = [
         'name', 'slug', 'category', 'tagline', 'price_per_night',
         'size_sqm', 'max_guests', 'bed_type', 'short_description',
