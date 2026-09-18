@@ -165,7 +165,7 @@
                         <div>
                             <p class="text-base font-bold" style="color:#856534;">{{ $currency->package($pkg) }}</p>
                         </div>
-                        <a href="#contact" data-package-enquiry="{{ $pkg->name }}"
+                        <a href="#contact" data-package-enquiry="{{ $pkg->name }}" data-package-id="{{ $pkg->id }}"
                                 class="relative z-20 shrink-0 inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 hover:scale-105"
                                 style="background:linear-gradient(135deg,#d4af5b,#b8953b); color:#0d1b2a;">
                             Enquire ↗

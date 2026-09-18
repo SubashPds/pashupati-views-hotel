@@ -98,9 +98,19 @@
                                     class="w-full px-4 py-3 text-sm rounded-xl border focus:outline-none focus:ring-2 focus:ring-gold/20 transition-all bg-[#fdfcf9]"
                                     style="border-color:rgba(133,101,52,0.18);">
                                 @foreach(['Room & stay','Packages','Dining','Events / Private functions','Airport transfer','General enquiry'] as $cat)
+                                @if($cat === 'Packages' && isset($packages) && $packages->isNotEmpty())
+                                <optgroup label="Packages">
+                                    <option value="Packages" @selected(old('category') === 'Packages')>General package enquiry</option>
+                                    @foreach($packages as $package)
+                                    <option value="package:{{ $package->id }}" @selected(old('category') === 'package:'.$package->id)>{{ $package->name }}</option>
+                                    @endforeach
+                                </optgroup>
+                                @else
                                 <option value="{{ $cat }}" {{ old('category') === $cat ? 'selected' : '' }}>{{ $cat }}</option>
+                                @endif
                                 @endforeach
                             </select>
+                            @error('category') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
                         </div>
                     </div>
 

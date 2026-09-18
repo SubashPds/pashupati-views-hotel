@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Mail\NewEnquiry;
 use App\Models\Enquiry;
+use App\Models\Package;
 use App\Models\SiteSetting;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -31,6 +32,35 @@ class EnquiryEmailTest extends TestCase
             'guest_name' => 'Guest & Family', 'email' => 'guest@example.test',
             'phone' => '9800000000', 'category' => 'Room booking', 'message' => 'A quiet room, please.',
         ], $overrides);
+    }
+
+    public function test_package_selection_is_listed_and_included_in_saved_enquiry_and_email(): void
+    {
+        Mail::fake();
+        $this->recipients('hotel@example.test');
+        $package = Package::create(['name' => 'Temple Visit', 'is_active' => true]);
+        $hidden = Package::create(['name' => 'Hidden Package', 'is_active' => false]);
+        $this->get('/')->assertOk()->assertSee('<optgroup label="Packages">', false)
+            ->assertSee('value="package:'.$package->id.'"', false)
+            ->assertDontSee('value="package:'.$hidden->id.'"', false);
+        $this->post(route('enquire'), $this->enquiry([
+            'category' => 'package:'.$package->id, 'message' => 'For two people.',
+        ]))->assertSessionHasNoErrors()->assertSessionHas('enquiry_success');
+        $this->assertDatabaseHas('enquiries', [
+            'category' => 'Packages', 'message' => "Package: Temple Visit\n\nFor two people.",
+        ]);
+        Mail::assertSent(NewEnquiry::class, fn ($mail) => str_contains($mail->enquiry->message, 'Package: Temple Visit'));
+    }
+
+    public function test_unavailable_package_selections_do_not_save_or_send(): void
+    {
+        Mail::fake();
+        $package = Package::create(['name' => 'Inactive Package', 'is_active' => false]);
+        foreach (['package:'.$package->id, 'package:99999', 'package:invalid'] as $category) {
+            $this->post(route('enquire'), $this->enquiry(['category' => $category]))->assertSessionHasErrors('category');
+        }
+        $this->assertDatabaseCount('enquiries', 0);
+        Mail::assertNothingSent();
     }
 
     public function test_all_recipients_receive_one_private_notification_and_settings_are_read_fresh(): void

@@ -30,8 +30,9 @@ document.querySelectorAll('[data-package-enquiry]').forEach((link) => {
         link.closest('dialog')?.close();
         const category = document.getElementById('c-cat');
         const message = document.getElementById('c-msg');
-        if (category) category.value = 'Packages';
-        if (message) {
+        const packageOption = category && Array.from(category.options).find((option) => option.value === `package:${link.dataset.packageId}`);
+        if (category) category.value = packageOption ? packageOption.value : 'Packages';
+        if (message && !packageOption) {
             const enquiry = `I'm interested in the ${link.dataset.packageEnquiry} package.`;
             if (!message.value.includes(enquiry)) {
                 message.value = message.value.trim() ? `${message.value}\n\n${enquiry}` : enquiry;

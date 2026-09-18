@@ -74,7 +74,7 @@
 
     <div class="flex shrink-0 items-center justify-between gap-3 border-t border-navy/10 bg-white/90 px-4 py-3 sm:px-6">
         <p class="min-w-0 break-words text-sm font-semibold leading-snug tracking-tight sm:text-base">{{ $currency->package($pkg) }}</p>
-        <a href="#contact" data-package-enquiry="{{ $pkg->name }}" aria-label="Enquire about {{ $pkg->name }}" class="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-linear-to-br from-navy to-navy-lt px-4 py-2.5 text-xs font-semibold text-white shadow-sm transition-all hover:brightness-125 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold sm:px-5 sm:text-sm">
+        <a href="#contact" data-package-enquiry="{{ $pkg->name }}" data-package-id="{{ $pkg->id }}" aria-label="Enquire about {{ $pkg->name }}" class="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-linear-to-br from-navy to-navy-lt px-4 py-2.5 text-xs font-semibold text-white shadow-sm transition-all hover:brightness-125 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold sm:px-5 sm:text-sm">
             Enquire
             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg>
         </a>

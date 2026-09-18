@@ -78,6 +78,16 @@ class HomeController extends Controller
             'guests'     => ['nullable', Rule::in(['1', '2', '3', '4', '5+'])],
         ]);
 
+        if (str_starts_with($validated['category'] ?? '', 'package:')) {
+            $packageId = substr($validated['category'], strlen('package:'));
+            $package = ctype_digit($packageId) ? Package::active()->find($packageId) : null;
+            if (!$package) {
+                return back()->withInput()->withErrors(['category' => 'This package is no longer available. Please choose another enquiry type.']);
+            }
+            $validated['category'] = 'Packages';
+            $validated['message'] = trim('Package: '.$package->name."\n\n".($validated['message'] ?? ''));
+        }
+
         if (empty($validated['email']) && empty($validated['phone'])) {
             return back()
                 ->withInput()
