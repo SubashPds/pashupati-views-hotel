@@ -93,6 +93,7 @@ Route::middleware('superadmin')->prefix('admin')->name('admin.')->group(function
     Route::put('/packages/{package}',          [PackageController::class, 'update'])->name('packages.update');
     Route::patch('/packages/{package}/status', [PackageController::class, 'toggleStatus'])->name('packages.toggle-status');
     Route::delete('/packages/{package}',       [PackageController::class, 'destroy'])->name('packages.destroy');
+    Route::delete('/package-images/{image}',   [PackageController::class, 'destroyImage'])->name('packages.images.destroy');
 
     // Enquiries
     Route::get('/enquiries',                [EnquiryController::class, 'index'])->name('enquiries.index');

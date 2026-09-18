@@ -1,4 +1,12 @@
 @php
+    $photos = collect();
+    if ($pkg->cover_image_url) {
+        $photos->push(['url' => $pkg->cover_image_url, 'caption' => $pkg->name]);
+    }
+    foreach ($pkg->images as $image) {
+        $photos->push(['url' => Storage::url($image->image_path), 'caption' => $image->caption ?: $pkg->name]);
+    }
+    $photos = $photos->unique('url')->values();
     $description = html_entity_decode(strip_tags(preg_replace('/<\s*(?:br\s*\/?|\/p|\/div|\/li|\/h[1-6])\s*>/i', "\n", $pkg->description ?: $pkg->short_description ?: '')), ENT_QUOTES | ENT_HTML5, 'UTF-8');
 @endphp
 
@@ -14,8 +22,24 @@
     </div>
 
     <div data-package-body class="min-h-0 overflow-y-auto overscroll-contain space-y-6 p-4 sm:p-6">
-        @if($pkg->cover_image_url)
-        <img src="{{ $pkg->cover_image_url }}" alt="{{ $pkg->name }}" class="aspect-[4/3] max-h-96 w-full rounded-xl bg-navy/5 object-contain" loading="lazy">
+        @if($photos->isNotEmpty())
+        <figure>
+            <img data-package-photo src="{{ $photos[0]['url'] }}" alt="{{ $photos[0]['caption'] }}" class="aspect-[4/3] max-h-96 w-full rounded-xl bg-navy/5 object-contain" loading="lazy">
+            <figcaption data-package-caption class="mt-2 text-sm text-gray-500" aria-live="polite">{{ $photos[0]['caption'] }}</figcaption>
+        </figure>
+        @if($photos->count() > 1)
+        <div class="flex gap-3 overflow-x-auto p-1" aria-label="Package photos">
+            @foreach($photos as $photo)
+            <button type="button" data-package-thumbnail data-photo-src="{{ $photo['url'] }}" data-photo-caption="{{ $photo['caption'] }}"
+                    aria-label="Show photo {{ $loop->iteration }}: {{ $photo['caption'] }}" aria-pressed="{{ $loop->first ? 'true' : 'false' }}"
+                    class="shrink-0 overflow-hidden rounded-lg border-2 border-transparent aria-pressed:border-gold focus-visible:outline-2 focus-visible:outline-gold">
+                <img src="{{ $photo['url'] }}" alt="" class="h-16 w-24 object-cover" loading="lazy">
+            </button>
+            @endforeach
+        </div>
+        @endif
+        @else
+        <div class="rounded-xl bg-navy/5 p-10 text-center text-gray-500">Package photos coming soon.</div>
         @endif
 
         @if($pkg->badge || $pkg->tagline)

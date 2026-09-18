@@ -48,7 +48,7 @@ class HomeController extends Controller
         $testimonials = Testimonial::active()->orderBy('sort_order')->get();
 
         // Packages
-        $packages = Package::active()->orderBy('sort_order')->get();
+        $packages = Package::with('images')->active()->orderBy('sort_order')->get();
 
         return view('frontend.home', compact(
             'heroSlides',

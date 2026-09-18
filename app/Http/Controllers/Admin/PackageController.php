@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Package;
+use App\Models\PackageImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class PackageController extends Controller
 {
@@ -32,13 +32,15 @@ class PackageController extends Controller
         $data['includes']   = $this->parseLines($request->input('includes_raw'));
         $data['highlights'] = $this->parseLines($request->input('highlights_raw'));
 
-        Package::create($data);
+        $package = Package::create($data);
+        $this->handleGalleryUploads($request, $package);
 
         return redirect()->route('admin.packages.index')->with('success', 'Package created successfully.');
     }
 
     public function edit(Package $package)
     {
+        $package->load('images');
         return view('admin.packages.form', compact('package'));
     }
 
@@ -57,6 +59,7 @@ class PackageController extends Controller
         $data['highlights'] = $this->parseLines($request->input('highlights_raw'));
 
         $package->update($data);
+        $this->handleGalleryUploads($request, $package);
 
         return redirect()->route('admin.packages.index')->with('success', 'Package updated.');
     }
@@ -72,15 +75,34 @@ class PackageController extends Controller
         if ($package->cover_image) {
             Storage::disk('public')->delete($package->cover_image);
         }
+        $package->images()->each(fn ($image) => Storage::disk('public')->delete($image->image_path));
         $package->delete();
         return back()->with('success', 'Package deleted.');
     }
 
     // ── Helpers ─────────────────────────────────────────────────────────────
 
+    public function destroyImage(PackageImage $image)
+    {
+        Storage::disk('public')->delete($image->image_path);
+        $image->delete();
+        return back()->with('success', 'Image removed.');
+    }
+
+    private function handleGalleryUploads(Request $request, Package $package): void
+    {
+        $lastOrder = $package->images()->max('sort_order') ?? 0;
+        foreach ($request->file('gallery_images') ?? [] as $i => $file) {
+            $package->images()->create([
+                'image_path' => $file->store('packages/gallery', 'public'),
+                'sort_order' => $lastOrder + $i + 1,
+            ]);
+        }
+    }
+
     private function validatePackage(Request $request, ?int $ignoreId = null): array
     {
-        return $request->validate([
+        $validated = $request->validate([
             'name'              => 'required|string|max:255',
             'tagline'           => 'nullable|string|max:255',
             'badge'             => 'nullable|string|max:100',
@@ -92,9 +114,13 @@ class PackageController extends Controller
             'min_guests'        => 'nullable|integer|min:1',
             'max_guests'        => ['nullable', 'integer', 'min:1', ...($request->filled('min_guests') ? ['gte:min_guests'] : [])],
             'cover_image'       => 'nullable|image|max:4096',
+            'gallery_images'    => 'nullable|array',
+            'gallery_images.*'  => 'required|image|mimes:jpg,jpeg,png,webp|max:4096',
             'is_active'         => 'nullable|boolean',
             'sort_order'        => 'nullable|integer',
         ]);
+        unset($validated['gallery_images']);
+        return $validated;
     }
 
     /** Convert textarea (one item per line) → JSON array */

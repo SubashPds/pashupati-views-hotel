@@ -23,6 +23,17 @@ document.querySelectorAll('.package-details-dialog').forEach((dialog) => {
             document.body.style.overflow = dialog.dataset.previousOverflow || '';
         }
     });
+    dialog.querySelectorAll('[data-package-thumbnail]').forEach((thumbnail) => {
+        thumbnail.addEventListener('click', () => {
+            const photo = dialog.querySelector('[data-package-photo]');
+            photo.src = thumbnail.dataset.photoSrc;
+            photo.alt = thumbnail.dataset.photoCaption;
+            dialog.querySelector('[data-package-caption]').textContent = thumbnail.dataset.photoCaption;
+            dialog.querySelectorAll('[data-package-thumbnail]').forEach((button) => {
+                button.setAttribute('aria-pressed', String(button === thumbnail));
+            });
+        });
+    });
 });
 
 document.querySelectorAll('[data-package-enquiry]').forEach((link) => {

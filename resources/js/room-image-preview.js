@@ -20,7 +20,7 @@ document.querySelectorAll('[data-room-image-upload]').forEach((upload) => {
         const files = selectedFiles;
         preview.hidden = files.length === 0;
         if (savedCover) savedCover.hidden = files.length > 0;
-        status.textContent = files.length ? `${files.length} ${files.length === 1 ? 'image' : 'images'} selected. Save the room to upload.` : '';
+        status.textContent = files.length ? `${files.length} ${files.length === 1 ? 'image' : 'images'} selected. Save changes to upload.` : '';
 
         files.forEach((file, index) => {
             const figure = document.createElement('figure');
