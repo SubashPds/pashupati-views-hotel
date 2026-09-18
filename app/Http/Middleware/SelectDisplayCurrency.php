@@ -14,8 +14,13 @@ class SelectDisplayCurrency
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $country = app(VisitorCountry::class)->detect($request);
-        $code = match ($country) { 'NP' => 'NPR', 'IN' => 'INR', default => 'USD' };
+        $code = $request->cookie('display_currency');
+        $hasPreference = in_array($code, ['NPR', 'INR', 'USD'], true);
+        if (!$hasPreference) {
+            $country = app(VisitorCountry::class)->detect($request);
+            $code = match ($country) { 'NP' => 'NPR', 'IN' => 'INR', default => 'USD' };
+        }
+        view()->share('showCountryPrompt', !$hasPreference);
         $defaults = CurrencySettings::defaults();
         $settings = SiteSetting::whereIn('key', array_keys($defaults))->pluck('value', 'key')->all();
         $rates = ['NPR' => 1.0];

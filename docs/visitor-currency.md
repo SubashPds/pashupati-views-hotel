@@ -6,6 +6,12 @@ The initial INR reference is 1.60 NPR. The initial USD reference is 153.01 NPR, 
 
 ## Country selection
 
+On the first visit, a banner asks where the guest is visiting from: Nepal, India, or another country. Choosing a location selects NPR, INR, or USD respectively. The header also provides a currency selector on desktop and mobile so guests can override the location-based choice at any time.
+
+Either choice is saved in an encrypted, HttpOnly, SameSite=Lax `display_currency` cookie for 365 days (Secure over HTTPS). Returning visitors use this preference before any country lookup and do not see the banner again. Clearing cookies restores the prompt. Only the currency preference is saved, not the guest's location. Forms also work without JavaScript.
+
+Until a guest chooses, the existing IP-based default applies:
+
 - Nepal (`NP`): NPR.
 - India (`IN`): INR.
 - All other countries or failed lookups: USD.

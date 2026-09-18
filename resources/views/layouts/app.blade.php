@@ -76,6 +76,20 @@
 
                 {{-- Right actions --}}
                 <div class="flex items-center gap-2">
+                    @isset($currency)
+                    <form method="POST" action="{{ route('currency.store') }}">
+                        @csrf
+                        <input type="hidden" name="return_to" value="{{ request()->getPathInfo() }}">
+                        <label for="display-currency" class="sr-only">Display currency</label>
+                        <select id="display-currency" name="currency" onchange="this.form.requestSubmit()"
+                                class="rounded-lg border border-white/20 bg-navy px-1 py-2 text-xs text-white" style="background:#0d1b2a;">
+                            @foreach(['NPR', 'INR', 'USD'] as $code)
+                            <option value="{{ $code }}" @selected($currency->code === $code)>{{ $code }}</option>
+                            @endforeach
+                        </select>
+                        <noscript><button type="submit" class="text-xs text-white">Apply</button></noscript>
+                    </form>
+                    @endisset
                     {{-- Book Now CTA --}}
                     <button onclick="openBooking()"
                             class="hidden md:inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-white rounded-lg transition-all hover:brightness-110 shadow-md"
@@ -125,6 +139,24 @@
             </div>
         </div>
     </header>
+
+    @if($showCountryPrompt ?? false)
+    <section aria-labelledby="country-prompt-title" class="border-b border-amber-200 bg-amber-50 px-4 py-4">
+        <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3">
+            <div>
+                <h2 id="country-prompt-title" class="text-sm font-semibold text-navy">Where are you visiting from?</h2>
+                <p class="mt-1 text-xs text-gray-600">Choose your location to see prices in your currency. We’ll remember your choice for one year.</p>
+            </div>
+            <form method="POST" action="{{ route('currency.store') }}" class="flex flex-wrap gap-2">
+                @csrf
+                <input type="hidden" name="return_to" value="{{ request()->getPathInfo() }}">
+                @foreach(['NP' => 'Nepal · NPR', 'IN' => 'India · INR', 'OTHER' => 'Other country · USD'] as $country => $label)
+                <button type="submit" name="country" value="{{ $country }}" class="rounded-lg border border-amber-300 bg-white px-3 py-2 text-xs font-medium text-navy hover:bg-amber-100">{{ $label }}</button>
+                @endforeach
+            </form>
+        </div>
+    </section>
+    @endif
 
     {{-- ═══ PAGE CONTENT ═══ --}}
     <main id="home">

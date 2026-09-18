@@ -34,6 +34,40 @@ class VisitorCurrencyTest extends TestCase
         }
     }
 
+    public function test_location_choice_saves_a_year_long_currency_cookie(): void
+    {
+        $this->get('/')->assertSee('Where are you visiting from?');
+        foreach (['NP' => 'NPR', 'IN' => 'INR', 'OTHER' => 'USD'] as $country => $code) {
+            $response = $this->post(route('currency.store'), ['country' => $country, 'return_to' => '/blogs']);
+            $response->assertRedirect('/blogs')->assertCookie('display_currency', $code);
+            $cookie = $response->getCookie('display_currency');
+            $this->assertEqualsWithDelta(now()->addYear()->timestamp, $cookie->getExpiresTime(), 86400);
+            $this->assertTrue($cookie->isHttpOnly());
+            $this->assertSame('lax', $cookie->getSameSite());
+        }
+    }
+
+    public function test_manual_currency_overrides_location_and_persists_on_public_pages(): void
+    {
+        $this->rates();
+        Room::create(['name' => 'Saved Currency Room', 'category' => 'deluxe', 'price_per_night' => 1600, 'is_active' => true]);
+        $this->post(route('currency.store'), ['currency' => 'INR'])->assertCookie('display_currency', 'INR');
+        $this->withCookie('display_currency', 'INR')->withServerVariables(['REMOTE_ADDR' => '8.8.8.8'])
+            ->get('/')->assertOk()->assertSee('INR 1,000.00')->assertDontSee('Where are you visiting from?');
+        $this->get('/blogs')->assertOk()->assertDontSee('Where are you visiting from?');
+        Http::assertNothingSent();
+        $this->assertSame('1600.00', Room::first()->price_per_night);
+    }
+
+    public function test_invalid_preferences_and_external_redirects_are_rejected(): void
+    {
+        foreach ([[], ['currency' => 'EUR'], ['country' => 'bad'], ['currency' => ['USD']],
+            ['currency' => 'USD', 'return_to' => '//example.com']] as $payload) {
+            $this->postJson(route('currency.store'), $payload)->assertUnprocessable()->assertCookieMissing('display_currency');
+        }
+        $this->withCookie('display_currency', 'EUR')->get('/')->assertOk()->assertSee('Where are you visiting from?');
+    }
+
     public function test_country_selects_currency_for_rooms_packages_services_and_details(): void
     {
         $this->rates();
