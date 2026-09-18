@@ -30,6 +30,7 @@
             'general'      => '🌐 General',
             'currency'     => '💱 Currency',
             'hero'         => '🦸 Hero',
+            'stay'         => '🧳 Plan your stay',
             'rooms'        => '🛏️ Rooms',
             'packages'     => '🎁 Packages',
             'experience'   => '✨ Experience',
@@ -56,6 +57,9 @@
     <div id="tab-{{ $group }}" class="settings-panel {{ $group === $activeGroup ? '' : 'hidden' }}">
         <div class="p-6 rounded-2xl bg-white/5 border border-white/8 space-y-5">
             <h3 class="text-sm font-semibold text-gray-200 mb-2">{{ $groupLabels[$group] ?? ucfirst($group) }}</h3>
+            @if($group === 'stay')
+                <p class="text-sm text-gray-400">Edit the section text, button labels, and three cards. The packages button appears automatically when at least one active package is available.</p>
+            @endif
             @if($group === 'currency')
                 <p class="text-sm text-gray-400">Keep room and package base prices in NPR. Visitors in Nepal see NPR, visitors in India see INR, and visitors elsewhere see USD. Converted price = NPR price ÷ the rate below.</p>
                 <p class="text-xs text-gray-400">Choose the rates your hotel wants to use. Initial reference values are 1 INR = NPR 1.60 and 1 USD = NPR 153.01 (NRB USD selling rate published 11 September 2026). Rates change only when you update these settings.</p>

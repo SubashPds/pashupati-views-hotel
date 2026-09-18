@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\SiteSetting;
 use App\Support\CurrencySettings;
 use App\Support\EmailAddresses;
+use App\Support\StaySettings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -42,13 +43,25 @@ class SettingController extends Controller
             if (!$currencySettings->contains('key', $definition['key'])) $currencySettings->push(new SiteSetting($definition));
         }
         $settings->put('currency', $currencySettings);
+        $staySettings = $settings->get('stay', collect());
+        foreach (StaySettings::definitions() as $definition) {
+            if (!$staySettings->contains('key', $definition['key'])) $staySettings->push(new SiteSetting($definition));
+        }
+        $settings->put('stay', $staySettings);
 
         return view('admin.settings.index', compact('settings'));
     }
 
     public function update(Request $request)
     {
+        $stayRules = [];
+        foreach (StaySettings::definitions() as $definition) {
+            $stayRules[$definition['key']] = $definition['type'] === 'boolean'
+                ? 'sometimes|required|boolean'
+                : 'sometimes|required|string|max:'.($definition['type'] === 'textarea' ? '3000' : '255');
+        }
         $request->validate([
+            ...$stayRules,
             'contact_map_location' => 'nullable|string|max:500',
             'contact_email' => ['nullable', 'string', 'max:3000', function ($attribute, $value, $fail) {
                 if (!is_string($value)) return;
@@ -66,7 +79,7 @@ class SettingController extends Controller
             ]));
         }
 
-        foreach (CurrencySettings::definitions() as $definition) {
+        foreach (array_merge(CurrencySettings::definitions(), StaySettings::definitions()) as $definition) {
             if ($request->exists($definition['key'])) {
                 SiteSetting::updateOrCreate(['key' => $definition['key']], array_merge($definition, ['value' => $request->input($definition['key'])]));
             }
@@ -79,7 +92,7 @@ class SettingController extends Controller
             );
         }
 
-        $data = $request->except(array_merge(['_token', '_method', '_settings_tab', 'contact_map_location', 'contact_email'], array_keys(CurrencySettings::defaults())));
+        $data = $request->except(array_merge(['_token', '_method', '_settings_tab', 'contact_map_location', 'contact_email'], array_keys(CurrencySettings::defaults()), array_keys(StaySettings::defaults())));
 
         foreach ($data as $key => $value) {
             SiteSetting::where('group', '!=', 'offers')->where('key', $key)->update(['value' => $value]);
