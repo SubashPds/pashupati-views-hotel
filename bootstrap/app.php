@@ -11,10 +11,16 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->redirectUsersTo(fn () => route('admin.dashboard'));
+        $middleware->prependToPriorityList(
+            before: \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            prepend: \App\Http\Middleware\AdminAccess::class,
+        );
         if ($proxies = env('TRUSTED_PROXIES')) {
             $middleware->trustProxies(at: array_map('trim', explode(',', $proxies)));
         }
         $middleware->alias([
+            'admin.access' => \App\Http\Middleware\AdminAccess::class,
             'superadmin' => \App\Http\Middleware\SuperAdminMiddleware::class,
         ]);
     })

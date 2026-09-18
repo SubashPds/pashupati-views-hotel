@@ -54,10 +54,13 @@
                         ['route' => 'admin.blogs.index',        'icon' => '📝', 'label' => 'Blogs', 'active' => 'admin.blogs.*'],
                         ['route' => 'admin.enquiries.index',    'icon' => '📩', 'label' => 'Enquiries'],
                         ['route' => 'admin.settings.index',     'icon' => '⚙️', 'label' => 'Site Settings'],
+                        ['route' => 'admin.users.index',        'icon' => '👤', 'label' => 'Users'],
+                        ['route' => 'admin.roles.index',        'icon' => '🔐', 'label' => 'Roles & Permissions'],
                     ];
                 @endphp
 
                 @foreach($navItems as $item)
+                    @continue(!auth()->user()->canAccessAdminRoute($item['route']))
                     @php($itemActive = request()->routeIs($item['active'] ?? str_replace('.index', '.*', $item['route'])))
                     <a href="{{ route($item['route']) }}"
                        @if($itemActive) aria-current="page" @endif
@@ -79,7 +82,7 @@
                     </div>
                     <div class="overflow-hidden">
                         <p class="text-sm font-medium text-white truncate">{{ auth()->user()->name ?? '' }}</p>
-                        <p class="text-xs text-gray-500">Super Admin</p>
+                        <p class="text-xs text-gray-500">{{ auth()->user()->role_label }}</p>
                     </div>
                 </div>
 

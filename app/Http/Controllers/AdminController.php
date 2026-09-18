@@ -9,15 +9,16 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-    public function dashboard()
+    public function dashboard(Request $request)
     {
+        $user = $request->user();
         $stats = [
-            'rooms'        => Room::count(),
-            'enquiries'    => Enquiry::where('status', 'new')->count(),
-            'testimonials' => Testimonial::count(),
+            'rooms'        => $user->hasPermission('rooms') ? Room::count() : null,
+            'enquiries'    => $user->hasPermission('enquiries') ? Enquiry::where('status', 'new')->count() : null,
+            'testimonials' => $user->hasPermission('testimonials') ? Testimonial::count() : null,
         ];
 
-        $recentEnquiries = Enquiry::latest()->take(5)->get();
+        $recentEnquiries = $user->hasPermission('enquiries') ? Enquiry::latest()->take(5)->get() : collect();
 
         return view('admin.dashboard', compact('stats', 'recentEnquiries'));
     }

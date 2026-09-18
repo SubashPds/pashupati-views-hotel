@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Super Admin Login')
+@section('title', 'Sign In')
 
 @section('content')
 
@@ -12,7 +12,7 @@
             🏨
         </div>
         <h1 class="text-xl font-bold text-white">Pashupati Views Hotel</h1>
-        <p class="text-sm text-gray-400 mt-1">Super Admin Portal</p>
+        <p class="text-sm text-gray-400 mt-1">Account sign in</p>
     </div>
 
     {{-- Error alert --}}

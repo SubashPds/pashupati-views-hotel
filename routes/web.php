@@ -29,8 +29,14 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// ── Admin (superadmin protected) ──────────────────────────────────────────────
-Route::middleware('superadmin')->prefix('admin')->name('admin.')->group(function () {
+// ── Dashboard protected by role permissions ──────────────────────────────────
+Route::middleware(['admin.access', 'auth.session'])->prefix('admin')->name('admin.')->group(function () {
+
+    Route::middleware('superadmin')->group(function () {
+        Route::resource('users', \App\Http\Controllers\Admin\UserController::class)->except(['show', 'destroy']);
+        Route::get('/roles', [\App\Http\Controllers\Admin\RoleController::class, 'index'])->name('roles.index');
+        Route::put('/roles/{role}', [\App\Http\Controllers\Admin\RoleController::class, 'update'])->name('roles.update');
+    });
 
     Route::resource('blogs', \App\Http\Controllers\Admin\BlogController::class)->except('show');
 

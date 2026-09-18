@@ -9,7 +9,7 @@ class AuthController extends Controller
 {
     public function showLogin()
     {
-        if (Auth::check() && Auth::user()->isSuperAdmin()) {
+        if (Auth::check() && Auth::user()->is_active) {
             return redirect()->route('admin.dashboard');
         }
 
@@ -26,10 +26,10 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $user = Auth::user();
 
-            if (! $user->isSuperAdmin()) {
+            if (! isset(\App\Support\Permissions::ROLES[$user->role])) {
                 Auth::logout();
                 return back()->withErrors([
-                    'email' => 'Access denied. Only super admins can login.',
+                    'email' => 'Your account does not have an assigned role. Contact a superadmin.',
                 ])->onlyInput('email');
             }
 
