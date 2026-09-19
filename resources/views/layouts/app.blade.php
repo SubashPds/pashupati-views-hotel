@@ -62,7 +62,7 @@
                         ['#packages',                  'Packages'],
                         ['#experience',                'Experience'],
                         ['#services',                  'Services'],
-                        ['#gallery',                   'Gallery'],
+                        [route('gallery'),             'Gallery'],
                         [route('blogs.index'),         'Blogs'],
                         [route('faqs.index'),          'FAQ'],
                         [route('contact'),             'Contact'],
@@ -75,6 +75,7 @@
                     <a href="{{ $resolvedHref }}"
                        @if($href === route('blogs.index') && request()->routeIs('blogs.*')) aria-current="location" @endif
                        @if($href === route('faqs.index')  && request()->routeIs('faqs.*'))  aria-current="location" @endif
+                       @if($href === route('gallery')     && request()->routeIs('gallery')) aria-current="location" @endif
                        class="nav-link px-3 py-2 rounded-lg text-gray-300 hover:text-amber-300 hover:bg-white/5 transition-all">
                         {{ $label }}
                     </a>
@@ -126,7 +127,7 @@
                     ['#packages',              'Packages'],
                     ['#experience',            'Experience'],
                     ['#services',              'Services'],
-                    ['#gallery',               'Gallery'],
+                    [route('gallery'),         'Gallery'],
                     [route('blogs.index'),     'Blogs'],
                     [route('faqs.index'),      'FAQ'],
                     [route('contact'),         'Contact'],
@@ -139,6 +140,7 @@
                 <a href="{{ $resolvedHref }}"
                        @if($href === route('blogs.index') && request()->routeIs('blogs.*')) aria-current="location" @endif
                        @if($href === route('faqs.index')  && request()->routeIs('faqs.*'))  aria-current="location" @endif
+                       @if($href === route('gallery')     && request()->routeIs('gallery')) aria-current="location" @endif
                    class="nav-link px-4 py-3 rounded-xl text-gray-300 hover:text-amber-300 hover:bg-white/5 transition-all"
                    onclick="closeMobileNav()">
                     {{ $label }}
@@ -223,7 +225,7 @@
                 <div>
                     <h4 class="text-white font-semibold text-xs uppercase tracking-widest mb-4" style="color:#b8953b;">Explore</h4>
                     <ul class="space-y-2.5 text-sm text-gray-400">
-                        @foreach([['#rooms','Rooms & Suites'],['#experience','Experiences'],['#services','Services'],['#gallery','Gallery'],[route('blogs.index'),'Blogs'],[route('faqs.index'),'FAQ'],[route('contact'),'Contact']] as [$h,$l])
+                        @foreach([['#rooms','Rooms & Suites'],['#experience','Experiences'],['#services','Services'],[route('gallery'),'Gallery'],[route('blogs.index'),'Blogs'],[route('faqs.index'),'FAQ'],[route('contact'),'Contact']] as [$h,$l])
                         <li><a href="{{ str_starts_with($h, '#') && !request()->routeIs('home') ? route('home') . $h : $h }}" class="hover:text-amber-300 transition-colors">{{ $l }}</a></li>
                         @endforeach
                     </ul>

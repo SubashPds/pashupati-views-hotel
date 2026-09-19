@@ -15,7 +15,8 @@
         </div>
 
         @php
-            $galleryCategories = $galleryItems->map(fn ($item) => strtolower(trim($item->section ?? '')) ?: 'general')->unique()->values();
+            $visibleItems = isset($limit) ? $galleryItems->take($limit) : $galleryItems;
+            $galleryCategories = $visibleItems->map(fn ($item) => strtolower(trim($item->section ?? '')) ?: 'general')->unique()->values();
         @endphp
         <div data-gallery-filters hidden role="group" aria-label="Filter gallery by category" class="mb-8 text-center">
             <button type="button" data-gallery-filter="" aria-pressed="true" aria-controls="gallery-grid">All</button>
@@ -38,7 +39,7 @@
                 ];
             @endphp
 
-            @foreach($galleryItems as $item)
+            @foreach($visibleItems as $item)
             @php
                 $heights  = ['200px','260px','160px','220px','240px','180px'];
                 $h        = $heights[$loop->index % count($heights)];
@@ -121,6 +122,14 @@
 
             @endforeach
         </div>
+
+        @if(isset($limit) && $galleryItems->count() > $limit)
+        <div class="mt-10 text-center">
+            <a href="{{ route('gallery') }}" class="inline-flex items-center justify-center gap-2 px-8 py-3.5 text-sm font-semibold rounded-xl text-white transition-all shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2" style="background:linear-gradient(135deg,#b8953b,#d4af5b);">
+                View Full Gallery
+            </a>
+        </div>
+        @endif
 
         <style>
             [data-gallery-filters] button { margin:0.25rem; padding:0.6rem 1.1rem; border:1px solid rgba(133,101,52,0.3); border-radius:999px; color:#856534; font-size:0.875rem; font-weight:600; cursor:pointer; }

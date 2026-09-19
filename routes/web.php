@@ -22,6 +22,7 @@ Route::get('/blogs', [\App\Http\Controllers\BlogController::class, 'index'])->na
 Route::get('/blogs/{slug}', [\App\Http\Controllers\BlogController::class, 'show'])->name('blogs.show')->middleware(\App\Http\Middleware\SelectDisplayCurrency::class);
 Route::get('/faqs', [FrontFaqController::class, 'index'])->name('faqs.index');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
+Route::get('/gallery', [HomeController::class, 'gallery'])->name('gallery');
 Route::post('/enquire', [HomeController::class, 'enquire'])->name('enquire');
 Route::post('/currency', [\App\Http\Controllers\CurrencyPreferenceController::class, 'store'])->name('currency.store');
 

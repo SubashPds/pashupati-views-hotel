@@ -39,7 +39,7 @@ class HomeController extends Controller
         $experiences = Experience::active()->orderBy('sort_order')->get();
 
         // Gallery (active only, ordered, paginated per page)
-        $galleryItems = GalleryItem::active()->orderBy('sort_order')->get();
+        $galleryItems = GalleryItem::active()->orderBy('sort_order')->take(10)->get();
 
         // Services
         $services = Service::active()->orderBy('sort_order')->get();
@@ -69,6 +69,16 @@ class HomeController extends Controller
     {
         $settings = SiteSetting::orderBy('sort_order')->pluck('value', 'key');
         return view('frontend.contact', compact('settings'));
+    }
+
+    /**
+     * Dedicated gallery page.
+     */
+    public function gallery(): View
+    {
+        $settings = SiteSetting::orderBy('sort_order')->pluck('value', 'key');
+        $galleryItems = GalleryItem::active()->orderBy('sort_order')->get();
+        return view('frontend.gallery', compact('settings', 'galleryItems'));
     }
 
     /**

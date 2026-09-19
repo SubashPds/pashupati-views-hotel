@@ -25,7 +25,7 @@
 
 
     {{-- ⑤ Gallery ───────────────────────────────────────────────────────── --}}
-    @include('frontend.sections.gallery')
+    @include('frontend.sections.gallery', ['limit' => 8])
 
     {{-- ⑥ Testimonials ────────────────────────────────────────────── --}}
     @include('frontend.sections.testimonials')
