@@ -4,44 +4,33 @@
 
 @section('content')
 
-{{-- ── Hero Section ──────────────────────────────────────────────────── --}}
-<div class="faq-hero relative overflow-hidden bg-gradient-to-br from-[#0d1b2a] to-[#1a2d42]">
-    {{-- Animated gradient orbs --}}
-    <div class="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-[image:radial-gradient(circle,rgba(184,149,59,0.1)_0%,transparent_70%)] animate-[faqFloat_20s_ease-in-out_infinite]"></div>
-    <div class="absolute -bottom-32 -left-32 w-80 h-80 rounded-full bg-[image:radial-gradient(circle,rgba(184,149,59,0.08)_0%,transparent_70%)] animate-[faqFloat_25s_ease-in-out_infinite_reverse]"></div>
+{{-- ── FAQ header — matches the gallery page ────────────────────────── --}}
+<div class="faq-hero relative overflow-hidden bg-ivory">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <nav aria-label="Breadcrumb" class="gallery-breadcrumb">
+            <a href="{{ route('home') }}">Home</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">FAQ</span>
+        </nav>
 
-    <div class="relative max-w-5xl mx-auto px-6 sm:px-10 lg:px-8 py-16 sm:py-20 lg:py-16">
-        {{-- Breadcrumb --}}
-        <a href="{{ route('home') }}"
-           class="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] mb-12 text-[rgba(184,149,59,0.9)] transition-opacity hover:opacity-60 group">
-            <svg class="w-3.5 h-3.5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
-            </svg>
-            Back to Home
-        </a>
+        <div class="gallery-collection-heading mt-10 sm:mt-12">
+            <div>
+                <p class="section-label">Good to know</p>
+                <h1 class="faq-title mt-2.5 text-2xl sm:text-3xl font-medium tracking-tight text-navy">Frequently Asked Questions</h1>
+            </div>
+            <p class="gallery-collection-hint">
+                Find answers to common questions about your stay, booking, and experiences at our hotel.
+            </p>
+        </div>
 
-        {{-- Main heading (centered to match subtitle/search below it) --}}
-        <h1 class="faq-title text-center max-w-3xl mx-auto text-4xl sm:text-5xl lg:text-4xl font-bold tracking-tight leading-[1.15] text-white mb-5 animate-[faqFadeUp_0.8s_cubic-bezier(0.22,1,0.36,1)_both]">
-            Frequently Asked<br>
-            <span class="bg-[linear-gradient(135deg,#d4af5b,#b8953b)] bg-clip-text text-transparent [-webkit-text-fill-color:transparent]">Questions</span>
-        </h1>
-
-        {{-- Subtitle --}}
-        <p class="text-base sm:text-lg text-gray-300 max-w-2xl mx-auto leading-relaxed text-center">
-            Find answers to common questions about your stay, booking, and experiences at our hotel.
-        </p>
-
-        {{-- Search --}}
-        <div class="mt-10 max-w-2xl mx-auto text-center">
-            <div class="mb-4">
-                <label for="faq-search" class="sr-only">Search FAQs</label>
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"/></svg>
-                    </span>
-                    <input id="faq-search" type="search" placeholder="Search questions..."
-                           class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 bg-white text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-200"/>
-                </div>
+        <div class="mt-8 pt-6 border-t border-gold/20 flex justify-center">
+            <label for="faq-search" class="sr-only">Search FAQs</label>
+            <div class="relative w-full max-w-2xl">
+                <span class="absolute inset-y-0 left-3 flex items-center text-gray-400" aria-hidden="true">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"/></svg>
+                </span>
+                <input id="faq-search" type="search" placeholder="Search questions..."
+                       class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 bg-white text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-200"/>
             </div>
         </div>
     </div>
