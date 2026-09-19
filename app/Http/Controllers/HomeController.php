@@ -63,6 +63,15 @@ class HomeController extends Controller
     }
 
     /**
+     * Dedicated contact page.
+     */
+    public function contact(): View
+    {
+        $settings = SiteSetting::orderBy('sort_order')->pluck('value', 'key');
+        return view('frontend.contact', compact('settings'));
+    }
+
+    /**
      * Handle enquiry / contact form submission.
      */
     public function enquire(Request $request, EnquiryEmailNotifier $notifier): RedirectResponse

@@ -38,6 +38,7 @@
             'services'     => '🛎️ Services',
             'testimonials' => '💬 Testimonials',
             'contact'      => '📞 Contact',
+            'social'       => '📱 Social Media',
             'footer'       => '🔻 Footer',
         ];
     @endphp
@@ -59,6 +60,9 @@
             <h3 class="text-sm font-semibold text-gray-200 mb-2">{{ $groupLabels[$group] ?? ucfirst($group) }}</h3>
             @if($group === 'stay')
                 <p class="text-sm text-gray-400">Edit the section text, button labels, and three cards. The packages button appears automatically when at least one active package is available.</p>
+            @endif
+            @if($group === 'social')
+                <p class="text-sm text-gray-400">Enter full URLs to your hotel's official social media profiles. Leave blank to hide them.</p>
             @endif
             @if($group === 'currency')
                 <p class="text-sm text-gray-400">Keep room and package base prices in NPR. Visitors in Nepal see NPR, visitors in India see INR, and visitors elsewhere see USD. Converted price = NPR price ÷ the rate below.</p>

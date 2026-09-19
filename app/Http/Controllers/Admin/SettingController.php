@@ -25,6 +25,13 @@ class SettingController extends Controller
         'label' => 'Email addresses (enquiry notifications)', 'sort_order' => 3,
     ];
 
+    private const SOCIAL_SETTINGS = [
+        ['key' => 'social_facebook', 'type' => 'text', 'group' => 'social', 'label' => 'Facebook URL', 'sort_order' => 1],
+        ['key' => 'social_instagram', 'type' => 'text', 'group' => 'social', 'label' => 'Instagram URL', 'sort_order' => 2],
+        ['key' => 'social_tiktok', 'type' => 'text', 'group' => 'social', 'label' => 'TikTok URL', 'sort_order' => 3],
+    ];
+
+
     public function index()
     {
         $settings = SiteSetting::orderBy('group')->orderBy('sort_order')->get()->groupBy('group');
@@ -37,6 +44,15 @@ class SettingController extends Controller
             if ($setting->key === 'contact_email') $setting->fill(['label' => self::EMAIL_SETTING['label'], 'type' => 'textarea']);
         }
         $settings->put('contact', $contactSettings);
+
+        $socialSettings = $settings->get('social', collect());
+        foreach (self::SOCIAL_SETTINGS as $definition) {
+            if (!$socialSettings->contains('key', $definition['key'])) {
+                $socialSettings->push(new SiteSetting($definition));
+            }
+        }
+        $settings->put('social', $socialSettings);
+
         $settings->forget('offers');
         $currencySettings = $settings->get('currency', collect());
         foreach (CurrencySettings::definitions() as $definition) {
@@ -71,6 +87,9 @@ class SettingController extends Controller
             }],
             'currency_npr_per_inr' => 'sometimes|required|numeric|between:0.0001,1000000',
             'currency_npr_per_usd' => 'sometimes|required|numeric|between:0.0001,1000000',
+            'social_facebook' => 'nullable|url|max:255',
+            'social_instagram' => 'nullable|url|max:255',
+            'social_tiktok' => 'nullable|url|max:255',
         ]);
 
         if ($request->exists('contact_email')) {
@@ -92,7 +111,17 @@ class SettingController extends Controller
             );
         }
 
-        $data = $request->except(array_merge(['_token', '_method', '_settings_tab', 'contact_map_location', 'contact_email'], array_keys(CurrencySettings::defaults()), array_keys(StaySettings::defaults())));
+        foreach (self::SOCIAL_SETTINGS as $definition) {
+            if ($request->exists($definition['key'])) {
+                SiteSetting::updateOrCreate(
+                    ['key' => $definition['key']],
+                    array_merge($definition, ['value' => $request->input($definition['key'])])
+                );
+            }
+        }
+
+        $exceptKeys = array_merge(['_token', '_method', '_settings_tab', 'contact_map_location', 'contact_email'], array_keys(CurrencySettings::defaults()), array_keys(StaySettings::defaults()), array_column(self::SOCIAL_SETTINGS, 'key'));
+        $data = $request->except($exceptKeys);
 
         $editableSettings = SiteSetting::where('group', '!=', 'offers')->whereIn('key', array_keys($data))->get()->keyBy('key');
         foreach ($data as $key => $value) {
