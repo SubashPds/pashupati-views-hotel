@@ -23,6 +23,7 @@ Route::get('/blogs/{slug}', [\App\Http\Controllers\BlogController::class, 'show'
 Route::get('/faqs', [FrontFaqController::class, 'index'])->name('faqs.index');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 Route::get('/gallery', [HomeController::class, 'gallery'])->name('gallery');
+Route::get('/restaurant', [\App\Http\Controllers\RestaurantController::class, 'index'])->name('restaurant');
 Route::post('/enquire', [HomeController::class, 'enquire'])->name('enquire');
 Route::post('/currency', [\App\Http\Controllers\CurrencyPreferenceController::class, 'store'])->name('currency.store');
 
@@ -122,6 +123,9 @@ Route::middleware(['admin.access', 'auth.session'])->prefix('admin')->name('admi
     Route::delete('/faqs/{faq}',           [FaqController::class, 'destroy'])->name('faqs.destroy');
 
     // Site Settings
+    Route::get('/restaurant', [\App\Http\Controllers\Admin\RestaurantController::class, 'index'])->name('restaurant.index');
+    Route::put('/restaurant', [\App\Http\Controllers\Admin\RestaurantController::class, 'update'])->name('restaurant.update');
+
     Route::get('/settings',  [SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
 });

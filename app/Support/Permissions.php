@@ -8,6 +8,7 @@ class Permissions
 
     public const MODULES = [
         'rooms' => 'Rooms',
+        'restaurant' => 'Restaurant Management',
         'packages' => 'Packages',
         'experiences' => 'Experiences',
         'hero-slides' => 'Home Carousel',

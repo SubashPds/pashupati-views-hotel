@@ -2,6 +2,16 @@ const viewer = document.getElementById('gallery-viewer');
 const gallery = document.getElementById('gallery');
 const filters = gallery?.querySelector('[data-gallery-filters]');
 
+gallery?.querySelectorAll('[data-gallery-preview]').forEach((media) => {
+    function showFallback() {
+        media.hidden = true;
+        const fallback = media.parentElement.querySelector('[data-gallery-fallback]');
+        if (fallback) fallback.hidden = false;
+    }
+    media.addEventListener('error', showFallback);
+    if (media.tagName === 'IMG' && media.complete && !media.naturalWidth) showFallback();
+});
+
 if (filters) {
     const cells = [...gallery.querySelectorAll('[data-gallery-category]')];
     const buttons = [...filters.querySelectorAll('[data-gallery-filter]')];
@@ -15,8 +25,11 @@ if (filters) {
                 cell.hidden = category !== '' && cell.dataset.galleryCategory !== category;
                 if (cell.hidden) cell.querySelectorAll('video').forEach((video) => video.pause());
             });
-            const visibleCount = cells.filter((cell) => !cell.hidden).length;
-            count.textContent = `${button.textContent.trim()}: ${visibleCount} gallery ${visibleCount === 1 ? 'item' : 'items'}`;
+            const visibleCells = cells.filter((cell) => !cell.hidden);
+            cells.forEach((cell) => cell.toggleAttribute('data-gallery-featured', cell === visibleCells[0]));
+            const visibleCount = visibleCells.length;
+            const label = button.dataset.galleryLabel || button.textContent.trim();
+            count.textContent = `${label} · ${visibleCount} ${visibleCount === 1 ? 'moment' : 'moments'}`;
         });
     });
 }
@@ -25,6 +38,7 @@ if (viewer) {
     const photo = viewer.querySelector('[data-gallery-image]');
     const video = viewer.querySelector('[data-gallery-video]');
     const title = viewer.querySelector('#gallery-viewer-title');
+    const position = viewer.querySelector('[data-gallery-position]');
     const error = viewer.querySelector('[data-gallery-error]');
     const allItems = [...document.querySelectorAll('[data-gallery-open]')];
     let items = allItems;
@@ -49,6 +63,7 @@ if (viewer) {
         index = (nextIndex + items.length) % items.length;
         const button = items[index];
         title.textContent = button.dataset.mediaTitle;
+        if (position) position.textContent = `${button.dataset.mediaType === 'video' ? 'Video' : 'Photo'} ${index + 1} / ${items.length}`;
 
         if (button.dataset.mediaType === 'video') {
             video.hidden = false;
