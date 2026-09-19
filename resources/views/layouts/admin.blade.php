@@ -44,7 +44,6 @@
                     $navItems = [
                         ['route' => 'admin.dashboard',          'icon' => '📊', 'label' => 'Dashboard'],
                         ['route' => 'admin.rooms.index',        'icon' => '🛏️', 'label' => 'Rooms'],
-                        ['route' => 'admin.restaurant.index',   'icon' => '🍽️', 'label' => 'Restaurant Management'],
                         ['route' => 'admin.packages.index',     'icon' => '🎁', 'label' => 'Packages'],
                         ['route' => 'admin.experiences.index',  'icon' => '✨', 'label' => 'Experiences'],
                         ['route' => 'admin.hero-slides.index', 'icon' => '🎞️', 'label' => 'Home Carousel'],
