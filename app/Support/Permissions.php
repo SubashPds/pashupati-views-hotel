@@ -15,7 +15,8 @@ class Permissions
         'gallery' => 'Gallery',
         'services' => 'Services',
         'testimonials' => 'Testimonials',
-        'blogs' => 'Blogs',
+        'faqs'         => 'FAQs',
+        'blogs'        => 'Blogs',
         'enquiries' => 'Enquiries',
         'settings' => 'Site Settings',
     ];

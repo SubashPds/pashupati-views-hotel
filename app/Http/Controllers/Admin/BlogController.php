@@ -80,7 +80,7 @@ class BlogController extends Controller
             'title' => 'required|string|max:255',
             'excerpt' => 'nullable|string|max:500',
             'content' => 'required|string|max:100000',
-            'cover_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
+            'cover_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:6096',
             'is_published' => 'required|boolean',
             'remove_cover' => 'nullable|boolean',
         ]);

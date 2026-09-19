@@ -27,11 +27,10 @@
     {{-- ⑤ Gallery ───────────────────────────────────────────────────────── --}}
     @include('frontend.sections.gallery')
 
-    {{-- ⑥ Testimonials ────────────────────────────────────────────────── --}}
+    {{-- ⑥ Testimonials ────────────────────────────────────────────── --}}
     @include('frontend.sections.testimonials')
 
-    {{-- ⑦ Contact ──────────────────────────────────────────────────────── --}}
-    @include('frontend.sections.contact')
+    {{-- ⑦ Contact → rendered globally by layouts/app.blade.php --}}
 
     @include('frontend.partials.detail-photo-viewer')
 

@@ -10,14 +10,17 @@ use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\ExperienceController;
 use App\Http\Controllers\Admin\EnquiryController;
 use App\Http\Controllers\Admin\PackageController;
+use App\Http\Controllers\Admin\FaqController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\FaqController as FrontFaqController;
 
 // ── Public frontend ───────────────────────────────────────────────────────────
 Route::get('/', [HomeController::class, 'index'])->name('home')->middleware(\App\Http\Middleware\SelectDisplayCurrency::class);
 Route::get('/blogs', [\App\Http\Controllers\BlogController::class, 'index'])->name('blogs.index')->middleware(\App\Http\Middleware\SelectDisplayCurrency::class);
 Route::get('/blogs/{slug}', [\App\Http\Controllers\BlogController::class, 'show'])->name('blogs.show')->middleware(\App\Http\Middleware\SelectDisplayCurrency::class);
+Route::get('/faqs', [FrontFaqController::class, 'index'])->name('faqs.index');
 Route::post('/enquire', [HomeController::class, 'enquire'])->name('enquire');
 Route::post('/currency', [\App\Http\Controllers\CurrencyPreferenceController::class, 'store'])->name('currency.store');
 
@@ -106,6 +109,15 @@ Route::middleware(['admin.access', 'auth.session'])->prefix('admin')->name('admi
     Route::get('/enquiries/{enquiry}',      [EnquiryController::class, 'show'])->name('enquiries.show');
     Route::patch('/enquiries/{enquiry}/status', [EnquiryController::class, 'updateStatus'])->name('enquiries.update-status');
     Route::delete('/enquiries/{enquiry}',   [EnquiryController::class, 'destroy'])->name('enquiries.destroy');
+
+    // FAQs
+    Route::get('/faqs',                    [FaqController::class, 'index'])->name('faqs.index');
+    Route::get('/faqs/create',             [FaqController::class, 'create'])->name('faqs.create');
+    Route::post('/faqs',                   [FaqController::class, 'store'])->name('faqs.store');
+    Route::get('/faqs/{faq}/edit',         [FaqController::class, 'edit'])->name('faqs.edit');
+    Route::put('/faqs/{faq}',              [FaqController::class, 'update'])->name('faqs.update');
+    Route::patch('/faqs/{faq}/status',     [FaqController::class, 'toggleStatus'])->name('faqs.toggle-status');
+    Route::delete('/faqs/{faq}',           [FaqController::class, 'destroy'])->name('faqs.destroy');
 
     // Site Settings
     Route::get('/settings',  [SettingController::class, 'index'])->name('settings.index');

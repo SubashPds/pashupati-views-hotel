@@ -113,9 +113,9 @@ class PackageController extends Controller
             'duration'          => 'nullable|string|max:100',
             'min_guests'        => 'nullable|integer|min:1',
             'max_guests'        => ['nullable', 'integer', 'min:1', ...($request->filled('min_guests') ? ['gte:min_guests'] : [])],
-            'cover_image'       => 'nullable|image|max:4096',
+            'cover_image'       => 'nullable|image|max:6096',
             'gallery_images'    => 'nullable|array',
-            'gallery_images.*'  => 'required|image|mimes:jpg,jpeg,png,webp|max:4096',
+            'gallery_images.*'  => 'required|image|mimes:jpg,jpeg,png,webp|max:6096',
             'is_active'         => 'nullable|boolean',
             'sort_order'        => 'nullable|integer',
         ]);

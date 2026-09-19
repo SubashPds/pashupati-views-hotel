@@ -57,17 +57,25 @@
                 {{-- Desktop Nav --}}
                 <nav class="hidden xl:flex items-center gap-1 text-sm font-medium" aria-label="Main navigation">
                     @foreach([
-                        ['#home',         'Home'],
-                        ['#rooms',        'Rooms'],
-                        ['#packages',     'Packages'],
-                        ['#experience',   'Experience'],
-                        ['#services',     'Services'],
-                        ['#gallery',      'Gallery'],
-                        [route('blogs.index'),        'Blogs'],
-                        ['#contact',      'Contact'],
+                        ['#home',                      'Home'],
+                        ['#rooms',                     'Rooms'],
+                        ['#packages',                  'Packages'],
+                        ['#experience',                'Experience'],
+                        ['#services',                  'Services'],
+                        ['#gallery',                   'Gallery'],
+                        [route('blogs.index'),         'Blogs'],
+                        [route('faqs.index'),          'FAQ'],
+                        ['#contact',                   'Contact'],
                     ] as [$href, $label])
-                    <a href="{{ str_starts_with($href, '#') && !request()->routeIs('home') ? route('home') . $href : $href }}"
+                    @php
+                        // #contact is on every page — never redirect to home for it
+                        $resolvedHref = str_starts_with($href, '#') && $href !== '#contact' && !request()->routeIs('home')
+                            ? route('home') . $href
+                            : $href;
+                    @endphp
+                    <a href="{{ $resolvedHref }}"
                        @if($href === route('blogs.index') && request()->routeIs('blogs.*')) aria-current="location" @endif
+                       @if($href === route('faqs.index')  && request()->routeIs('faqs.*'))  aria-current="location" @endif
                        class="nav-link px-3 py-2 rounded-lg text-gray-300 hover:text-amber-300 hover:bg-white/5 transition-all">
                         {{ $label }}
                     </a>
@@ -114,17 +122,24 @@
              style="border-color:rgba(184,149,59,0.15); background:rgba(13,27,42,0.98);">
             <div class="px-4 py-4 flex flex-col gap-1 text-sm font-medium">
                 @foreach([
-                    ['#home',       'Home'],
-                    ['#rooms',      'Rooms'],
-                    ['#packages',   'Packages'],
-                    ['#experience', 'Experience'],
-                    ['#services',   'Services'],
-                    ['#gallery',    'Gallery'],
-                    [route('blogs.index'),      'Blogs'],
-                    ['#contact',    'Contact'],
+                    ['#home',                  'Home'],
+                    ['#rooms',                 'Rooms'],
+                    ['#packages',              'Packages'],
+                    ['#experience',            'Experience'],
+                    ['#services',              'Services'],
+                    ['#gallery',               'Gallery'],
+                    [route('blogs.index'),     'Blogs'],
+                    [route('faqs.index'),      'FAQ'],
+                    ['#contact',               'Contact'],
                 ] as [$href, $label])
-                <a href="{{ str_starts_with($href, '#') && !request()->routeIs('home') ? route('home') . $href : $href }}"
+                @php
+                    $resolvedHref = str_starts_with($href, '#') && $href !== '#contact' && !request()->routeIs('home')
+                        ? route('home') . $href
+                        : $href;
+                @endphp
+                <a href="{{ $resolvedHref }}"
                        @if($href === route('blogs.index') && request()->routeIs('blogs.*')) aria-current="location" @endif
+                       @if($href === route('faqs.index')  && request()->routeIs('faqs.*'))  aria-current="location" @endif
                    class="nav-link px-4 py-3 rounded-xl text-gray-300 hover:text-amber-300 hover:bg-white/5 transition-all"
                    onclick="closeMobileNav()">
                     {{ $label }}
@@ -162,6 +177,9 @@
     <main id="home">
         @yield('content')
     </main>
+
+    {{-- ═══ CONTACT (global — shown on every page before footer) ═══ --}}
+    @include('frontend.sections.contact')
 
     {{-- ═══ FOOTER ═══ --}}
     <footer style="background:#0d1b2a; border-top:1px solid rgba(184,149,59,0.15);">
@@ -206,8 +224,8 @@
                 <div>
                     <h4 class="text-white font-semibold text-xs uppercase tracking-widest mb-4" style="color:#b8953b;">Explore</h4>
                     <ul class="space-y-2.5 text-sm text-gray-400">
-                        @foreach([['#rooms','Rooms & Suites'],['#experience','Experiences'],['#services','Services'],['#gallery','Gallery'],[route('blogs.index'),'Blogs'],['#contact','Contact']] as [$h,$l])
-                        <li><a href="{{ str_starts_with($h, '#') && !request()->routeIs('home') ? route('home') . $h : $h }}" class="hover:text-amber-300 transition-colors">{{ $l }}</a></li>
+                        @foreach([['#rooms','Rooms & Suites'],['#experience','Experiences'],['#services','Services'],['#gallery','Gallery'],[route('blogs.index'),'Blogs'],[route('faqs.index'),'FAQ'],['#contact','Contact']] as [$h,$l])
+                        <li><a href="{{ str_starts_with($h, '#') && !in_array($h, ['#contact']) && !request()->routeIs('home') ? route('home') . $h : $h }}" class="hover:text-amber-300 transition-colors">{{ $l }}</a></li>
                         @endforeach
                     </ul>
                 </div>

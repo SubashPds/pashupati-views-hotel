@@ -67,7 +67,7 @@ class PromotionController extends Controller
                     $fail('Use an https:// link, a site path such as /blogs, or a section such as #contact.');
                 }
             }],
-            'offer_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
+            'offer_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:6096',
             'image_alt' => 'nullable|string|max:255',
             'remove_offer_image' => 'sometimes|boolean',
             'sort_order' => 'required|integer|min:0|max:100000',
