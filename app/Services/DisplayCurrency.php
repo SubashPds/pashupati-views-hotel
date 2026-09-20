@@ -3,10 +3,25 @@
 namespace App\Services;
 
 use App\Models\Package;
+use App\Models\SiteSetting;
+use App\Support\CurrencySettings;
 
 class DisplayCurrency
 {
     public function __construct(public readonly string $code, private array $rates) {}
+
+    public static function fromCode(string $code): self
+    {
+        $defaults = CurrencySettings::defaults();
+        $settings = SiteSetting::whereIn('key', array_keys($defaults))->pluck('value', 'key')->all();
+        $rates = ['NPR' => 1.0];
+        foreach (['INR' => 'currency_npr_per_inr', 'USD' => 'currency_npr_per_usd'] as $currency => $key) {
+            $value = $settings[$key] ?? $defaults[$key];
+            $rates[$currency] = is_numeric($value) && (float) $value > 0 ? (float) $value : (float) $defaults[$key];
+        }
+
+        return new self($code, $rates);
+    }
 
     public function amount(float|string $amount, string $source = 'NPR'): string
     {

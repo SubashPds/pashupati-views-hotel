@@ -116,8 +116,10 @@
                     <p class="text-xs text-gray-500 mt-0.5">We respond within 24 hours.</p>
                 </div>
 
-                <form method="POST" action="{{ route('enquire') }}" class="space-y-4 px-6 pb-6 pt-5 sm:px-7 sm:pb-7" novalidate>
+                <form method="POST" action="{{ route('enquire') }}" data-ajax-form="enquiry" class="space-y-4 px-6 pb-6 pt-5 sm:px-7 sm:pb-7" novalidate>
                     @csrf
+
+                    @include('frontend.partials.form-feedback')
 
                     @if($errors->has('contact'))
                     <div class="p-3 rounded-lg text-xs text-red-600 bg-red-50 border border-red-200">

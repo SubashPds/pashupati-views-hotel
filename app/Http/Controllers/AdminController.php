@@ -18,7 +18,7 @@ class AdminController extends Controller
             'testimonials' => $user->hasPermission('testimonials') ? Testimonial::count() : null,
         ];
 
-        $recentEnquiries = $user->hasPermission('enquiries') ? Enquiry::latest()->take(5)->get() : collect();
+        $recentEnquiries = $user->hasPermission('enquiries') ? Enquiry::latest()->latest('id')->take(5)->get() : collect();
 
         return view('admin.dashboard', compact('stats', 'recentEnquiries'));
     }

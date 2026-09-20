@@ -12,9 +12,11 @@ use App\Models\SiteSetting;
 use App\Models\Testimonial;
 use App\Services\EnquiryEmailNotifier;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class HomeController extends Controller
 {
@@ -84,7 +86,7 @@ class HomeController extends Controller
     /**
      * Handle enquiry / contact form submission.
      */
-    public function enquire(Request $request, EnquiryEmailNotifier $notifier): RedirectResponse
+    public function enquire(Request $request, EnquiryEmailNotifier $notifier): RedirectResponse|JsonResponse
     {
         $validated = $request->validate([
             'guest_name' => 'required|string|max:255',
@@ -101,16 +103,14 @@ class HomeController extends Controller
             $packageId = substr($validated['category'], strlen('package:'));
             $package = ctype_digit($packageId) ? Package::active()->find($packageId) : null;
             if (!$package) {
-                return back()->withInput()->withErrors(['category' => 'This package is no longer available. Please choose another enquiry type.']);
+                throw ValidationException::withMessages(['category' => 'This package is no longer available. Please choose another enquiry type.']);
             }
             $validated['category'] = 'Packages';
             $validated['message'] = trim('Package: '.$package->name."\n\n".($validated['message'] ?? ''));
         }
 
         if (empty($validated['email']) && empty($validated['phone'])) {
-            return back()
-                ->withInput()
-                ->withErrors(['contact' => 'Please provide at least an email address or phone number.']);
+            throw ValidationException::withMessages(['contact' => 'Please provide at least an email address or phone number.']);
         }
 
         $stayDetails = [];
@@ -122,6 +122,10 @@ class HomeController extends Controller
 
         $enquiry = Enquiry::create($validated);
         $notifier->send($enquiry);
+
+        if ($request->expectsJson()) {
+            return response()->json(['message' => "Thank you! We've received your enquiry and will respond within 24 hours."], 201);
+        }
 
         return back()->with('enquiry_success', true);
     }

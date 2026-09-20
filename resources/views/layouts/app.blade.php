@@ -88,7 +88,7 @@
                 {{-- Right actions --}}
                 <div class="flex items-center gap-2">
                     @isset($currency)
-                    <form method="POST" action="{{ route('currency.store') }}">
+                    <form method="POST" action="{{ route('currency.store') }}" data-ajax-form="currency" class="relative">
                         @csrf
                         <input type="hidden" name="return_to" value="{{ request()->getPathInfo() }}">
                         <label for="display-currency" class="sr-only">Display currency</label>
@@ -99,6 +99,7 @@
                             @endforeach
                         </select>
                         <noscript><button type="submit" class="text-xs text-white">Apply</button></noscript>
+                        @include('frontend.partials.form-feedback')
                     </form>
                     @endisset
                     {{-- Book Now CTA --}}
@@ -162,18 +163,19 @@
     </header>
 
     @if($showCountryPrompt ?? false)
-    <section aria-labelledby="country-prompt-title" class="border-b border-amber-200 bg-amber-50 px-4 py-4">
+    <section data-country-prompt aria-labelledby="country-prompt-title" class="border-b border-amber-200 bg-amber-50 px-4 py-4">
         <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3">
             <div>
                 <h2 id="country-prompt-title" class="text-sm font-semibold text-navy">Where are you visiting from?</h2>
                 <p class="mt-1 text-xs text-gray-600">Choose your location to see prices in your currency. We’ll remember your choice for one year.</p>
             </div>
-            <form method="POST" action="{{ route('currency.store') }}" class="flex flex-wrap gap-2">
+            <form method="POST" action="{{ route('currency.store') }}" data-ajax-form="currency" class="flex flex-wrap gap-2">
                 @csrf
                 <input type="hidden" name="return_to" value="{{ request()->getPathInfo() }}">
                 @foreach(['NP' => 'Nepal · NPR', 'IN' => 'India · INR', 'OTHER' => 'Other country · USD'] as $country => $label)
                 <button type="submit" name="country" value="{{ $country }}" class="rounded-lg border border-amber-300 bg-white px-3 py-2 text-xs font-medium text-navy hover:bg-amber-100">{{ $label }}</button>
                 @endforeach
+                @include('frontend.partials.form-feedback')
             </form>
         </div>
     </section>
@@ -336,8 +338,9 @@
             <button onclick="closeBooking()" class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors text-lg" aria-label="Close">&times;</button>
         </div>
 
-        <form method="POST" action="{{ route('enquire') }}" class="px-6 py-5 space-y-4" id="booking-form">
+        <form method="POST" action="{{ route('enquire') }}" data-ajax-form="enquiry" class="px-6 py-5 space-y-4" id="booking-form">
             @csrf
+            @include('frontend.partials.form-feedback')
             <input type="hidden" name="category" value="Room &amp; stay">
 
             <div class="grid grid-cols-2 gap-4">

@@ -11,7 +11,7 @@
         <div class="flex items-start justify-between mb-5">
             <div>
                 <h2 class="text-lg font-semibold text-white">{{ $enquiry->guest_name }}</h2>
-                <p class="text-sm text-gray-400 mt-0.5">{{ $enquiry->created_at->format('d M Y, g:i A') }}</p>
+                <x-admin.enquiry-time :date="$enquiry->created_at" class="mt-0.5" />
             </div>
             <span class="inline-flex text-sm font-medium px-3 py-1 rounded-full ring-1 {{ $enquiry->status_badge_color }}">
                 {{ ucfirst($enquiry->status) }}

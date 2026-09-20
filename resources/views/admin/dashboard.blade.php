@@ -76,7 +76,8 @@
         <div class="flex items-center justify-between px-5 py-3.5">
             <div>
                 <p class="text-sm font-medium text-gray-200">{{ $enquiry->guest_name }}</p>
-                <p class="text-xs text-gray-500 mt-0.5">{{ $enquiry->category }} · {{ $enquiry->created_at->diffForHumans() }}</p>
+                <p class="text-xs text-gray-500 mt-0.5">{{ $enquiry->category }}</p>
+                <x-admin.enquiry-time :date="$enquiry->created_at" class="mt-1" />
             </div>
             <div class="flex items-center gap-3">
                 <span class="inline-flex text-xs font-medium px-2 py-0.5 rounded-full ring-1 {{ $enquiry->status_badge_color }}">

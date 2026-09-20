@@ -27,8 +27,7 @@ try {
     await page.locator('#c-email').fill('guest@example.test');
     await page.locator('#c-msg').fill('Browser contact notification check');
     await page.getByRole('button', { name: 'Send Message' }).click();
-    await page.waitForLoadState('domcontentloaded');
-    assert.equal(await page.getByText('Message Received!', { exact: true }).isVisible(), true);
+    await page.locator('#contact [data-form-feedback][data-state="success"]').waitFor({ state: 'visible' });
     console.log('PASS contact submission succeeds with multiple recipients');
 
     await go('/');
@@ -39,8 +38,7 @@ try {
     await page.locator('#b-checkout').fill('2026-10-03');
     await page.locator('#b-guests').selectOption('3');
     await page.locator('#booking-form button[type=submit]').click();
-    await page.waitForLoadState('domcontentloaded');
-    assert.equal(await page.getByText('Message Received!', { exact: true }).isVisible(), true);
+    await page.locator('#booking-form [data-form-feedback][data-state="success"]').waitFor({ state: 'visible' });
     await go('/admin/enquiries');
     await page.getByRole('link', { name: 'QA Email Booking', exact: true }).click();
     for (const detail of ['Check-in: 2026-10-01', 'Check-out: 2026-10-03', 'Guests: 3']) {

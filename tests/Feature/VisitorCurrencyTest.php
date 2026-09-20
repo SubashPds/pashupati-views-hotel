@@ -34,6 +34,25 @@ class VisitorCurrencyTest extends TestCase
         }
     }
 
+    public function test_ajax_preferences_return_consistent_prices_and_persist_the_cookie(): void
+    {
+        $this->rates();
+        $room = Room::create(['name' => 'Ajax Room', 'category' => 'deluxe', 'price_per_night' => 1600, 'is_active' => true]);
+        $package = Package::create(['name' => 'Ajax Package', 'price_label' => 'NPR 3,200 / person', 'is_active' => true]);
+        $service = Service::create(['title' => 'Ajax Transfer', 'price_label' => 'NPR 160 / trip', 'is_active' => true]);
+        $hidden = Package::create(['name' => 'Hidden', 'price_from' => 100, 'is_active' => false]);
+        foreach ([['country' => 'IN'], ['currency' => 'INR']] as $preference) {
+            $response = $this->postJson(route('currency.store'), $preference);
+            $response->assertOk()->assertCookie('display_currency', 'INR')->assertJsonPath('currency', 'INR')
+                ->assertJsonPath('prices.room-'.$room->id, 'INR 1,000.00')
+                ->assertJsonPath('prices.room-amount-'.$room->id, '1,000.00')
+                ->assertJsonPath('prices.package-'.$package->id, 'INR 2,000.00 / person')
+                ->assertJsonPath('prices.service-'.$service->id, 'INR 100.00 / trip');
+            $this->assertArrayNotHasKey('package-'.$hidden->id, $response->json('prices'));
+            $this->assertStringContainsString('no-store', $response->headers->get('Cache-Control'));
+        }
+    }
+
     public function test_location_choice_saves_a_year_long_currency_cookie(): void
     {
         $this->get('/')->assertSee('Where are you visiting from?');

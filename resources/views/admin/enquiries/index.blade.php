@@ -24,7 +24,7 @@
                 <th class="px-5 py-3 text-left">Guest</th>
                 <th class="px-5 py-3 text-left">Category</th>
                 <th class="px-5 py-3 text-left">Contact</th>
-                <th class="px-5 py-3 text-left">Date</th>
+                <th class="px-5 py-3 text-left" aria-sort="descending">Date &amp; time ↓</th>
                 <th class="px-5 py-3 text-left">Status</th>
                 <th class="px-5 py-3 text-right">Actions</th>
             </tr>
@@ -41,7 +41,7 @@
                 <td class="px-5 py-3.5 text-gray-400">
                     {{ $enquiry->email ?? $enquiry->phone ?? '—' }}
                 </td>
-                <td class="px-5 py-3.5 text-gray-500 text-xs">{{ $enquiry->created_at->format('d M Y') }}</td>
+                <td class="px-5 py-3.5"><x-admin.enquiry-time :date="$enquiry->created_at" class="whitespace-nowrap" /></td>
                 <td class="px-5 py-3.5">
                     <span class="inline-flex text-xs font-medium px-2 py-0.5 rounded-full ring-1 {{ $enquiry->status_badge_color }}">
                         {{ ucfirst($enquiry->status) }}

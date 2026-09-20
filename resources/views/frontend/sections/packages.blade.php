@@ -161,7 +161,7 @@
                     <div class="flex items-end justify-between gap-3 pt-4"
                          style="border-top:1px solid rgba(212,175,91,0.1);">
                         <div>
-                            <p class="text-base font-bold" style="color:#856534;">{{ $currency->package($pkg) }}</p>
+                            <p data-currency-price="package-{{ $pkg->id }}" class="text-base font-bold" style="color:#856534;">{{ $currency->package($pkg) }}</p>
                         </div>
                         <a href="#contact" data-package-enquiry="{{ $pkg->name }}" data-package-id="{{ $pkg->id }}"
                                 class="relative z-20 shrink-0 inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 hover:scale-105"

@@ -26,7 +26,7 @@
                 <p class="text-sm text-gray-500 leading-relaxed mb-4">{{ $service->description }}</p>
                 @endif
                 <div class="flex items-center justify-between">
-                    <span class="text-xs font-semibold" style="color:#b8953b;">{{ $currency->label($service->price_label) }}</span>
+                    <span data-currency-price="service-{{ $service->id }}" class="text-xs font-semibold" style="color:#b8953b;">{{ $currency->label($service->price_label) }}</span>
                     <button onclick="openBooking()"
                             class="text-xs font-bold px-3 py-1.5 rounded-lg border transition-all hover:bg-amber-50 active:scale-95"
                             style="color:#b8953b; border-color:rgba(184,149,59,0.30);">

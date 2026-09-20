@@ -10,7 +10,7 @@ class EnquiryController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Enquiry::latest();
+        $query = Enquiry::latest()->latest('id');
 
         if ($request->filled('status')) {
             $query->where('status', $request->status);

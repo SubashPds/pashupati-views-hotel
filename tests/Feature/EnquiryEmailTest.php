@@ -34,6 +34,35 @@ class EnquiryEmailTest extends TestCase
         ], $overrides);
     }
 
+    public function test_ajax_enquiry_saves_and_sends_without_a_redirect_or_success_flash(): void
+    {
+        Mail::fake();
+        $this->recipients('hotel@example.test');
+        $this->postJson(route('enquire'), $this->enquiry([
+            'checkin' => '2026-10-01', 'checkout' => '2026-10-03', 'guests' => '3',
+        ]))->assertCreated()->assertJsonStructure(['message'])->assertSessionMissing('enquiry_success');
+        $this->assertDatabaseCount('enquiries', 1);
+        $this->assertStringContainsString('Guests: 3', Enquiry::first()->message);
+        Mail::assertSentCount(1);
+    }
+
+    public function test_ajax_validation_returns_field_errors_without_saving_or_sending(): void
+    {
+        Mail::fake();
+        foreach ([
+            [['guest_name' => ''], 'guest_name'],
+            [['email' => 'invalid'], 'email'],
+            [['phone' => '', 'email' => ''], 'contact'],
+            [['category' => 'package:99999'], 'category'],
+            [['checkin' => '2026-10-03', 'checkout' => '2026-10-01'], 'checkout'],
+        ] as [$fields, $error]) {
+            $this->postJson(route('enquire'), $this->enquiry($fields))
+                ->assertUnprocessable()->assertJsonValidationErrors($error);
+        }
+        $this->assertDatabaseCount('enquiries', 0);
+        Mail::assertNothingSent();
+    }
+
     public function test_package_selection_is_listed_and_included_in_saved_enquiry_and_email(): void
     {
         Mail::fake();
