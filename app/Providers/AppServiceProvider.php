@@ -32,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
                 'settings'   => $view->getData()['settings'] ?? $sharedSettings,
                 'packages'   => $view->getData()['packages'] ?? \App\Models\Package::with('images')->active()->orderBy('sort_order')->get(),
                 'rooms'      => $view->getData()['rooms']    ?? \App\Models\Room::active()->orderBy('sort_order')->get(),
+                'policies'   => $view->getData()['policies'] ?? \App\Models\Policy::active()->orderBy('category')->get()->keyBy('category'),
             ]);
         });
     }

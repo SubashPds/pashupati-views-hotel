@@ -53,6 +53,7 @@
                         ['route' => 'admin.testimonials.index', 'icon' => '💬', 'label' => 'Testimonials'],
                         ['route' => 'admin.faqs.index',         'icon' => '❓', 'label' => 'FAQs'],
                         ['route' => 'admin.blogs.index',        'icon' => '📝', 'label' => 'Blogs', 'active' => 'admin.blogs.*'],
+                        ['route' => 'admin.policies.index',     'icon' => '📜', 'label' => 'Policies'],
                         ['route' => 'admin.enquiries.index',    'icon' => '📩', 'label' => 'Enquiries'],
                         ['route' => 'admin.settings.index',     'icon' => '⚙️', 'label' => 'Site Settings'],
                         ['route' => 'admin.users.index',        'icon' => '👤', 'label' => 'Users'],

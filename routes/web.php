@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\ExperienceController;
 use App\Http\Controllers\Admin\EnquiryController;
 use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\FaqController;
+use App\Http\Controllers\Admin\PolicyController as AdminPolicyController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HomeController;
@@ -21,6 +22,8 @@ Route::get('/', [HomeController::class, 'index'])->name('home')->middleware(\App
 Route::get('/blogs', [\App\Http\Controllers\BlogController::class, 'index'])->name('blogs.index')->middleware(\App\Http\Middleware\SelectDisplayCurrency::class);
 Route::get('/blogs/{slug}', [\App\Http\Controllers\BlogController::class, 'show'])->name('blogs.show')->middleware(\App\Http\Middleware\SelectDisplayCurrency::class);
 Route::get('/faqs', [FrontFaqController::class, 'index'])->name('faqs.index');
+Route::get('/privacy-policy', [\App\Http\Controllers\PolicyController::class, 'privacyPolicy'])->name('privacy-policy');
+Route::get('/terms-and-conditions', [\App\Http\Controllers\PolicyController::class, 'termsAndConditions'])->name('terms-and-conditions');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 Route::get('/gallery', [HomeController::class, 'gallery'])->name('gallery');
 // Route::get('/restaurant', [\App\Http\Controllers\RestaurantController::class, 'index'])->name('restaurant');
@@ -121,6 +124,11 @@ Route::middleware(['admin.access', 'auth.session'])->prefix('admin')->name('admi
     Route::put('/faqs/{faq}',              [FaqController::class, 'update'])->name('faqs.update');
     Route::patch('/faqs/{faq}/status',     [FaqController::class, 'toggleStatus'])->name('faqs.toggle-status');
     Route::delete('/faqs/{faq}',           [FaqController::class, 'destroy'])->name('faqs.destroy');
+
+    // Policies
+    Route::get('/policies', [AdminPolicyController::class, 'index'])->name('policies.index');
+    Route::get('/policies/{policy}/edit', [AdminPolicyController::class, 'edit'])->name('policies.edit');
+    Route::put('/policies/{policy}', [AdminPolicyController::class, 'update'])->name('policies.update');
 
     // Site Settings
     Route::get('/restaurant', [\App\Http\Controllers\Admin\RestaurantController::class, 'index'])->name('restaurant.index');
