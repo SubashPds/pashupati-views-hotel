@@ -65,7 +65,7 @@
                         <img src="{{ $pkg->cover_image_url }}"
                              alt="{{ $pkg->name }}"
                              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                             loading="lazy"
+                             loading="lazy" decoding="async"
                              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                         <div class="absolute inset-0 items-center justify-center flex-col gap-2 hidden"
                              style="background:{{ $grad }};">
@@ -91,7 +91,7 @@
                     @if($pkg->badge && !$isPopular)
                     <div class="absolute top-3 left-4">
                         <span class="px-2.5 py-1 text-xs font-semibold rounded-full text-navy"
-                              style="background:rgba(255,255,255,.94); backdrop-filter:blur(6px); border:1px solid rgba(133,101,52,.15);">
+                              style="background:rgba(255,255,255,.97); border:1px solid rgba(133,101,52,.15);">
                             {{ $pkg->badge }}
                         </span>
                     </div>

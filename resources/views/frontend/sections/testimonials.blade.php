@@ -79,6 +79,7 @@
     if (!track || !dots.length) return;
 
     let current = 0;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
     function scrollTo(idx) {
         const items = track.querySelectorAll('.snap-item');
@@ -87,7 +88,7 @@
         // Scroll only the track horizontally to avoid jumping the whole page viewport
         track.scrollTo({
             left: items[idx].offsetLeft - track.offsetLeft,
-            behavior: 'smooth'
+            behavior: reducedMotion.matches ? 'instant' : 'smooth'
         });
 
         dots.forEach((d, i) => {
@@ -100,9 +101,32 @@
 
     dots.forEach((d, i) => d.addEventListener('click', () => scrollTo(i)));
 
-    // Auto-advance every 6s
-    let timer = setInterval(() => scrollTo((current + 1) % dots.length), 6000);
-    track.addEventListener('pointerdown', () => clearInterval(timer));
+    // Offscreen sliders should not keep doing animation and layout work.
+    let timer;
+    let inView = !('IntersectionObserver' in window);
+    let interacted = false;
+    function syncAutoplay() {
+        clearInterval(timer);
+        if (inView && !interacted && !document.hidden && !reducedMotion.matches) {
+            timer = setInterval(() => scrollTo((current + 1) % dots.length), 6000);
+        }
+    }
+    function stopAutoplay() {
+        interacted = true;
+        syncAutoplay();
+    }
+    track.addEventListener('pointerdown', stopAutoplay);
+    document.getElementById('testimonial-dots')?.addEventListener('click', stopAutoplay);
+    document.addEventListener('visibilitychange', syncAutoplay);
+    reducedMotion.addEventListener('change', syncAutoplay);
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(([entry]) => {
+            inView = entry.isIntersecting;
+            syncAutoplay();
+        });
+        observer.observe(track);
+    }
+    syncAutoplay();
 
     // Sync dots on manual scroll
     let scrollTimer;

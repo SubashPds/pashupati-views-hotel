@@ -66,7 +66,7 @@
                         <img src="{{ $item->image_url }}"
                              alt="{{ $item->title ?? 'Gallery photo' }}"
                              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                             loading="lazy"
+                             loading="lazy" decoding="async"
                              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                         {{-- Fallback shown if image errors --}}
                         <div class="absolute inset-0 items-center justify-center flex-col gap-2 hidden"
@@ -95,7 +95,7 @@
                     @if($item->badge_label)
                     <div class="absolute top-3 left-3">
                         <span class="px-2.5 py-1 text-xs font-semibold rounded-lg text-white"
-                              style="background:rgba(13,27,42,0.75); backdrop-filter:blur(4px); border:1px solid rgba(184,149,59,0.25);">
+                              style="background:rgba(13,27,42,0.9); border:1px solid rgba(184,149,59,0.25);">
                             {{ $item->badge_label }}
                         </span>
                     </div>

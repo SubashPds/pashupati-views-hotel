@@ -46,7 +46,7 @@
                         <img src="{{ $room->cover_image_url }}"
                              alt="{{ $room->name }}"
                              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                             loading="lazy">
+                             loading="lazy" decoding="async">
                     @else
                         <div class="w-full h-full flex items-center justify-center text-6xl"
                              style="background:linear-gradient(135deg,#f5f1ea,#e8d5a3);">
@@ -56,14 +56,14 @@
                     {{-- Category badge --}}
                     <div class="absolute top-3 left-3">
                         <span class="px-3 py-1 text-xs font-bold uppercase tracking-widest rounded-full text-white"
-                              style="background:rgba(13,27,42,0.75); backdrop-filter:blur(8px);">
+                              style="background:rgba(13,27,42,0.9);">
                             {{ ucfirst($room->category) }}
                         </span>
                     </div>
                     {{-- Price badge --}}
                     <div class="absolute bottom-3 right-3">
                         <span class="px-3 py-1.5 text-xs font-bold rounded-lg text-white"
-                              style="background:rgba(13,27,42,0.85); backdrop-filter:blur(8px);">
+                              style="background:rgba(13,27,42,0.9);">
                             {{ $currency->format($room->price_per_night) }}<span class="font-normal opacity-75"> /night</span>
                         </span>
                     </div>

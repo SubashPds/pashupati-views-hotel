@@ -132,7 +132,8 @@
 #hero-section {
     --hero-top-height: 4.0625rem;
     min-height: calc(100vh - var(--hero-top-height));
-    min-height: calc(100dvh - var(--hero-top-height));
+    /* Keep mobile browser chrome changes from resizing the whole page mid-scroll. */
+    min-height: calc(100svh - var(--hero-top-height));
 }
 
 @media (min-width: 64rem) {

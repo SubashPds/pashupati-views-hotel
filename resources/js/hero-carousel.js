@@ -6,12 +6,17 @@ if (carousel) {
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     let index = 0;
     let paused = reducedMotion.matches;
+    let inView = !('IntersectionObserver' in window);
     let timer;
+
+    function canPlay() {
+        return inView && !paused && !document.hidden;
+    }
 
     function sync() {
         clearTimeout(timer);
         const activeVideo = slides[index]?.querySelector('video');
-        if (activeVideo?.ended && !paused && !document.hidden && slides.length > 1) {
+        if (activeVideo?.ended && canPlay() && slides.length > 1) {
             show(index + 1);
             return;
         }
@@ -19,7 +24,7 @@ if (carousel) {
             slide.hidden = i !== index;
             const video = slide.querySelector('video');
             if (video) {
-                if (i === index && !paused && !document.hidden) {
+                if (i === index && canPlay()) {
                     video.muted = true;
                     video.play().catch(() => {});
                 } else {
@@ -31,7 +36,7 @@ if (carousel) {
             dot.setAttribute('aria-current', String(i === index));
             dot.style.backgroundColor = i === index ? '#b8953b' : 'rgba(0,0,0,.5)';
         });
-        if (!activeVideo && !paused && !document.hidden && slides.length > 1) {
+        if (!activeVideo && canPlay() && slides.length > 1) {
             timer = setTimeout(() => show(index + 1), 8000);
         }
     }
@@ -49,12 +54,20 @@ if (carousel) {
     dots.forEach((dot, i) => dot.addEventListener('click', () => show(i)));
     slides.forEach((slide, i) => {
         slide.querySelector('video')?.addEventListener('ended', () => {
-            if (i === index && !paused && !document.hidden && slides.length > 1) {
+            if (i === index && canPlay() && slides.length > 1) {
                 show(index + 1);
             }
         });
     });
     document.addEventListener('visibilitychange', sync);
     reducedMotion.addEventListener('change', () => { paused = reducedMotion.matches; sync(); });
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(([entry]) => {
+            if (inView === entry.isIntersecting) return;
+            inView = entry.isIntersecting;
+            sync();
+        });
+        observer.observe(carousel);
+    }
     sync();
 }

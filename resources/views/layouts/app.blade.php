@@ -34,8 +34,8 @@
 
     {{-- ═══ NAVIGATION ═══ --}}
     <header id="site-header"
-            class="sticky top-0 z-50 transition-all duration-300"
-            style="background: rgba(13,27,42,0.97); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(184,149,59,0.15);">
+            class="sticky top-0 z-50"
+            style="background: #0d1b2a; border-bottom: 1px solid rgba(184,149,59,0.15);">
 
         <div data-navigation-bar class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16 lg:h-18">
@@ -463,9 +463,16 @@
 
     // ── Sticky nav shadow on scroll ────────────────────────────────
     const header = document.getElementById('site-header');
-    window.addEventListener('scroll', () => {
-        header?.style.setProperty('box-shadow', window.scrollY > 10 ? '0 4px 32px rgba(0,0,0,0.4)' : 'none');
-    }, { passive: true });
+    let headerHasShadow;
+    function syncHeaderShadow() {
+        const scrolled = window.scrollY > 10;
+        if (scrolled === headerHasShadow) return;
+        headerHasShadow = scrolled;
+        header?.style.setProperty('box-shadow', scrolled ? '0 4px 32px rgba(0,0,0,0.4)' : 'none');
+    }
+    window.addEventListener('scroll', syncHeaderShadow, { passive: true });
+    window.addEventListener('pageshow', syncHeaderShadow);
+    syncHeaderShadow();
 
     // ── Show success flash after form submit then close dialog ──────
     @if(session('enquiry_success'))

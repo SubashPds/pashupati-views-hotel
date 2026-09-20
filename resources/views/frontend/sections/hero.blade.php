@@ -17,7 +17,7 @@
                 <source src="{{ $slide->media_url }}" type="{{ str_ends_with($slide->media_path, '.webm') ? 'video/webm' : 'video/mp4' }}">
             </video>
             @else
-            <img src="{{ $slide->media_url }}" alt="{{ $slide->title }}" class="w-full h-full object-cover" loading="{{ $loop->first ? 'eager' : 'lazy' }}">
+            <img src="{{ $slide->media_url }}" alt="{{ $slide->title }}" class="w-full h-full object-cover" loading="{{ $loop->first ? 'eager' : 'lazy' }}" decoding="async">
             @endif
         </div>
         @endforeach
@@ -35,9 +35,9 @@
     {{-- Ambient glow orbs --}}
     <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div class="absolute -top-32 right-0 w-[500px] h-[500px] rounded-full opacity-10"
-             style="background:radial-gradient(circle, #b8953b 0%, transparent 70%); filter:blur(60px);"></div>
+             style="background:radial-gradient(circle, #b8953b 0%, transparent 70%);"></div>
         <div class="absolute bottom-0 -left-40 w-[600px] h-[600px] rounded-full opacity-8"
-             style="background:radial-gradient(circle, #b8953b 0%, transparent 60%); filter:blur(80px);"></div>
+             style="background:radial-gradient(circle, #b8953b 0%, transparent 60%);"></div>
         {{-- Subtle grid texture --}}
         <div class="absolute inset-0 opacity-3"
              style="background-image: repeating-linear-gradient(0deg, rgba(184,149,59,0.06) 0px, transparent 1px), repeating-linear-gradient(90deg, rgba(184,149,59,0.06) 0px, transparent 1px); background-size:72px 72px;"></div>

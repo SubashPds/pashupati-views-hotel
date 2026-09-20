@@ -33,7 +33,7 @@
 </div>
 
 {{-- Gallery grid --}}
-<h3 class="text-sm font-semibold text-gray-200 mb-4">All Media ({{ $items->count() }})</h3>
+<h3 class="text-sm font-semibold text-gray-200 mb-4">All Media ({{ $items->total() }})</h3>
 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
     @forelse($items as $item)
     <div class="group relative rounded-xl overflow-hidden bg-white/5 border border-white/8">
@@ -68,5 +68,7 @@
     <div class="col-span-full text-center py-16 text-gray-500">No photos or videos uploaded yet.</div>
     @endforelse
 </div>
+
+<div class="mt-6">{{ $items->links() }}</div>
 
 @endsection
