@@ -17,6 +17,9 @@ return [
 
     'default' => env('CACHE_STORE', 'database'),
 
+    // Use a persistent shared store in production so limits survive new sessions/workers.
+    'limiter' => env('RATE_LIMITER_STORE', env('CACHE_STORE', 'database')),
+
     /*
     |--------------------------------------------------------------------------
     | Cache Stores

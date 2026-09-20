@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +22,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->configurePublicRateLimits();
+
         \Illuminate\Support\Facades\View::composer('layouts.app', function ($view) {
             // Share data needed by the global contact section and footer on every page
             $sharedSettings = \App\Models\SiteSetting::pluck('value', 'key');
@@ -29,6 +34,33 @@ class AppServiceProvider extends ServiceProvider
                 'rooms'      => $view->getData()['rooms']    ?? \App\Models\Room::active()->orderBy('sort_order')->get(),
             ]);
         });
+    }
+
+    private function configurePublicRateLimits(): void
+    {
+        $response = function (Request $request, array $headers) {
+            $seconds = max(1, (int) $headers['Retry-After']);
+            $message = "Too many requests. Please wait {$seconds} seconds before trying again.";
+            $headers['Cache-Control'] = 'private, no-store';
+
+            return $request->expectsJson()
+                ? response()->json(['message' => $message, 'retry_after' => $seconds], 429, $headers)
+                : response()->view('errors.429', compact('message'), 429, $headers);
+        };
+
+        foreach ([
+            'public-enquiries' => [5, 20],
+            'public-currency' => [20, 100],
+            'public-login' => [5, 30],
+            'public-logout' => [20, 100],
+        ] as $name => [$perMinute, $perHour]) {
+            RateLimiter::for($name, fn (Request $request) => [
+                // Both forms and failed validation attempts share the same IP quota.
+                // Separate window keys prevent minute and hour counters from colliding.
+                Limit::perMinute($perMinute)->by('minute:'.$request->ip())->response($response),
+                Limit::perHour($perHour)->by('hour:'.$request->ip())->response($response),
+            ]);
+        }
     }
 
     private function bindRepo()

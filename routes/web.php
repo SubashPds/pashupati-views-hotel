@@ -24,16 +24,16 @@ Route::get('/faqs', [FrontFaqController::class, 'index'])->name('faqs.index');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 Route::get('/gallery', [HomeController::class, 'gallery'])->name('gallery');
 // Route::get('/restaurant', [\App\Http\Controllers\RestaurantController::class, 'index'])->name('restaurant');
-Route::post('/enquire', [HomeController::class, 'enquire'])->name('enquire');
-Route::post('/currency', [\App\Http\Controllers\CurrencyPreferenceController::class, 'store'])->name('currency.store');
+Route::post('/enquire', [HomeController::class, 'enquire'])->name('enquire')->middleware('throttle:public-enquiries');
+Route::post('/currency', [\App\Http\Controllers\CurrencyPreferenceController::class, 'store'])->name('currency.store')->middleware('throttle:public-currency');
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
 Route::middleware('guest')->group(function () {
     Route::get('/login',  [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.post')->middleware('throttle:public-login');
 });
 
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('throttle:public-logout');
 
 // ── Dashboard protected by role permissions ──────────────────────────────────
 Route::middleware(['admin.access', 'auth.session'])->prefix('admin')->name('admin.')->group(function () {

@@ -20,7 +20,7 @@ try {
         const result = reply;
         if (gate) await gate;
         if (result.abort) return route.abort('failed');
-        await route.fulfill({ status: result.status, contentType: result.html ? 'text/html' : 'application/json', body: result.html || JSON.stringify(result.body) });
+        await route.fulfill({ status: result.status, headers: result.headers, contentType: result.html ? 'text/html' : 'application/json', body: result.html || JSON.stringify(result.body) });
     });
     await page.goto(base, { waitUntil: 'domcontentloaded' });
     await page.waitForFunction(() => document.getElementById('booking-form').noValidate);
@@ -76,6 +76,19 @@ try {
         assert.equal(await submit.isEnabled(), true);
     }
 
+    // A server throttle preserves input and prevents local retries across both enquiry forms.
+    reply = { status: 429, headers: { 'Retry-After': '2' }, body: { message: 'Too many requests.', retry_after: 2 } };
+    await submit.click();
+    await page.waitForFunction(() => document.querySelector('#contact [data-form-feedback]').textContent.includes('Please wait 2 seconds'));
+    assert.equal(await page.locator('#c-msg').inputValue(), 'Keep my message');
+    const throttledCount = requests.length;
+    await contact.evaluate(form => form.requestSubmit());
+    await page.evaluate(() => { window.openBooking(); document.getElementById('booking-form').requestSubmit(); });
+    assert.equal(requests.length, throttledCount, 'Contact and booking share the retry cooldown');
+    assert.ok((await page.locator('#booking-form [data-form-feedback]').innerText()).includes('Please wait'));
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(2100);
+
     // Booking feedback stays inside the modal, where it is readable and announced.
     await page.evaluate(() => window.openBooking());
     const booking = page.locator('#booking-form');
@@ -130,7 +143,7 @@ try {
     await page.waitForFunction(() => document.querySelector('#contact [data-form-feedback]').dataset.state === 'success');
     assert.equal(navigations, navigationCount);
     assert.deepEqual(errors, []);
-    console.log('PASS: AJAX contact/booking success, inline validation, duplicate protection, retained inputs on 419/server/network errors, country/currency updates and failure recovery, mobile layout, and no page refresh.');
+    console.log('PASS: AJAX contact/booking success, validation, duplicate protection, retained inputs on errors, shared 429 retry cooldown and recovery, currency updates, mobile layout, and no page refresh.');
 } finally {
     await browser.close();
 }

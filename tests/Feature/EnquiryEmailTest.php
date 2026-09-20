@@ -144,6 +144,8 @@ class EnquiryEmailTest extends TestCase
 
     public function test_invalid_submissions_do_not_save_or_send(): void
     {
+        // Exercise validation independently; PublicPostRateLimitTest checks quotas.
+        $this->withoutMiddleware(\Illuminate\Routing\Middleware\ThrottleRequests::class);
         Mail::fake();
         $this->recipients('hotel@example.test');
         foreach ([

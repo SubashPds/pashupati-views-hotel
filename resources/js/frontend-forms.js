@@ -1,6 +1,11 @@
 const forms = [...document.querySelectorAll('[data-ajax-form]')];
 let currencyBusy = false;
 let currencyFeedbackTimer;
+const retryUntil = new Map();
+
+function retryMessage(seconds) {
+    return `Too many requests. Please wait ${seconds} seconds before trying again.`;
+}
 
 function showFeedback(form, message, state) {
     const feedback = form.querySelector('[data-form-feedback]');
@@ -55,6 +60,11 @@ forms.forEach((form, index) => {
     form.addEventListener('submit', async event => {
         event.preventDefault();
         if (form.dataset.submitting === 'true' || (isCurrency && currencyBusy)) return;
+        const remaining = Math.ceil(((retryUntil.get(form.dataset.ajaxForm) || 0) - Date.now()) / 1000);
+        if (remaining > 0) {
+            showFeedback(form, retryMessage(remaining), 'error').focus();
+            return;
+        }
         clearErrors();
         const data = new FormData(form);
         const submitter = event.submitter;
@@ -81,6 +91,13 @@ forms.forEach((form, index) => {
                 credentials: 'same-origin',
                 headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
             });
+            if (response.status === 429) {
+                const header = Number(response.headers.get('Retry-After'));
+                const seconds = Number.isFinite(header) && header > 0 ? Math.ceil(header) : 60;
+                retryUntil.set(form.dataset.ajaxForm, Date.now() + seconds * 1000);
+                focusTarget = showFeedback(form, retryMessage(seconds), 'error');
+                return;
+            }
             if (response.status === 419) {
                 focusTarget = showFeedback(form, 'Your session has expired. Refresh the page before submitting again. Your details have not been cleared.', 'error');
                 return;
