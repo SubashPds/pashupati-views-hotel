@@ -1,6 +1,5 @@
 const viewer = document.getElementById('gallery-viewer');
 const gallery = document.getElementById('gallery');
-const filters = gallery?.querySelector('[data-gallery-filters]');
 
 gallery?.querySelectorAll('[data-gallery-preview]').forEach((media) => {
     function showFallback() {
@@ -11,28 +10,6 @@ gallery?.querySelectorAll('[data-gallery-preview]').forEach((media) => {
     media.addEventListener('error', showFallback);
     if (media.tagName === 'IMG' && media.complete && !media.naturalWidth) showFallback();
 });
-
-if (filters) {
-    const cells = [...gallery.querySelectorAll('[data-gallery-category]')];
-    const buttons = [...filters.querySelectorAll('[data-gallery-filter]')];
-    const count = gallery.querySelector('[data-gallery-count]');
-    filters.hidden = false;
-    buttons.forEach((button) => {
-        button.addEventListener('click', () => {
-            const category = button.dataset.galleryFilter;
-            buttons.forEach((filter) => filter.setAttribute('aria-pressed', String(filter === button)));
-            cells.forEach((cell) => {
-                cell.hidden = category !== '' && cell.dataset.galleryCategory !== category;
-                if (cell.hidden) cell.querySelectorAll('video').forEach((video) => video.pause());
-            });
-            const visibleCells = cells.filter((cell) => !cell.hidden);
-            cells.forEach((cell) => cell.toggleAttribute('data-gallery-featured', cell === visibleCells[0]));
-            const visibleCount = visibleCells.length;
-            const label = button.dataset.galleryLabel || button.textContent.trim();
-            count.textContent = `${label} · ${visibleCount} ${visibleCount === 1 ? 'moment' : 'moments'}`;
-        });
-    });
-}
 
 if (viewer) {
     const photo = viewer.querySelector('[data-gallery-image]');

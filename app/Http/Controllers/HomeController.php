@@ -76,11 +76,24 @@ class HomeController extends Controller
     /**
      * Dedicated gallery page.
      */
-    public function gallery(): View
+    public function gallery(Request $request): View
     {
         $settings = SiteSetting::orderBy('sort_order')->pluck('value', 'key');
-        $galleryItems = GalleryItem::active()->orderBy('sort_order')->get();
-        return view('frontend.gallery', compact('settings', 'galleryItems'));
+        $categoryExpression = "COALESCE(NULLIF(LOWER(TRIM(section)), ''), 'general')";
+        $categoryCounts = GalleryItem::active()->reorder()
+            ->selectRaw($categoryExpression.' AS category, COUNT(*) AS total')
+            ->groupByRaw($categoryExpression)->orderBy('category')->pluck('total', 'category');
+        $category = $request->query('category', '');
+        abort_unless(is_string($category), 404);
+        $category = strtolower(trim($category));
+        abort_unless($category === '' || $categoryCounts->has($category), 404);
+
+        $galleryItems = GalleryItem::active()
+            ->when($category !== '', fn ($query) => $query->whereRaw($categoryExpression.' = ?', [$category]))
+            ->orderBy('id')->paginate(12)
+            ->appends($category !== '' ? ['category' => $category] : [])->fragment('gallery');
+
+        return view('frontend.gallery', compact('settings', 'galleryItems', 'categoryCounts', 'category'));
     }
 
     /**

@@ -9,7 +9,7 @@ try {
     await page.addInitScript(() => sessionStorage.setItem('hotel.promotions.seen', '1'));
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
-    const response = await page.goto(`${base}/gallery`, { waitUntil: 'networkidle' });
+    const response = await page.goto(`${base}/gallery`, { waitUntil: 'domcontentloaded' });
     assert.equal(response.status(), 200);
     // Dismiss the existing site-wide offers dialog if it is displayed.
     const offer = page.locator('dialog[open]').filter({ hasNot: page.locator('[data-gallery-image]') });
@@ -17,20 +17,24 @@ try {
     const cards = page.locator('[data-gallery-category]');
     const total = await cards.count();
     assert.ok(total > 0, 'Populate the local CMS gallery before this browser check.');
+    assert.ok(total <= 16, 'Gallery pages must contain at most 16 items');
     for (const width of [375, 768, 1280, 1440]) {
         await page.setViewportSize({ width, height: 900 });
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, `No horizontal overflow at ${width}px`);
         assert.equal(await page.locator('.gallery-card-caption h3').first().isVisible(), true);
     }
     const filters = page.locator('[data-gallery-filter]');
-    for (const filter of await filters.all()) {
-        const category = await filter.getAttribute('data-gallery-filter');
-        await filter.click();
+    const filterCategories = await filters.evaluateAll(links => links.map(link => link.dataset.galleryFilter));
+    for (const category of filterCategories) {
+        const filter = filters.filter({ has: undefined }).locator(`xpath=self::*[@data-gallery-filter=${JSON.stringify(category)}]`);
+        const href = await filter.getAttribute('href');
+        await Promise.all([page.waitForURL(href, { waitUntil: 'domcontentloaded' }), filter.click()]);
         const visible = cards.locator('visible=true');
         const categories = await visible.evaluateAll(items => items.map(item => item.dataset.galleryCategory));
         assert.ok(categories.length > 0);
         if (category) assert.ok(categories.every(value => value === category));
-        assert.equal(await filter.getAttribute('aria-pressed'), 'true');
+        assert.equal(await filter.getAttribute('aria-current'), 'true');
+        assert.ok(categories.length <= 16);
         assert.equal(await page.locator('[data-gallery-featured]:visible').count(), 1);
         const buttons = page.locator('[data-gallery-open]:visible');
         const count = await buttons.count();
@@ -53,7 +57,7 @@ try {
             await page.waitForFunction(() => document.body.style.overflow !== 'hidden');
         }
     }
-    await filters.first().click();
+    await Promise.all([page.waitForURL(`${base}/gallery#gallery`, { waitUntil: 'domcontentloaded' }), filters.first().click()]);
     assert.equal(await cards.locator('visible=true').count(), total);
     // Simulate a failed preview and ensure the fallback remains readable.
     const preview = page.locator('img[data-gallery-preview]').first();
@@ -71,13 +75,26 @@ try {
         }
     }
     // The homepage continues to use the shared viewer with its existing gallery.
-    await page.goto(`${base}/`, { waitUntil: 'networkidle' });
+    const nextPage = page.locator('[data-gallery-pagination] a[rel="next"]').first();
+    if (await nextPage.count()) {
+        const firstPageItems = await page.locator('[data-gallery-open]').evaluateAll(items => items.map(item => item.dataset.mediaSrc));
+        const nextUrl = await nextPage.getAttribute('href');
+        await Promise.all([page.waitForURL(nextUrl, { waitUntil: 'domcontentloaded' }), nextPage.click()]);
+        assert.ok(await cards.count() <= 16);
+        assert.equal((await page.locator('.gallery-card-number').first().textContent()).trim(), '17');
+        const secondPageItems = await page.locator('[data-gallery-open]').evaluateAll(items => items.map(item => item.dataset.mediaSrc));
+        assert.notDeepEqual(secondPageItems, firstPageItems);
+        await page.locator('[data-gallery-open]').first().click();
+        assert.equal(await page.locator('#gallery-viewer').evaluate(dialog => dialog.open), true);
+        await page.keyboard.press('Escape');
+    }
+    await page.goto(`${base}/`, { waitUntil: 'domcontentloaded' });
     if (await page.locator('dialog[open]').count()) await page.keyboard.press('Escape');
     await page.locator('[data-gallery-open]').first().click();
     assert.equal(await page.locator('#gallery-viewer').evaluate(dialog => dialog.open), true);
     await page.keyboard.press('Escape');
     assert.deepEqual(errors, []);
-    console.log('PASS: responsive gallery, all category filters, filtered viewer navigation, Escape/focus restoration, missing-image fallback, and homepage viewer.');
+    console.log('PASS: 16-item pagination, responsive gallery, category links, viewer navigation, Escape/focus restoration, missing-image fallback, and homepage viewer.');
 } finally {
     await browser.close();
 }
