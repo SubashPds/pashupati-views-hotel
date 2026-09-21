@@ -152,10 +152,12 @@
                     <div class="flex-1"></div>
 
                     <button type="button" data-package-details="package-details-{{ $pkg->id }}"
+                            data-package-details-url="{{ route('packages.details', $pkg) }}"
                             aria-haspopup="dialog" aria-controls="package-details-{{ $pkg->id }}" aria-label="View details for {{ $pkg->name }}"
                             class="package-details-trigger w-full cursor-pointer py-2 text-sm font-semibold text-navy">
                         View details →
                     </button>
+                    <p data-package-details-error role="alert" class="text-sm text-red-700" hidden></p>
 
                     {{-- Price + CTA --}}
                     <div class="flex items-end justify-between gap-3 pt-4"
@@ -180,7 +182,4 @@
         @endif
     </div>
 </section>
-@foreach($packages as $pkg)
-    @include('frontend.partials.package-details', ['pkg' => $pkg])
-@endforeach
 @endif

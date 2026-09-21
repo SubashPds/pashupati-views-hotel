@@ -31,9 +31,9 @@ class HomeController extends Controller
         $settings = SiteSetting::orderBy('sort_order')
             ->pluck('value', 'key');
 
-        // Active rooms, eager-load images, ordered by sort
-        $rooms = Room::with('images')
-            ->active()
+        // Room cards only; full descriptions and galleries load on demand.
+        $rooms = Room::active()
+            ->select(['id', 'name', 'category', 'tagline', 'price_per_night', 'size_sqm', 'max_guests', 'bed_type', 'short_description', 'amenities', 'cover_image'])
             ->orderBy('sort_order')
             ->get();
 
@@ -49,8 +49,10 @@ class HomeController extends Controller
         // Testimonials
         $testimonials = Testimonial::active()->orderBy('sort_order')->get();
 
-        // Packages
-        $packages = Package::with('images')->active()->orderBy('sort_order')->get();
+        // Package cards only; descriptions, highlights, and galleries load on demand.
+        $packages = Package::active()
+            ->select(['id', 'name', 'tagline', 'badge', 'short_description', 'price_label', 'price_from', 'duration', 'min_guests', 'max_guests', 'includes', 'cover_image'])
+            ->get();
 
         return view('frontend.home', compact(
             'heroSlides',
@@ -62,6 +64,22 @@ class HomeController extends Controller
             'testimonials',
             'packages',
         ));
+    }
+
+    public function roomDetails(Room $room): View
+    {
+        abort_unless($room->is_active, 404);
+        $room->load('images');
+
+        return view('frontend.partials.room-details', compact('room'));
+    }
+
+    public function packageDetails(Package $package): View
+    {
+        abort_unless($package->is_active, 404);
+        $package->load('images');
+
+        return view('frontend.partials.package-details', ['pkg' => $package]);
     }
 
     /**

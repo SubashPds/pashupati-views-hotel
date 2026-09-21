@@ -99,7 +99,8 @@ class VisitorCurrencyTest extends TestCase
             Http::fake(['get.geojs.io/v1/ip/country/'.$ip.'.json' => Http::response(['country' => $country])]);
             $response = $this->withServerVariables(['REMOTE_ADDR' => $ip])->get('/');
             $response->assertOk()->assertSee($room)->assertSee($package)->assertSee($service);
-            $this->assertSame(2, substr_count($response->getContent(), $package));
+            $this->assertSame(1, substr_count($response->getContent(), $package));
+            $this->get(route('packages.details', Package::first()))->assertOk()->assertSee($package);
             $this->assertStringContainsString('no-store', $response->headers->get('Cache-Control'));
         }
         $this->assertSame('1600.00', Room::first()->price_per_night);

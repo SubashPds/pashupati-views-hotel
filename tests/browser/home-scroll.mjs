@@ -97,9 +97,11 @@ try {
     await page.goto(`${base}/#packages`, { waitUntil: 'domcontentloaded' });
     await page.waitForFunction(() => document.querySelector('#site-header a[href="#packages"][aria-current="location"]'));
     await page.locator('[data-package-details]').first().click();
+    await page.locator('.package-details-dialog[open]').waitFor();
     assert.equal(await page.locator('.package-details-dialog[open]').count(), 1);
     await page.keyboard.press('Escape');
     await page.locator('[data-room-details]').first().click();
+    await page.locator('.room-details-dialog[open]').waitFor();
     assert.equal(await page.locator('.room-details-dialog[open]').count(), 1);
     await page.keyboard.press('Escape');
     assert.deepEqual(errors, []);

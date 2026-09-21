@@ -115,10 +115,12 @@
 
                     {{-- Actions --}}
                     <button type="button" data-room-details="room-details-{{ $room->id }}"
+                            data-room-details-url="{{ route('rooms.details', $room) }}"
                             aria-haspopup="dialog" aria-controls="room-details-{{ $room->id }}" aria-label="View details for {{ $room->name }}"
                             class="room-details-trigger mb-3 w-full py-2 text-sm font-semibold text-navy cursor-pointer">
                         View details →
                     </button>
+                    <p data-room-details-error role="alert" class="mb-3 text-sm text-red-700" hidden></p>
                     <button type="button" data-book-room="{{ $room->name }}"
                             class="relative z-20 w-full py-3 text-sm font-bold text-white rounded-xl transition-all hover:brightness-110 active:scale-95"
                             style="background:linear-gradient(135deg,#0d1b2a,#1a2d42);">
@@ -130,10 +132,6 @@
         </div>
     </div>
 </section>
-
-@foreach($rooms as $room)
-    @include('frontend.partials.room-details', ['room' => $room])
-@endforeach
 
 @push('scripts')
 <script>

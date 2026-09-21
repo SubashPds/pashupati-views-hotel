@@ -38,7 +38,8 @@ class PackageImagesTest extends TestCase
         $this->assertCount(2, $package->images);
         foreach ($package->images as $image) Storage::disk('public')->assertExists($image->image_path);
         $this->get(route('admin.packages.edit', $package))->assertOk()->assertSee('Remove gallery image 1');
-        $this->get('/')->assertOk()->assertSee('data-package-thumbnail', false)->assertSee(Storage::url($package->images->first()->image_path));
+        $this->get('/')->assertOk()->assertDontSee('data-package-thumbnail', false)->assertDontSee(Storage::url($package->images->first()->image_path));
+        $this->get(route('packages.details', $package))->assertOk()->assertSee('data-package-thumbnail', false)->assertSee(Storage::url($package->images->first()->image_path));
 
         $this->put(route('admin.packages.update', $package), ['name' => 'Temple Stay'])->assertSessionHasNoErrors();
         $this->assertSame($originalCover, $package->fresh()->cover_image);

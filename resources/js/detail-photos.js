@@ -1,4 +1,9 @@
 const viewer = document.getElementById('detail-photo-viewer');
+let initializePhotos = () => {};
+
+export function initializeDetailPhotos(root = document) {
+    initializePhotos(root);
+}
 
 if (viewer) {
     const fullscreenImage = viewer.querySelector('[data-fullscreen-image]');
@@ -25,7 +30,10 @@ if (viewer) {
         change(event.key === 'ArrowLeft' ? -1 : 1);
     }
 
-    document.querySelectorAll('[data-detail-photos]').forEach((container) => {
+    const initialized = new WeakSet();
+    initializePhotos = (root) => root.querySelectorAll('[data-detail-photos]').forEach((container) => {
+        if (initialized.has(container)) return;
+        initialized.add(container);
         const kind = container.dataset.detailPhotos;
         const photo = container.querySelector(`[data-${kind}-photo]`);
         const caption = container.querySelector(`[data-${kind}-caption]`);
@@ -57,6 +65,7 @@ if (viewer) {
             document.body.style.overflow = 'hidden';
         });
     });
+    initializeDetailPhotos();
 
     previous.addEventListener('click', () => active?.select(active.index - 1));
     next.addEventListener('click', () => active?.select(active.index + 1));

@@ -19,6 +19,8 @@ use App\Http\Controllers\FaqController as FrontFaqController;
 
 // ── Public frontend ───────────────────────────────────────────────────────────
 Route::get('/', [HomeController::class, 'index'])->name('home')->middleware(\App\Http\Middleware\SelectDisplayCurrency::class);
+Route::get('/rooms/{room}/details', [HomeController::class, 'roomDetails'])->name('rooms.details')->middleware(\App\Http\Middleware\SelectDisplayCurrency::class);
+Route::get('/packages/{package}/details', [HomeController::class, 'packageDetails'])->name('packages.details')->middleware(\App\Http\Middleware\SelectDisplayCurrency::class);
 Route::get('/blogs', [\App\Http\Controllers\BlogController::class, 'index'])->name('blogs.index')->middleware(\App\Http\Middleware\SelectDisplayCurrency::class);
 Route::get('/blogs/{slug}', [\App\Http\Controllers\BlogController::class, 'show'])->name('blogs.show')->middleware(\App\Http\Middleware\SelectDisplayCurrency::class);
 Route::get('/faqs', [FrontFaqController::class, 'index'])->name('faqs.index');
