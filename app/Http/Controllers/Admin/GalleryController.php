@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\GalleryItem;
-use App\Services\GalleryPreview;
+use App\Services\MediaFiles;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use RuntimeException;
 
 class GalleryController extends Controller
 {
@@ -26,20 +26,22 @@ class GalleryController extends Controller
             'section'  => 'nullable|string|max:100',
         ]);
 
-        $lastOrder = GalleryItem::max('sort_order') ?? 0;
-
-        foreach ($request->file('images', []) as $i => $file) {
-            $path = $file->store('gallery', 'public');
-            app(GalleryPreview::class)->generate($path);
-            GalleryItem::create([
-                'image_path'  => $path,
-                'title'       => $request->title,
-                'badge_label' => $request->badge_label,
-                'section'     => $request->section ?? 'general',
-                'is_active'   => true,
-                'sort_order'  => $lastOrder + $i + 1,
-            ]);
-        }
+        MediaFiles::transaction(function (MediaFiles $files) use ($request) {
+            $lastOrder = GalleryItem::max('sort_order') ?? 0;
+            foreach ($request->file('images', []) as $i => $file) {
+                $item = new GalleryItem([
+                    'image_path'  => $files->store($file, 'gallery', preview: true),
+                    'title'       => $request->title,
+                    'badge_label' => $request->badge_label,
+                    'section'     => $request->section ?? 'general',
+                    'is_active'   => true,
+                    'sort_order'  => $lastOrder + $i + 1,
+                ]);
+                if (! $item->save()) {
+                    throw new RuntimeException('The gallery item could not be saved.');
+                }
+            }
+        });
 
         return back()->with('success', 'Gallery media uploaded successfully.');
     }
@@ -70,9 +72,12 @@ class GalleryController extends Controller
 
     public function destroy(GalleryItem $galleryItem)
     {
-        app(GalleryPreview::class)->delete($galleryItem->image_path);
-        Storage::disk('public')->delete($galleryItem->image_path);
-        $galleryItem->delete();
+        MediaFiles::transaction(function (MediaFiles $files) use ($galleryItem) {
+            $files->deleteAfterCommit($galleryItem->image_path);
+            if (! $galleryItem->delete()) {
+                throw new RuntimeException('The gallery item could not be deleted.');
+            }
+        });
         return back()->with('success', 'Gallery item deleted.');
     }
 }

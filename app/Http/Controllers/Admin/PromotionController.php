@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Promotion;
+use App\Services\MediaFiles;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use RuntimeException;
 
 class PromotionController extends Controller
 {
@@ -22,8 +23,14 @@ class PromotionController extends Controller
     public function store(Request $request)
     {
         $data = $this->validated($request);
-        if ($file = $request->file('offer_image')) $data['image_path'] = $file->store('offers', 'public');
-        Promotion::create($data);
+        MediaFiles::transaction(function (MediaFiles $files) use ($request, $data) {
+            if ($file = $request->file('offer_image')) {
+                $data['image_path'] = $files->store($file, 'offers');
+            }
+            if (! (new Promotion($data))->save()) {
+                throw new RuntimeException('The promotion could not be saved.');
+            }
+        });
         return redirect()->route('admin.promotions.index')->with('success', 'Promotion created.');
     }
 
@@ -35,22 +42,32 @@ class PromotionController extends Controller
     public function update(Request $request, Promotion $promotion)
     {
         $data = $this->validated($request);
-        $oldPath = $promotion->image_path;
-        if ($file = $request->file('offer_image')) {
-            $data['image_path'] = $file->store('offers', 'public');
-        } elseif ($request->boolean('remove_offer_image')) {
-            $data['image_path'] = null;
-        }
-        $promotion->update($data);
-        if ($oldPath && $promotion->image_path !== $oldPath) Storage::disk('public')->delete($oldPath);
+        MediaFiles::transaction(function (MediaFiles $files) use ($request, $promotion, $data) {
+            $promotion = Promotion::lockForUpdate()->findOrFail($promotion->id);
+            if ($file = $request->file('offer_image')) {
+                $data['image_path'] = $files->store($file, 'offers');
+            } elseif ($request->boolean('remove_offer_image')) {
+                $data['image_path'] = null;
+            }
+            if (array_key_exists('image_path', $data)) {
+                $files->deleteAfterCommit($promotion->image_path);
+            }
+            if (! $promotion->update($data)) {
+                throw new RuntimeException('The promotion could not be saved.');
+            }
+        });
         return redirect()->route('admin.promotions.index')->with('success', 'Promotion updated.');
     }
 
     public function destroy(Promotion $promotion)
     {
-        $path = $promotion->image_path;
-        $promotion->delete();
-        if ($path) Storage::disk('public')->delete($path);
+        MediaFiles::transaction(function (MediaFiles $files) use ($promotion) {
+            $promotion = Promotion::lockForUpdate()->findOrFail($promotion->id);
+            $files->deleteAfterCommit($promotion->image_path);
+            if (! $promotion->delete()) {
+                throw new RuntimeException('The promotion could not be deleted.');
+            }
+        });
         return back()->with('success', 'Promotion deleted.');
     }
 

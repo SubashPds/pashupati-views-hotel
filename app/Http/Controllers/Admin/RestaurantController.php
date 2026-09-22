@@ -4,12 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Restaurant;
+use App\Services\MediaFiles;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
-use Throwable;
+use RuntimeException;
 
 class RestaurantController extends Controller
 {
@@ -58,56 +57,47 @@ class RestaurantController extends Controller
         $data = collect($validated)->except(['cuisines_raw', 'featured_dishes_raw', 'menu_image', 'remove_menu_image', 'gallery_images', 'images'])->all();
         $data['cuisines'] = $this->parseLines($request->input('cuisines_raw'));
         $data['featured_dishes'] = $this->parseLines($request->input('featured_dishes_raw'));
-        $newPaths = [];
-        $oldPaths = [];
-        $store = function ($file, string $directory) use (&$newPaths): string {
-            $path = $file->store($directory, 'public');
-            if (! $path) {
-                throw new \RuntimeException('The restaurant image could not be stored.');
+        MediaFiles::transaction(function (MediaFiles $files) use ($request, $validated, $data) {
+            $restaurant = Restaurant::lockForUpdate()->find(1) ?? new Restaurant;
+            $restaurant->id = 1;
+            $restaurant->fill($data);
+            if ($request->hasFile('menu_image') || $request->boolean('remove_menu_image')) {
+                if ($restaurant->menu_image) {
+                    $files->deleteAfterCommit($restaurant->menu_image);
+                }
+                $restaurant->menu_image = $request->hasFile('menu_image') ? $files->store($request->file('menu_image'), 'restaurant/menu') : null;
             }
-            $newPaths[] = $path;
+            if (! $restaurant->save()) {
+                throw new RuntimeException('The restaurant could not be saved.');
+            }
 
-            return $path;
-        };
-
-        try {
-            DB::transaction(function () use ($request, $validated, $data, $store, &$oldPaths) {
-                $restaurant = Restaurant::lockForUpdate()->find(1) ?? new Restaurant;
-                $restaurant->id = 1;
-                $restaurant->fill($data);
-                if ($request->hasFile('menu_image') || $request->boolean('remove_menu_image')) {
-                    if ($restaurant->menu_image) {
-                        $oldPaths[] = $restaurant->menu_image;
+            foreach ($validated['images'] ?? [] as $input) {
+                $image = $restaurant->images()->findOrFail($input['id']);
+                if (! empty($input['remove'])) {
+                    $files->deleteAfterCommit($image->image_path);
+                    if (! $image->delete()) {
+                        throw new RuntimeException('The image could not be deleted.');
                     }
-                    $restaurant->menu_image = $request->hasFile('menu_image') ? $store($request->file('menu_image'), 'restaurant/menu') : null;
-                }
-                $restaurant->save();
 
-                foreach ($validated['images'] ?? [] as $input) {
-                    $image = $restaurant->images()->findOrFail($input['id']);
-                    if (! empty($input['remove'])) {
-                        $oldPaths[] = $image->image_path;
-                        $image->delete();
-
-                        continue;
-                    }
-                    if (! empty($input['replacement'])) {
-                        $oldPaths[] = $image->image_path;
-                        $image->image_path = $store($input['replacement'], 'restaurant/gallery');
-                    }
-                    $image->caption = $input['caption'] ?? null;
-                    $image->save();
+                    continue;
                 }
-                $order = $restaurant->images()->max('sort_order') ?? 0;
-                foreach ($request->file('gallery_images', []) as $file) {
-                    $restaurant->images()->create(['image_path' => $store($file, 'restaurant/gallery'), 'sort_order' => ++$order]);
+                if (! empty($input['replacement'])) {
+                    $files->deleteAfterCommit($image->image_path);
+                    $image->image_path = $files->store($input['replacement'], 'restaurant/gallery');
                 }
-            });
-        } catch (Throwable $exception) {
-            Storage::disk('public')->delete($newPaths);
-            throw $exception;
-        }
-        Storage::disk('public')->delete($oldPaths);
+                $image->caption = $input['caption'] ?? null;
+                if (! $image->save()) {
+                    throw new RuntimeException('The image could not be saved.');
+                }
+            }
+            $order = $restaurant->images()->max('sort_order') ?? 0;
+            foreach ($request->file('gallery_images', []) as $file) {
+                $image = $restaurant->images()->create(['image_path' => $files->store($file, 'restaurant/gallery'), 'sort_order' => ++$order]);
+                if (! $image->exists) {
+                    throw new RuntimeException('The image could not be saved.');
+                }
+            }
+        });
 
         return redirect()->route('admin.restaurant.index')->with('success', 'Restaurant updated successfully.');
     }

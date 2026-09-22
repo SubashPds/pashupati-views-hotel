@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Room;
 use App\Models\RoomImage;
-use App\Services\ImagePreview;
+use App\Services\MediaFiles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
+use RuntimeException;
 
 class RoomController extends Controller
 {
@@ -35,17 +35,19 @@ class RoomController extends Controller
             ]);
         }
 
-        if ($request->hasFile('cover_image')) {
-            $validated['cover_image'] = $request->file('cover_image')->store('rooms', 'public');
-            app(ImagePreview::class)->generate($validated['cover_image']);
-        }
-
         $validated['amenities'] = $this->parseAmenities($request->input('amenities_raw', ''));
         $validated['slug'] = $slug;
 
-        $room = Room::create($validated);
-
-        $this->handleGalleryUploads($request, $room);
+        MediaFiles::transaction(function (MediaFiles $files) use ($request, $validated) {
+            if ($request->hasFile('cover_image')) {
+                $validated['cover_image'] = $files->store($request->file('cover_image'), 'rooms', preview: true);
+            }
+            $room = new Room($validated);
+            if (! $room->save()) {
+                throw new RuntimeException('The room could not be saved.');
+            }
+            $this->handleGalleryUploads($request, $room, $files);
+        });
 
         return redirect()->route('admin.rooms.index')->with('success', 'Room created successfully.');
     }
@@ -59,18 +61,19 @@ class RoomController extends Controller
     {
         $validated = $this->validate($request);
 
-        if ($request->hasFile('cover_image')) {
-            app(ImagePreview::class)->delete($room->cover_image);
-            if ($room->cover_image) Storage::disk('public')->delete($room->cover_image);
-            $validated['cover_image'] = $request->file('cover_image')->store('rooms', 'public');
-            app(ImagePreview::class)->generate($validated['cover_image']);
-        }
-
         $validated['amenities'] = $this->parseAmenities($request->input('amenities_raw', ''));
 
-        $room->update($validated);
-
-        $this->handleGalleryUploads($request, $room);
+        MediaFiles::transaction(function (MediaFiles $files) use ($request, $room, $validated) {
+            $room = Room::lockForUpdate()->findOrFail($room->id);
+            if ($request->hasFile('cover_image')) {
+                $validated['cover_image'] = $files->store($request->file('cover_image'), 'rooms', preview: true);
+                $files->deleteAfterCommit($room->cover_image);
+            }
+            if (! $room->update($validated)) {
+                throw new RuntimeException('The room could not be saved.');
+            }
+            $this->handleGalleryUploads($request, $room, $files);
+        });
 
         return redirect()->route('admin.rooms.index')->with('success', 'Room updated successfully.');
     }
@@ -83,17 +86,25 @@ class RoomController extends Controller
 
     public function destroy(Room $room)
     {
-        app(ImagePreview::class)->delete($room->cover_image);
-        if ($room->cover_image) Storage::disk('public')->delete($room->cover_image);
-        $room->images()->each(fn($img) => Storage::disk('public')->delete($img->image_path));
-        $room->delete();
+        MediaFiles::transaction(function (MediaFiles $files) use ($room) {
+            $room = Room::lockForUpdate()->findOrFail($room->id);
+            $files->deleteAfterCommit($room->cover_image);
+            $room->images()->each(fn ($image) => $files->deleteAfterCommit($image->image_path));
+            if (! $room->delete()) {
+                throw new RuntimeException('The room could not be deleted.');
+            }
+        });
         return redirect()->route('admin.rooms.index')->with('success', 'Room deleted.');
     }
 
     public function destroyImage(RoomImage $image)
     {
-        Storage::disk('public')->delete($image->image_path);
-        $image->delete();
+        MediaFiles::transaction(function (MediaFiles $files) use ($image) {
+            $files->deleteAfterCommit($image->image_path);
+            if (! $image->delete()) {
+                throw new RuntimeException('The image could not be deleted.');
+            }
+        });
         return back()->with('success', 'Image removed.');
     }
 
@@ -127,13 +138,16 @@ class RoomController extends Controller
         return array_values(array_filter(array_map('trim', explode("\n", $raw ?? '')), fn ($value) => $value !== ''));
     }
 
-    private function handleGalleryUploads(Request $request, Room $room): void
+    private function handleGalleryUploads(Request $request, Room $room, MediaFiles $files): void
     {
         if ($request->hasFile('gallery_images')) {
             $lastOrder = $room->images()->max('sort_order') ?? 0;
             foreach ($request->file('gallery_images') as $i => $file) {
-                $path = $file->store('rooms/gallery', 'public');
-                $room->images()->create(['image_path' => $path, 'sort_order' => $lastOrder + $i + 1]);
+                $path = $files->store($file, 'rooms/gallery');
+                $image = $room->images()->create(['image_path' => $path, 'sort_order' => $lastOrder + $i + 1]);
+                if (! $image->exists) {
+                    throw new RuntimeException('The image could not be saved.');
+                }
             }
         }
     }

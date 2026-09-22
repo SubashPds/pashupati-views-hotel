@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Package;
 use App\Models\PackageImage;
-use App\Services\ImagePreview;
+use App\Services\MediaFiles;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use RuntimeException;
 
 class PackageController extends Controller
 {
@@ -26,16 +26,19 @@ class PackageController extends Controller
     {
         $data = $this->validatePackage($request);
 
-        if ($request->hasFile('cover_image')) {
-            $data['cover_image'] = $request->file('cover_image')->store('packages', 'public');
-            app(ImagePreview::class)->generate($data['cover_image']);
-        }
-
         $data['includes']   = $this->parseLines($request->input('includes_raw'));
         $data['highlights'] = $this->parseLines($request->input('highlights_raw'));
 
-        $package = Package::create($data);
-        $this->handleGalleryUploads($request, $package);
+        MediaFiles::transaction(function (MediaFiles $files) use ($request, $data) {
+            if ($request->hasFile('cover_image')) {
+                $data['cover_image'] = $files->store($request->file('cover_image'), 'packages', preview: true);
+            }
+            $package = new Package($data);
+            if (! $package->save()) {
+                throw new RuntimeException('The package could not be saved.');
+            }
+            $this->handleGalleryUploads($request, $package, $files);
+        });
 
         return redirect()->route('admin.packages.index')->with('success', 'Package created successfully.');
     }
@@ -50,20 +53,20 @@ class PackageController extends Controller
     {
         $data = $this->validatePackage($request, $package->id);
 
-        if ($request->hasFile('cover_image')) {
-            app(ImagePreview::class)->delete($package->cover_image);
-            if ($package->cover_image) {
-                Storage::disk('public')->delete($package->cover_image);
-            }
-            $data['cover_image'] = $request->file('cover_image')->store('packages', 'public');
-            app(ImagePreview::class)->generate($data['cover_image']);
-        }
-
         $data['includes']   = $this->parseLines($request->input('includes_raw'));
         $data['highlights'] = $this->parseLines($request->input('highlights_raw'));
 
-        $package->update($data);
-        $this->handleGalleryUploads($request, $package);
+        MediaFiles::transaction(function (MediaFiles $files) use ($request, $package, $data) {
+            $package = Package::lockForUpdate()->findOrFail($package->id);
+            if ($request->hasFile('cover_image')) {
+                $data['cover_image'] = $files->store($request->file('cover_image'), 'packages', preview: true);
+                $files->deleteAfterCommit($package->cover_image);
+            }
+            if (! $package->update($data)) {
+                throw new RuntimeException('The package could not be saved.');
+            }
+            $this->handleGalleryUploads($request, $package, $files);
+        });
 
         return redirect()->route('admin.packages.index')->with('success', 'Package updated.');
     }
@@ -76,12 +79,14 @@ class PackageController extends Controller
 
     public function destroy(Package $package)
     {
-        app(ImagePreview::class)->delete($package->cover_image);
-        if ($package->cover_image) {
-            Storage::disk('public')->delete($package->cover_image);
-        }
-        $package->images()->each(fn ($image) => Storage::disk('public')->delete($image->image_path));
-        $package->delete();
+        MediaFiles::transaction(function (MediaFiles $files) use ($package) {
+            $package = Package::lockForUpdate()->findOrFail($package->id);
+            $files->deleteAfterCommit($package->cover_image);
+            $package->images()->each(fn ($image) => $files->deleteAfterCommit($image->image_path));
+            if (! $package->delete()) {
+                throw new RuntimeException('The package could not be deleted.');
+            }
+        });
         return back()->with('success', 'Package deleted.');
     }
 
@@ -89,19 +94,26 @@ class PackageController extends Controller
 
     public function destroyImage(PackageImage $image)
     {
-        Storage::disk('public')->delete($image->image_path);
-        $image->delete();
+        MediaFiles::transaction(function (MediaFiles $files) use ($image) {
+            $files->deleteAfterCommit($image->image_path);
+            if (! $image->delete()) {
+                throw new RuntimeException('The image could not be deleted.');
+            }
+        });
         return back()->with('success', 'Image removed.');
     }
 
-    private function handleGalleryUploads(Request $request, Package $package): void
+    private function handleGalleryUploads(Request $request, Package $package, MediaFiles $files): void
     {
         $lastOrder = $package->images()->max('sort_order') ?? 0;
         foreach ($request->file('gallery_images') ?? [] as $i => $file) {
-            $package->images()->create([
-                'image_path' => $file->store('packages/gallery', 'public'),
+            $image = $package->images()->create([
+                'image_path' => $files->store($file, 'packages/gallery'),
                 'sort_order' => $lastOrder + $i + 1,
             ]);
+            if (! $image->exists) {
+                throw new RuntimeException('The image could not be saved.');
+            }
         }
     }
 

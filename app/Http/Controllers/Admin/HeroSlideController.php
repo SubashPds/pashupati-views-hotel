@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\HeroSlide;
+use App\Services\MediaFiles;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use RuntimeException;
 
 class HeroSlideController extends Controller
 {
@@ -25,9 +26,13 @@ class HeroSlideController extends Controller
         $data = $this->validated($request, true);
         $file = $request->file('media');
         unset($data['media']);
-        $data['media_path'] = $file->store('hero-slides', 'public');
         $data['media_type'] = str_starts_with($file->getMimeType(), 'video/') ? 'video' : 'image';
-        HeroSlide::create($data);
+        MediaFiles::transaction(function (MediaFiles $files) use ($file, $data) {
+            $data['media_path'] = $files->store($file, 'hero-slides');
+            if (! (new HeroSlide($data))->save()) {
+                throw new RuntimeException('The slide could not be saved.');
+            }
+        });
         return redirect()->route('admin.hero-slides.index')->with('success', 'Slide created.');
     }
 
@@ -40,23 +45,29 @@ class HeroSlideController extends Controller
     {
         $data = $this->validated($request, false);
         unset($data['media']);
-        $oldPath = $heroSlide->media_path;
-        if ($file = $request->file('media')) {
-            $data['media_path'] = $file->store('hero-slides', 'public');
-            $data['media_type'] = str_starts_with($file->getMimeType(), 'video/') ? 'video' : 'image';
-        }
-        $heroSlide->update($data);
-        if (isset($data['media_path'])) {
-            Storage::disk('public')->delete($oldPath);
-        }
+        MediaFiles::transaction(function (MediaFiles $files) use ($request, $heroSlide, $data) {
+            $heroSlide = HeroSlide::lockForUpdate()->findOrFail($heroSlide->id);
+            if ($file = $request->file('media')) {
+                $data['media_path'] = $files->store($file, 'hero-slides');
+                $data['media_type'] = str_starts_with($file->getMimeType(), 'video/') ? 'video' : 'image';
+                $files->deleteAfterCommit($heroSlide->media_path);
+            }
+            if (! $heroSlide->update($data)) {
+                throw new RuntimeException('The slide could not be saved.');
+            }
+        });
         return redirect()->route('admin.hero-slides.index')->with('success', 'Slide updated.');
     }
 
     public function destroy(HeroSlide $heroSlide)
     {
-        $path = $heroSlide->media_path;
-        $heroSlide->delete();
-        Storage::disk('public')->delete($path);
+        MediaFiles::transaction(function (MediaFiles $files) use ($heroSlide) {
+            $heroSlide = HeroSlide::lockForUpdate()->findOrFail($heroSlide->id);
+            $files->deleteAfterCommit($heroSlide->media_path);
+            if (! $heroSlide->delete()) {
+                throw new RuntimeException('The slide could not be deleted.');
+            }
+        });
         return back()->with('success', 'Slide deleted.');
     }
 

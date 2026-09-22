@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
+use App\Services\MediaFiles;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use RuntimeException;
 
 class BlogController extends Controller
 {
@@ -30,10 +31,14 @@ class BlogController extends Controller
         }
         $data['slug'] = $slug;
         $data['published_at'] = $data['is_published'] ? now() : null;
-        if ($request->hasFile('cover_image')) {
-            $data['cover_image'] = $request->file('cover_image')->store('blogs', 'public');
-        }
-        Blog::create($data);
+        MediaFiles::transaction(function (MediaFiles $files) use ($request, $data) {
+            if ($request->hasFile('cover_image')) {
+                $data['cover_image'] = $files->store($request->file('cover_image'), 'blogs');
+            }
+            if (! (new Blog($data))->save()) {
+                throw new RuntimeException('The blog could not be saved.');
+            }
+        });
 
         return redirect()->route('admin.blogs.index')->with('success', 'Blog created.');
     }
@@ -46,30 +51,36 @@ class BlogController extends Controller
     public function update(Request $request, Blog $blog)
     {
         $data = $this->validateBlog($request);
-        $oldCover = $blog->cover_image;
-        if ($request->hasFile('cover_image')) {
-            $data['cover_image'] = $request->file('cover_image')->store('blogs', 'public');
-        } elseif ($request->boolean('remove_cover')) {
-            $data['cover_image'] = null;
-        }
-        if ($data['is_published'] && ! $blog->published_at) {
-            $data['published_at'] = now();
-        }
-        $blog->update($data);
-        if ($oldCover && $oldCover !== $blog->cover_image) {
-            Storage::disk('public')->delete($oldCover);
-        }
+        MediaFiles::transaction(function (MediaFiles $files) use ($request, $blog, $data) {
+            $blog = Blog::lockForUpdate()->findOrFail($blog->id);
+            if ($request->hasFile('cover_image')) {
+                $data['cover_image'] = $files->store($request->file('cover_image'), 'blogs');
+            } elseif ($request->boolean('remove_cover')) {
+                $data['cover_image'] = null;
+            }
+            if (array_key_exists('cover_image', $data)) {
+                $files->deleteAfterCommit($blog->cover_image);
+            }
+            if ($data['is_published'] && ! $blog->published_at) {
+                $data['published_at'] = now();
+            }
+            if (! $blog->update($data)) {
+                throw new RuntimeException('The blog could not be saved.');
+            }
+        });
 
         return redirect()->route('admin.blogs.index')->with('success', 'Blog updated.');
     }
 
     public function destroy(Blog $blog)
     {
-        $cover = $blog->cover_image;
-        $blog->delete();
-        if ($cover) {
-            Storage::disk('public')->delete($cover);
-        }
+        MediaFiles::transaction(function (MediaFiles $files) use ($blog) {
+            $blog = Blog::lockForUpdate()->findOrFail($blog->id);
+            $files->deleteAfterCommit($blog->cover_image);
+            if (! $blog->delete()) {
+                throw new RuntimeException('The blog could not be deleted.');
+            }
+        });
 
         return redirect()->route('admin.blogs.index')->with('success', 'Blog deleted.');
     }
