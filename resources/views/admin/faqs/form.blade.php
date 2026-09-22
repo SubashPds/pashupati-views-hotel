@@ -16,7 +16,7 @@
         <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">
             Question <span class="text-red-400">*</span>
         </label>
-        <input type="text" name="question" required
+        <input type="text" name="question" maxlength="255" required
                value="{{ old('question', $faq->question) }}"
                placeholder="e.g. What time is check-in?"
                class="w-full px-4 py-3 text-sm bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-violet-500 transition-all">

@@ -57,13 +57,13 @@
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
                     <x-admin.field label="Price Label" name="price_label" :value="old('price_label', $package->price_label)"
                                    hint="e.g. NPR 12,000 / night" />
-                    <x-admin.field label="Price From (numeric)" name="price_from" type="number" step="0.01"
+                    <x-admin.field label="Price From (numeric)" name="price_from" type="number" step="0.01" min="0" max="99999999.99"
                                    :value="old('price_from', $package->price_from)"
                                    hint="Base price in NPR; used when Price Label is blank." />
                     <div class="grid grid-cols-2 gap-3">
-                        <x-admin.field label="Min Guests" name="min_guests" type="number"
+                        <x-admin.field label="Min Guests" name="min_guests" type="number" min="1" max="127"
                                        :value="old('min_guests', $package->min_guests ?? 1)" hint="Leave blank for 1 guest." />
-                        <x-admin.field label="Max Guests" name="max_guests" type="number"
+                        <x-admin.field label="Max Guests" name="max_guests" type="number" min="1" max="127"
                                        :value="old('max_guests', $package->max_guests)" hint="Leave blank = unlimited" />
                     </div>
                 </div>

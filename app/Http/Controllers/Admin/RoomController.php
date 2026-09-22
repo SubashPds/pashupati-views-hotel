@@ -114,7 +114,7 @@ class RoomController extends Controller
             'name'              => 'required|string|max:255',
             'category'          => 'required|in:deluxe,premium,suite',
             'tagline'           => 'nullable|string|max:255',
-            'price_per_night'   => 'required|numeric|min:0',
+            'price_per_night'   => 'required|numeric|decimal:0,2|min:0|max:99999999.99',
             'size_sqm'          => 'nullable|integer|min:1',
             'max_guests'        => 'required|integer|min:1',
             'bed_type'          => 'nullable|string|max:255',

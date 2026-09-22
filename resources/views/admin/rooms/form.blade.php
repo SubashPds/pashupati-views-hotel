@@ -44,7 +44,7 @@
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
-                    <x-admin.field label="Price per Night (NPR)" name="price_per_night" type="number" step="0.01" min="0" :value="$room->price_per_night" required />
+                    <x-admin.field label="Price per Night (NPR)" name="price_per_night" type="number" step="0.01" min="0" max="99999999.99" :value="$room->price_per_night" required />
                     <x-admin.field label="Max Guests" name="max_guests" type="number" :value="$room->max_guests ?? 2" required />
                 </div>
 
