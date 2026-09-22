@@ -13,8 +13,8 @@
     <x-admin.field label="Title" name="title" :value="$service->title" required />
     <x-admin.field label="Icon (emoji)" name="icon" :value="$service->icon" hint="e.g. ✈️ 🚗 🗺️" />
     <x-admin.field label="Description" name="description" type="textarea" :value="$service->description" />
-    <x-admin.field label="Price Label" name="price_label" :value="$service->price_label ?? 'Price on request'" />
-    <x-admin.field label="Sort Order" name="sort_order" type="number" :value="$service->sort_order ?? 0" />
+    <x-admin.field label="Price Label" name="price_label" :value="$service->price_label ?? 'Price on request'" hint="Leave blank for Price on request." />
+    <x-admin.field label="Sort Order" name="sort_order" type="number" :value="$service->sort_order ?? 0" hint="Leave blank for 0." />
 
     <div class="flex gap-3 pt-2">
         <button type="submit" class="flex-1 py-3 bg-violet-600 hover:bg-violet-500 text-white text-sm font-semibold rounded-xl transition-colors">

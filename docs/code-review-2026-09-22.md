@@ -93,6 +93,10 @@ Found **12 actionable failure risks: 3 high priority and 9 medium priority**. Th
 
    **Fix:** align validation, form requirements, and schema. For optional values with defaults, normalize blanks before saving; make columns nullable only when null has a defined meaning.
 
+   **Remediated — 22 September 2026:** cleared service price labels use `Price on request`, package minimum guests use `1`, FAQ sort orders use `0`, and gallery sections use `general`. The same correction covers optional service/package sort orders (`0`). Create and update actions normalize submitted nulls after validation, while omitted update fields preserve existing values. Nullable fields such as package maximum guests retain their existing meaning. Service sort order is now validated, and the forms explain the defaults.
+
+   **Regression verification:** `tests/Feature/OptionalAdminFieldsTest.php` passes **24 tests, 208 assertions**, covering blank/whitespace/null inputs, omitted fields, explicit values including zero, and invalid inputs across the four forms. The full PHP suite has **206 passed, 6 failed, 1,945 assertions**; the six failures are the same pre-existing failures listed below.
+
 8. **Medium — Validation accepts values that production MySQL cannot store.**
 
    Locations: [app/Http/Controllers/Admin/FaqController.php:25](</home/subash/Subash/pashupati views hotel/app/Http/Controllers/Admin/FaqController.php:25>), [database/migrations/2026_09_19_100001_create_faqs_table.php:13](</home/subash/Subash/pashupati views hotel/database/migrations/2026_09_19_100001_create_faqs_table.php:13>), [app/Http/Controllers/Admin/PackageController.php:117](</home/subash/Subash/pashupati views hotel/app/Http/Controllers/Admin/PackageController.php:117>), [database/migrations/2026_09_10_000002_create_packages_table.php:22](</home/subash/Subash/pashupati views hotel/database/migrations/2026_09_10_000002_create_packages_table.php:22>), [app/Http/Controllers/Admin/RoomController.php:106](</home/subash/Subash/pashupati views hotel/app/Http/Controllers/Admin/RoomController.php:106>).

@@ -21,14 +21,9 @@ class ServiceController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'title'       => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'icon'        => 'nullable|string|max:20',
-            'price_label' => 'nullable|string|max:100',
-        ]);
+        $validated = $this->validateService($request);
 
-        Service::create(array_merge($request->only('title', 'description', 'icon', 'price_label', 'sort_order'), ['is_active' => true]));
+        Service::create($validated + ['is_active' => true]);
         return redirect()->route('admin.services.index')->with('success', 'Service added.');
     }
 
@@ -39,14 +34,7 @@ class ServiceController extends Controller
 
     public function update(Request $request, Service $service)
     {
-        $request->validate([
-            'title'       => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'icon'        => 'nullable|string|max:20',
-            'price_label' => 'nullable|string|max:100',
-        ]);
-
-        $service->update($request->only('title', 'description', 'icon', 'price_label', 'sort_order'));
+        $service->update($this->validateService($request));
         return redirect()->route('admin.services.index')->with('success', 'Service updated.');
     }
 
@@ -60,5 +48,24 @@ class ServiceController extends Controller
     {
         $service->delete();
         return back()->with('success', 'Service deleted.');
+    }
+
+    private function validateService(Request $request): array
+    {
+        $validated = $request->validate([
+            'title'       => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'icon'        => 'nullable|string|max:20',
+            'price_label' => 'nullable|string|max:100',
+            'sort_order'  => 'nullable|integer',
+        ]);
+
+        foreach (['price_label' => 'Price on request', 'sort_order' => 0] as $field => $default) {
+            if (array_key_exists($field, $validated)) {
+                $validated[$field] ??= $default;
+            }
+        }
+
+        return $validated;
     }
 }

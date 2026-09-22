@@ -62,7 +62,7 @@
                                    hint="Base price in NPR; used when Price Label is blank." />
                     <div class="grid grid-cols-2 gap-3">
                         <x-admin.field label="Min Guests" name="min_guests" type="number"
-                                       :value="old('min_guests', $package->min_guests ?? 1)" />
+                                       :value="old('min_guests', $package->min_guests ?? 1)" hint="Leave blank for 1 guest." />
                         <x-admin.field label="Max Guests" name="max_guests" type="number"
                                        :value="old('max_guests', $package->max_guests)" hint="Leave blank = unlimited" />
                     </div>
@@ -159,7 +159,7 @@
                 <div class="space-y-4">
                     <div class="space-y-4">
                         <x-admin.field label="Sort Order" name="sort_order" type="number"
-                                       :value="old('sort_order', $package->sort_order ?? 0)" />
+                                       :value="old('sort_order', $package->sort_order ?? 0)" hint="Leave blank for 0." />
                         <div class="flex items-center gap-3 pt-2">
                             <label class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Visibility</label>
                             <label class="relative inline-flex items-center cursor-pointer">

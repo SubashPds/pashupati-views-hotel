@@ -60,6 +60,9 @@ class GalleryController extends Controller
             'section'     => 'nullable|string|max:100',
         ]);
 
+        if (array_key_exists('section', $validated)) {
+            $validated['section'] ??= 'general';
+        }
         $galleryItem->update($validated);
         return redirect()->route('admin.gallery.index')->with('success', 'Gallery item updated.');
     }

@@ -44,7 +44,7 @@
         <input type="number" name="sort_order" min="0"
                value="{{ old('sort_order', $faq->sort_order ?? 0) }}"
                class="w-32 px-4 py-3 text-sm bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-violet-500 transition-all">
-        <p class="text-xs text-gray-600 mt-1">Lower numbers appear first.</p>
+        <p class="text-xs text-gray-600 mt-1">Lower numbers appear first. Leave blank for 0.</p>
     </div>
 
     <div class="flex gap-3 pt-2">

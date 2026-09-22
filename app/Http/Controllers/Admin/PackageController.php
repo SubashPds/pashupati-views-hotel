@@ -159,6 +159,11 @@ class PackageController extends Controller
             'sort_order'        => 'nullable|integer',
         ]);
         unset($validated['gallery_images']);
+        foreach (['min_guests' => 1, 'sort_order' => 0] as $field => $default) {
+            if (array_key_exists($field, $validated)) {
+                $validated[$field] ??= $default;
+            }
+        }
         return $validated;
     }
 

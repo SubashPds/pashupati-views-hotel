@@ -21,16 +21,9 @@ class FaqController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'question'   => 'required|string|max:500',
-            'answer'     => 'required|string',
-            'sort_order' => 'nullable|integer',
-        ]);
+        $validated = $this->validateFaq($request);
 
-        Faq::create(array_merge(
-            $request->only('question', 'answer', 'sort_order'),
-            ['is_active' => true]
-        ));
+        Faq::create($validated + ['is_active' => true]);
 
         return redirect()->route('admin.faqs.index')->with('success', 'FAQ added successfully.');
     }
@@ -42,13 +35,7 @@ class FaqController extends Controller
 
     public function update(Request $request, Faq $faq)
     {
-        $request->validate([
-            'question'   => 'required|string|max:500',
-            'answer'     => 'required|string',
-            'sort_order' => 'nullable|integer',
-        ]);
-
-        $faq->update($request->only('question', 'answer', 'sort_order'));
+        $faq->update($this->validateFaq($request));
 
         return redirect()->route('admin.faqs.index')->with('success', 'FAQ updated successfully.');
     }
@@ -63,5 +50,19 @@ class FaqController extends Controller
     {
         $faq->delete();
         return back()->with('success', 'FAQ deleted.');
+    }
+
+    private function validateFaq(Request $request): array
+    {
+        $validated = $request->validate([
+            'question'   => 'required|string|max:500',
+            'answer'     => 'required|string',
+            'sort_order' => 'nullable|integer',
+        ]);
+        if (array_key_exists('sort_order', $validated)) {
+            $validated['sort_order'] ??= 0;
+        }
+
+        return $validated;
     }
 }
