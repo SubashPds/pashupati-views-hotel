@@ -36,17 +36,20 @@
         {{-- Room Cards Grid --}}
         <div id="rooms-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($rooms as $room)
-            <article data-scroll-reveal class="room-card card-lift group relative flex flex-col rounded-2xl overflow-hidden shadow-md"
+            <article class="room-card group relative flex flex-col rounded-2xl overflow-hidden shadow-md"
                      data-category="{{ $room->category }}"
                      style="background:#fff; border:1px solid rgba(184,149,59,0.12);">
 
                 {{-- Image --}}
-                <div class="relative h-52 overflow-hidden bg-gray-100">
+                <div class="card-preview-media relative h-52 overflow-hidden bg-gray-100">
                     @if($room->cover_image_url)
-                        <img src="{{ $room->cover_image_url }}"
+                        <img data-card-preview-src="{{ $room->cover_preview_url }}" hidden
                              alt="{{ $room->name }}"
-                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                             loading="lazy" decoding="async">
+                             class="w-full h-full object-cover"
+                             decoding="async" fetchpriority="low">
+                        <div data-card-preview-fallback class="absolute inset-0 flex items-center justify-center text-6xl"
+                             style="background:linear-gradient(135deg,#f5f1ea,#e8d5a3);" aria-hidden="true">🛏️</div>
+                        <noscript><img src="{{ $room->cover_preview_url }}" alt="{{ $room->name }}" loading="lazy" decoding="async" class="absolute inset-0 w-full h-full object-cover"></noscript>
                     @else
                         <div class="w-full h-full flex items-center justify-center text-6xl"
                              style="background:linear-gradient(135deg,#f5f1ea,#e8d5a3);">

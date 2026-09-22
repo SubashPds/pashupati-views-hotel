@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Room;
 use App\Models\RoomImage;
+use App\Services\ImagePreview;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -36,6 +37,7 @@ class RoomController extends Controller
 
         if ($request->hasFile('cover_image')) {
             $validated['cover_image'] = $request->file('cover_image')->store('rooms', 'public');
+            app(ImagePreview::class)->generate($validated['cover_image']);
         }
 
         $validated['amenities'] = $this->parseAmenities($request->input('amenities_raw', ''));
@@ -58,8 +60,10 @@ class RoomController extends Controller
         $validated = $this->validate($request);
 
         if ($request->hasFile('cover_image')) {
+            app(ImagePreview::class)->delete($room->cover_image);
             if ($room->cover_image) Storage::disk('public')->delete($room->cover_image);
             $validated['cover_image'] = $request->file('cover_image')->store('rooms', 'public');
+            app(ImagePreview::class)->generate($validated['cover_image']);
         }
 
         $validated['amenities'] = $this->parseAmenities($request->input('amenities_raw', ''));
@@ -79,6 +83,7 @@ class RoomController extends Controller
 
     public function destroy(Room $room)
     {
+        app(ImagePreview::class)->delete($room->cover_image);
         if ($room->cover_image) Storage::disk('public')->delete($room->cover_image);
         $room->images()->each(fn($img) => Storage::disk('public')->delete($img->image_path));
         $room->delete();

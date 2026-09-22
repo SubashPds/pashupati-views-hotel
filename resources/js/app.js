@@ -10,6 +10,8 @@ import './package-details';
 import './detail-photos';
 import './room-image-preview';
 import './gallery-viewer';
+import './home-gallery';
+import './card-previews';
 
 import './blog-cover-preview';
 import './offer-image-preview';

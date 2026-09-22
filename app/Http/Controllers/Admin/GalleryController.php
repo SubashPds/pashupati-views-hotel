@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\GalleryItem;
+use App\Services\GalleryPreview;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -29,6 +30,7 @@ class GalleryController extends Controller
 
         foreach ($request->file('images', []) as $i => $file) {
             $path = $file->store('gallery', 'public');
+            app(GalleryPreview::class)->generate($path);
             GalleryItem::create([
                 'image_path'  => $path,
                 'title'       => $request->title,
@@ -68,6 +70,7 @@ class GalleryController extends Controller
 
     public function destroy(GalleryItem $galleryItem)
     {
+        app(GalleryPreview::class)->delete($galleryItem->image_path);
         Storage::disk('public')->delete($galleryItem->image_path);
         $galleryItem->delete();
         return back()->with('success', 'Gallery item deleted.');

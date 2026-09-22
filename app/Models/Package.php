@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\TracksUserChanges;
+use App\Services\ImagePreview;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
@@ -69,6 +70,11 @@ class Package extends Model
         }
 
         return preg_replace('/\p{N}/u', 'NPR $0', $label, 1);
+    }
+
+    public function getCoverPreviewUrlAttribute(): string
+    {
+        return app(ImagePreview::class)->url($this->cover_image) ?? $this->cover_image_url;
     }
 
     public function getCoverImageUrlAttribute(): string

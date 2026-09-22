@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\TracksUserChanges;
+use App\Services\GalleryPreview;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
@@ -28,6 +29,11 @@ class GalleryItem extends Model
         return in_array(strtolower(pathinfo($path, PATHINFO_EXTENSION)), ['mp4', 'webm'], true)
             ? 'video'
             : 'image';
+    }
+
+    public function getPreviewUrlAttribute(): string
+    {
+        return app(GalleryPreview::class)->url($this->image_path) ?? $this->image_url;
     }
 
     /**

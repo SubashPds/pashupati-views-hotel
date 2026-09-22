@@ -3,7 +3,7 @@
   Props: $galleryItems (Collection<GalleryItem>), $settings
 --}}
 @if($galleryItems->isNotEmpty())
-<section id="gallery" class="py-10 sm:py-12" style="background:#f5f1ea;">
+<section id="gallery" data-home-gallery class="py-10 sm:py-12" style="background:#f5f1ea;">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div data-scroll-reveal class="text-center mb-8 sm:mb-10">
@@ -47,7 +47,7 @@
                 $grad     = $placeholderGrads[$loop->index % count($placeholderGrads)];
                 $hasImage = !empty($item->image_url);
             @endphp
-            <div data-scroll-reveal class="gallery-cell break-inside-avoid mb-4 rounded-xl overflow-hidden group relative"
+            <div class="gallery-cell break-inside-avoid mb-4 rounded-xl overflow-hidden group relative"
                  data-gallery-category="{{ strtolower(trim($item->section ?? '')) ?: 'general' }}"
                  style="border:1px solid rgba(184,149,59,0.12); box-shadow:0 2px 8px rgba(13,27,42,0.08);">
 
@@ -55,27 +55,28 @@
 
 
                     @if($hasImage && $item->media_type === 'video')
-                        <video src="{{ $item->image_url }}" class="w-full h-full object-cover" muted playsinline preload="metadata" aria-label="{{ $item->title ?: 'Gallery video' }}"></video>
-                        <div class="absolute inset-0 flex items-center justify-center bg-navy/20 pointer-events-none" aria-hidden="true">
+                        {{-- The original video is requested only when opened in the viewer. --}}
+                        <div class="absolute inset-0 flex flex-col gap-3 items-center justify-center pointer-events-none" style="background:{{ $grad }};" aria-hidden="true">
                             <span class="flex h-12 w-12 items-center justify-center rounded-full border border-white/40 bg-navy/60 text-white">
                                 <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="m9 5 11 7-11 7z"/></svg>
                             </span>
+                            <span class="text-xs font-medium text-white/80">Play video</span>
                         </div>
                     @elseif($hasImage)
                         {{-- Real image --}}
-                        <img src="{{ $item->image_url }}"
+                        <img data-home-gallery-src="{{ $item->preview_url }}" data-gallery-preview hidden
                              alt="{{ $item->title ?? 'Gallery photo' }}"
-                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                             loading="lazy" decoding="async"
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        {{-- Fallback shown if image errors --}}
-                        <div class="absolute inset-0 items-center justify-center flex-col gap-2 hidden"
+                             class="w-full h-full object-cover"
+                             decoding="async" fetchpriority="low">
+                        {{-- Reserve the tile while the preview loads, or if it fails. --}}
+                        <div data-gallery-fallback class="absolute inset-0 flex items-center justify-center flex-col gap-2"
                              style="background:{{ $grad }};">
                             <span class="text-5xl">{{ $emoji }}</span>
                             @if($item->title)
                             <p class="text-xs text-amber-300/70 font-medium px-4 text-center">{{ $item->title }}</p>
                             @endif
                         </div>
+                        <noscript><img src="{{ $item->preview_url }}" alt="{{ $item->title ?? 'Gallery photo' }}" loading="lazy" decoding="async" class="absolute inset-0 w-full h-full object-cover"></noscript>
                     @else
                         {{-- Placeholder tile when no image uploaded --}}
                         <div class="w-full h-full flex flex-col items-center justify-center gap-3 group-hover:brightness-110 transition-all"

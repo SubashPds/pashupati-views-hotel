@@ -57,3 +57,16 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Card image previews
+
+Homepage gallery, room, and package cards use cached WebP previews (up to 800 × 800 pixels); detail views and the gallery viewer open the original media. New gallery uploads and room/package cover uploads generate previews automatically. Generation requires PHP GD with WebP support or ImageMagick's `magick`/`convert` executable on `PATH`. Without either, images fall back to their original URLs.
+
+After deploying, generate previews for existing local uploads:
+
+```bash
+php artisan gallery:previews
+php artisan cards:previews
+```
+
+These commands scan files directly under `storage/app/public/gallery`, `rooms`, and `packages` without querying the database and save previews in each directory's `previews` subdirectory. Room/package detail gallery subdirectories are not processed. Keep the preview directories writable and served through the existing public storage link. Re-running a command reuses existing previews; add `--force` to regenerate them. Originals remain unchanged, remote images and videos are skipped, and page requests never perform image conversion. Replacing or deleting a room/package cover also removes its cached preview.

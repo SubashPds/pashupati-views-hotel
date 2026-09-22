@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\TracksUserChanges;
+use App\Services\ImagePreview;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
@@ -55,6 +56,11 @@ class Room extends Model
     public function getFormattedPriceAttribute(): string
     {
         return 'NPR ' . number_format($this->price_per_night, 0) . ' / night';
+    }
+
+    public function getCoverPreviewUrlAttribute(): string
+    {
+        return app(ImagePreview::class)->url($this->cover_image) ?? $this->cover_image_url;
     }
 
     public function getCoverImageUrlAttribute(): string

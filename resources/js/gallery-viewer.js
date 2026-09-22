@@ -8,7 +8,7 @@ gallery?.querySelectorAll('[data-gallery-preview]').forEach((media) => {
         if (fallback) fallback.hidden = false;
     }
     media.addEventListener('error', showFallback);
-    if (media.tagName === 'IMG' && media.complete && !media.naturalWidth) showFallback();
+    if (media.tagName === 'IMG' && media.hasAttribute('src') && media.complete && !media.naturalWidth) showFallback();
 });
 
 if (viewer) {

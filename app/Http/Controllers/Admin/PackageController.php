@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Package;
 use App\Models\PackageImage;
+use App\Services\ImagePreview;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -27,6 +28,7 @@ class PackageController extends Controller
 
         if ($request->hasFile('cover_image')) {
             $data['cover_image'] = $request->file('cover_image')->store('packages', 'public');
+            app(ImagePreview::class)->generate($data['cover_image']);
         }
 
         $data['includes']   = $this->parseLines($request->input('includes_raw'));
@@ -49,10 +51,12 @@ class PackageController extends Controller
         $data = $this->validatePackage($request, $package->id);
 
         if ($request->hasFile('cover_image')) {
+            app(ImagePreview::class)->delete($package->cover_image);
             if ($package->cover_image) {
                 Storage::disk('public')->delete($package->cover_image);
             }
             $data['cover_image'] = $request->file('cover_image')->store('packages', 'public');
+            app(ImagePreview::class)->generate($data['cover_image']);
         }
 
         $data['includes']   = $this->parseLines($request->input('includes_raw'));
@@ -72,6 +76,7 @@ class PackageController extends Controller
 
     public function destroy(Package $package)
     {
+        app(ImagePreview::class)->delete($package->cover_image);
         if ($package->cover_image) {
             Storage::disk('public')->delete($package->cover_image);
         }

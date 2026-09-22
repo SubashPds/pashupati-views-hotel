@@ -47,7 +47,7 @@
                 $isPopular = strtolower($pkg->badge ?? '') === 'most popular';
             @endphp
 
-            <div data-scroll-reveal class="package-card group relative flex flex-col rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+            <div class="package-card group relative flex flex-col rounded-2xl overflow-hidden"
                  style="background:#fff; border:1px solid rgba(133,101,52,.15); box-shadow:0 4px 20px rgba(13,27,42,.05);">
 
                 {{-- Popular ribbon --}}
@@ -60,21 +60,21 @@
                 @endif
 
                 {{-- Cover image or gradient hero --}}
-                <div class="relative h-44 overflow-hidden shrink-0">
+                <div class="card-preview-media relative h-44 overflow-hidden shrink-0">
                     @if($pkg->cover_image_url)
-                        <img src="{{ $pkg->cover_image_url }}"
+                        <img data-card-preview-src="{{ $pkg->cover_preview_url }}" hidden
                              alt="{{ $pkg->name }}"
-                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                             loading="lazy" decoding="async"
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="absolute inset-0 items-center justify-center flex-col gap-2 hidden"
-                             style="background:{{ $grad }};">
+                             class="w-full h-full object-cover"
+                             decoding="async" fetchpriority="low">
+                        <div data-card-preview-fallback class="absolute inset-0 flex items-center justify-center flex-col gap-2"
+                             style="background:{{ $grad }};" aria-hidden="true">
                             <span class="text-6xl">{{ $emoji }}</span>
                         </div>
+                        <noscript><img src="{{ $pkg->cover_preview_url }}" alt="{{ $pkg->name }}" loading="lazy" decoding="async" class="absolute inset-0 w-full h-full object-cover"></noscript>
                     @else
                         <div class="w-full h-full flex flex-col items-center justify-center gap-3"
                              style="background:{{ $grad }};">
-                            <span class="text-6xl group-hover:scale-110 transition-transform duration-300">{{ $emoji }}</span>
+                            <span class="text-6xl">{{ $emoji }}</span>
                         </div>
                     @endif
 
