@@ -191,7 +191,7 @@
 
 @if($package->exists)
     @foreach($package->images as $img)
-    <form id="delete-package-image-{{ $img->id }}" method="POST" action="{{ route('admin.packages.images.destroy', $img) }}" onsubmit="return confirm('Remove image?')">
+    <form id="delete-package-image-{{ $img->id }}" method="POST" action="{{ route('admin.packages.images.destroy', $img) }}" data-confirm="Remove image?">
         @csrf
         @method('DELETE')
     </form>

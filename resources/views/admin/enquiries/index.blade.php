@@ -50,7 +50,7 @@
                 <td class="px-5 py-3.5 text-right">
                     <div class="flex items-center justify-end gap-2">
                         <a href="{{ route('admin.enquiries.show', $enquiry) }}" class="px-3 py-1.5 text-xs font-medium bg-white/8 hover:bg-white/15 text-gray-300 rounded-lg transition-colors">View</a>
-                        <form method="POST" action="{{ route('admin.enquiries.destroy', $enquiry) }}" onsubmit="return confirm('Delete enquiry?')">
+                        <form method="POST" action="{{ route('admin.enquiries.destroy', $enquiry) }}" data-confirm="Delete enquiry?">
                             @csrf @method('DELETE')
                             <button type="submit" class="px-3 py-1.5 text-xs font-medium bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-lg transition-colors">Delete</button>
                         </form>

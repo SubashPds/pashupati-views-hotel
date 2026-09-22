@@ -81,7 +81,7 @@
 
         {{-- CTA --}}
         <div class="flex flex-wrap items-center justify-center gap-4">
-            <button onclick="openBooking()"
+            <button data-open-booking
                     class="inline-flex items-center gap-2 px-8 py-4 text-sm font-bold text-white rounded-xl shadow-xl transition-all hover:brightness-110 active:scale-95"
                     style="background:linear-gradient(135deg,#b8953b,#d4af5b); box-shadow:0 8px 32px rgba(184,149,59,0.30);">
                 {{ $settings['hero_cta_primary'] ?? 'Book your stay ↗' }}

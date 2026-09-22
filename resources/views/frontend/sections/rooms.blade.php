@@ -137,7 +137,7 @@
 </section>
 
 @push('scripts')
-<script>
+<script nonce="{{ Vite::cspNonce() }}">
 // Room category filter
 document.querySelectorAll('.room-filter-btn').forEach(btn => {
     btn.addEventListener('click', function() {

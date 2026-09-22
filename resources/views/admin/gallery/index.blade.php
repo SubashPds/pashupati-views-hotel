@@ -42,7 +42,7 @@
         @else
         <img src="{{ $item->image_url }}" alt="{{ $item->title }}"
              class="w-full h-36 object-cover transition-transform group-hover:scale-105 duration-300"
-             onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\'><rect fill=\'%23374151\' width=\'100\' height=\'100\'/><text fill=\'%236B7280\' x=\'50\' y=\'55\' text-anchor=\'middle\' font-size=\'30\'>🖼</text></svg>'">
+             data-admin-image-fallback>
         @endif
         <div class="p-3">
             <p class="text-xs font-medium text-gray-300 truncate">{{ $item->title ?: 'Untitled' }}</p>
@@ -57,7 +57,7 @@
                     </button>
                 </form>
                 {{-- Delete --}}
-                <form method="POST" action="{{ route('admin.gallery.destroy', $item) }}" onsubmit="return confirm('Delete this gallery item?')">
+                <form method="POST" action="{{ route('admin.gallery.destroy', $item) }}" data-confirm="Delete this gallery item?">
                     @csrf @method('DELETE')
                     <button type="submit" aria-label="Delete {{ $item->title ?: 'gallery item' }}" class="text-xs px-3 py-2 rounded-full text-red-400 ring-1 ring-red-400/20 bg-red-500/10 hover:bg-red-500/20">✕</button>
                 </form>

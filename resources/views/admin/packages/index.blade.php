@@ -64,7 +64,7 @@
                 </button>
             </form>
             <form method="POST" action="{{ route('admin.packages.destroy', $pkg) }}"
-                  onsubmit="return confirm('Delete package: {{ addslashes($pkg->name) }}?')">
+                  data-confirm="Delete package: {{ $pkg->name }}?">
                 @csrf @method('DELETE')
                 <button type="submit"
                         class="px-3 py-1.5 text-xs font-medium text-red-400 bg-red-500/10 hover:bg-red-500/20 rounded-lg transition-colors">

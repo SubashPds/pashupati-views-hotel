@@ -11,6 +11,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->prepend(\App\Http\Middleware\SecurityHeaders::class);
+        $middleware->trustHosts(at: fn () => array_map(
+            fn ($host) => '^'.preg_quote($host, '/').'$',
+            config('security.trusted_hosts'),
+        ), subdomains: false);
         $middleware->redirectUsersTo(fn () => route('admin.dashboard'));
         $middleware->prependToPriorityList(
             before: \Illuminate\Routing\Middleware\SubstituteBindings::class,
@@ -25,5 +30,5 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->respond(fn ($response) => app(\App\Http\Middleware\SecurityHeaders::class)->secure($response, request()));
     })->create();

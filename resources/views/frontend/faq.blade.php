@@ -65,7 +65,7 @@
                     id="{{ $faqId }}-btn"
                     aria-expanded="false"
                     aria-controls="{{ $faqId }}-panel"
-                    onclick="toggleFaq('{{ $faqId }}')"
+                    data-toggle-faq="{{ $faqId }}"
                     class="faq-trigger w-full flex items-center justify-between gap-5 px-6 py-5 sm:py-6 text-left transition-all duration-200 hover:pl-8">
 
                     <div class="flex-1 min-w-0 pr-4">
@@ -172,7 +172,7 @@
 @endpush
 
 @push('scripts')
-<script>
+<script nonce="{{ Vite::cspNonce() }}">
     (function() {
         /* ── Accordion open/close ─────────────────────────────────────── */
         function openItem(card) {

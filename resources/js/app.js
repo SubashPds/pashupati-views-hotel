@@ -1,5 +1,6 @@
 import './bootstrap';
 import './frontend-forms';
+import './secure-actions';
 
 import './hero-carousel';
 import './hero-layout';

@@ -39,10 +39,10 @@ services:
     environment:
       MYSQL_DATABASE: ${DB_DATABASE:-pashupatihotel}
       MYSQL_USER: ${DB_USERNAME:-admin}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-pashupatihotel}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-pashupatihotel}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?Set a unique database password}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?Set a separate database root password}
     ports:
-      - "3306:3306"
+      - "127.0.0.1:3306:3306"
     volumes:
       - db-data:/var/lib/mysql
     networks:
@@ -53,4 +53,3 @@ volumes:
 
 networks:
   pashupati-views-hotel-network:
-

@@ -19,8 +19,8 @@ use App\Http\Controllers\FaqController as FrontFaqController;
 
 // ── Public frontend ───────────────────────────────────────────────────────────
 Route::get('/', [HomeController::class, 'index'])->name('home')->middleware(\App\Http\Middleware\SelectDisplayCurrency::class);
-Route::get('/rooms/{room}/details', [HomeController::class, 'roomDetails'])->name('rooms.details')->middleware(\App\Http\Middleware\SelectDisplayCurrency::class);
-Route::get('/packages/{package}/details', [HomeController::class, 'packageDetails'])->name('packages.details')->middleware(\App\Http\Middleware\SelectDisplayCurrency::class);
+Route::get('/rooms/{room}/details', [HomeController::class, 'roomDetails'])->name('rooms.details')->middleware(['throttle:public-details', \App\Http\Middleware\SelectDisplayCurrency::class]);
+Route::get('/packages/{package}/details', [HomeController::class, 'packageDetails'])->name('packages.details')->middleware(['throttle:public-details', \App\Http\Middleware\SelectDisplayCurrency::class]);
 Route::get('/blogs', [\App\Http\Controllers\BlogController::class, 'index'])->name('blogs.index')->middleware(\App\Http\Middleware\SelectDisplayCurrency::class);
 Route::get('/blogs/{slug}', [\App\Http\Controllers\BlogController::class, 'show'])->name('blogs.show')->middleware(\App\Http\Middleware\SelectDisplayCurrency::class);
 Route::get('/faqs', [FrontFaqController::class, 'index'])->name('faqs.index');
@@ -35,7 +35,7 @@ Route::post('/currency', [\App\Http\Controllers\CurrencyPreferenceController::cl
 // ── Auth ──────────────────────────────────────────────────────────────────────
 Route::middleware('guest')->group(function () {
     Route::get('/login',  [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.post')->middleware('throttle:public-login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.post')->middleware(['throttle:public-login', 'throttle:login-account']);
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('throttle:public-logout');

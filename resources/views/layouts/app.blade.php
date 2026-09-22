@@ -93,7 +93,7 @@
                         @csrf
                         <input type="hidden" name="return_to" value="{{ request()->getPathInfo() }}">
                         <label for="display-currency" class="sr-only">Display currency</label>
-                        <select id="display-currency" name="currency" onchange="this.form.requestSubmit()"
+                        <select id="display-currency" name="currency" data-submit-on-change
                             class="rounded-lg border border-white/20 bg-navy px-1 py-2 text-xs text-white" style="background:#0d1b2a;">
                             @foreach(['NPR', 'INR', 'USD'] as $code)
                             <option value="{{ $code }}" @selected($currency->code === $code)>{{ $code }}</option>
@@ -104,7 +104,7 @@
                     </form>
                     @endisset
                     {{-- Book Now CTA --}}
-                    <button onclick="openBooking()"
+                    <button data-open-booking
                         class="hidden md:inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-white rounded-lg transition-all hover:brightness-110 shadow-md"
                         style="background:linear-gradient(135deg,#b8953b,#d4af5b);">
                         Book Now ↗
@@ -153,12 +153,12 @@
                     @if($href === route('gallery') && request()->routeIs('gallery')) aria-current="location" @endif
                     {{--@if($href === route('restaurant') && request()->routeIs('restaurant')) aria-current="location" @endif--}}
                     class="nav-link px-4 py-3 rounded-xl text-gray-300 hover:text-amber-300 hover:bg-white/5 transition-all"
-                    onclick="closeMobileNav()">
+                    data-close-mobile-nav>
                     {{ $label }}
                 </a>
                 @endforeach
 
-                <button onclick="openBooking(); closeMobileNav()"
+                <button data-open-booking data-close-mobile-nav
                     class="mt-2 py-3 px-6 text-sm font-bold text-center text-white rounded-xl transition-all"
                     style="background:linear-gradient(135deg,#b8953b,#d4af5b);">
                     Book Your Stay ↗
@@ -335,7 +335,7 @@
             💬 WhatsApp
         </a>
         @endif
-        <button onclick="openBooking()"
+        <button data-open-booking
             class="flex-1 py-3 text-xs font-bold text-center text-white rounded-xl transition-colors"
             style="background:linear-gradient(135deg,#b8953b,#d4af5b);">
             Book Now
@@ -353,7 +353,7 @@
                 <h2 id="booking-title" class="font-semibold text-white text-base">Plan Your Stay</h2>
                 <p class="text-xs text-gray-400 mt-0.5">Fill in your preferences and we'll be in touch.</p>
             </div>
-            <button onclick="closeBooking()" class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors text-lg" aria-label="Close">&times;</button>
+            <button data-close-booking class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors text-lg" aria-label="Close">&times;</button>
         </div>
 
         <form method="POST" action="{{ route('enquire') }}" data-ajax-form="enquiry" class="px-6 py-5 space-y-4" id="booking-form">
@@ -438,7 +438,7 @@
     </dialog>
 
     {{-- ═══ SCRIPTS ═══ --}}
-    <script>
+    <script nonce="{{ Vite::cspNonce() }}">
         // ── Booking modal ──────────────────────────────────────────────
         const bookingDialog = document.getElementById('booking-dialog');
 

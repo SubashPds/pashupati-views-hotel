@@ -18,9 +18,12 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        if (is_string($request->input('email'))) {
+            $request->merge(['email' => strtolower(trim($request->input('email')))]);
+        }
         $credentials = $request->validate([
-            'email'    => ['required', 'email'],
-            'password' => ['required'],
+            'email'    => ['required', 'string', 'email', 'max:254'],
+            'password' => ['required', 'string', 'max:4096'],
         ]);
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
@@ -28,15 +31,19 @@ class AuthController extends Controller
 
             if (! isset(\App\Support\Permissions::ROLES[$user->role])) {
                 Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
                 return back()->withErrors([
-                    'email' => 'Your account does not have an assigned role. Contact a superadmin.',
+                    'email' => 'The provided credentials do not match our records.',
                 ])->onlyInput('email');
             }
 
             if (! $user->is_active) {
                 Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
                 return back()->withErrors([
-                    'email' => 'Your account has been deactivated.',
+                    'email' => 'The provided credentials do not match our records.',
                 ])->onlyInput('email');
             }
 

@@ -57,7 +57,7 @@ class UserController extends Controller
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user?->id)],
             'role' => ['required', Rule::in(array_keys(Permissions::ROLES))],
             'is_active' => ['required', 'boolean'],
-            'password' => [$user ? 'nullable' : 'required', 'string', 'min:6', 'max:16', 'confirmed'],
+            'password' => [$user ? 'nullable' : 'required', 'string', new \App\Rules\StrongPassword, 'confirmed'],
         ]);
     }
 }

@@ -57,7 +57,7 @@
                             Edit
                         </a>
                         <form method="POST" action="{{ route('admin.rooms.destroy', $room) }}"
-                              onsubmit="return confirm('Delete this room?')">
+                              data-confirm="Delete this room?">
                             @csrf @method('DELETE')
                             <button type="submit"
                                     class="px-3 py-1.5 text-xs font-medium bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-lg transition-colors">

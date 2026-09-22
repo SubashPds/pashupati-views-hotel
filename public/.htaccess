@@ -1,9 +1,19 @@
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "DENY"
+</IfModule>
+
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
     </IfModule>
 
     RewriteEngine On
+
+    # Block hidden files and executable/non-media uploads before routing to PHP.
+    RewriteRule (^|/)\.(?!well-known/) - [F,L]
+    RewriteRule ^storage/(?!.*\.(?:jpe?g|png|webp|gif|bmp|avif|mp4|webm)$) - [F,L,NC]
+    RewriteRule ^(?!index\.php$).*\.(?:php[0-9]*|phtml|phar)(?:/|$) - [F,L,NC]
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .

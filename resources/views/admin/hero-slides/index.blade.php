@@ -19,7 +19,7 @@
             <p class="text-sm text-gray-400">{{ ucfirst($slide->media_type) }} · Order {{ $slide->sort_order }} · {{ $slide->is_active ? 'Visible' : 'Hidden' }}</p>
             <div class="flex gap-4 items-center">
                 <a href="{{ route('admin.hero-slides.edit', $slide) }}" class="text-violet-400">Edit</a>
-                <form method="POST" action="{{ route('admin.hero-slides.destroy', $slide) }}" onsubmit="return confirm('Delete this slide and its media?')">
+                <form method="POST" action="{{ route('admin.hero-slides.destroy', $slide) }}" data-confirm="Delete this slide and its media?">
                     @csrf @method('DELETE')
                     <button class="text-red-400">Delete</button>
                 </form>

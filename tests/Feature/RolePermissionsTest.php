@@ -40,8 +40,8 @@ class RolePermissionsTest extends TestCase
         $this->put(route('admin.users.update', $user), array_merge($data, ['role' => 'user', 'password' => '', 'password_confirmation' => '']))->assertSessionHasNoErrors();
         $this->assertSame($hash, $user->fresh()->password);
         $this->assertSame('user', $user->fresh()->role);
-        $this->put(route('admin.users.update', $user), array_merge($data, ['password' => 'New-pass-2026', 'password_confirmation' => 'New-pass-2026']))->assertSessionHasNoErrors();
-        $this->assertTrue(Hash::check('New-pass-2026', $user->fresh()->password));
+        $this->put(route('admin.users.update', $user), array_merge($data, ['password' => 'New-password-2026', 'password_confirmation' => 'New-password-2026']))->assertSessionHasNoErrors();
+        $this->assertTrue(Hash::check('New-password-2026', $user->fresh()->password));
     }
 
     public function test_all_roles_can_log_in_but_inactive_accounts_cannot(): void

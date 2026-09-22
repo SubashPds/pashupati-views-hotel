@@ -19,8 +19,8 @@
     </div>
     <div>
         <label for="user-password" class="mb-2 block text-sm font-medium text-gray-300">{{ $user->exists ? 'New password' : 'Password' }}</label>
-        <input id="user-password" type="password" name="password" autocomplete="new-password" minlength="6" maxlength="16" @required(!$user->exists) class="w-full rounded-xl border border-white/10 bg-gray-900 px-4 py-3 text-sm text-white">
-        <p class="mt-2 text-xs text-gray-400">At least 6 characters. {{ $user->exists ? 'Leave blank to keep the current password.' : 'Share login details with the user securely.' }}</p>
+        <input id="user-password" type="password" name="password" autocomplete="new-password" minlength="15" maxlength="72" @required(!$user->exists) class="w-full rounded-xl border border-white/10 bg-gray-900 px-4 py-3 text-sm text-white">
+        <p class="mt-2 text-xs text-gray-400">At least 15 characters; use a unique passphrase. {{ $user->exists ? 'Leave blank to keep the current password.' : 'Share login details with the user securely.' }}</p>
     </div>
     <div>
         <label for="user-password-confirmation" class="mb-2 block text-sm font-medium text-gray-300">Confirm password</label>

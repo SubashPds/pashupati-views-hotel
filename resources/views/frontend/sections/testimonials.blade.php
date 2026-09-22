@@ -72,7 +72,7 @@
 </section>
 
 @push('scripts')
-<script>
+<script nonce="{{ Vite::cspNonce() }}">
 (function() {
     const track = document.getElementById('testimonial-track');
     const dots  = document.querySelectorAll('#testimonial-dots .dot');

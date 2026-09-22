@@ -30,7 +30,7 @@
                     Edit
                 </a>
                 <form method="POST" action="{{ route('admin.faqs.destroy', $faq) }}"
-                      onsubmit="return confirm('Delete this FAQ?')">
+                      data-confirm="Delete this FAQ?">
                     @csrf @method('DELETE')
                     <button type="submit"
                             class="px-3 py-1 text-xs font-medium bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-lg transition-colors">

@@ -27,7 +27,7 @@
                     <td class="px-5 py-4"><div class="flex items-center justify-end gap-2">
                         @if($blog->is_published)<a href="{{ route('blogs.show', $blog->slug) }}" target="_blank" rel="noopener" class="px-3 py-1.5 text-xs text-violet-300 hover:underline">View</a>@endif
                         <a href="{{ route('admin.blogs.edit', $blog) }}" class="rounded-lg bg-white/8 px-3 py-1.5 text-xs text-gray-300 hover:bg-white/15">Edit</a>
-                        <form method="POST" action="{{ route('admin.blogs.destroy', $blog) }}" onsubmit="return confirm('Delete this blog permanently?')">
+                        <form method="POST" action="{{ route('admin.blogs.destroy', $blog) }}" data-confirm="Delete this blog permanently?">
                             @csrf @method('DELETE')
                             <button type="submit" class="rounded-lg bg-red-500/10 px-3 py-1.5 text-xs text-red-400 hover:bg-red-500/20">Delete</button>
                         </form>

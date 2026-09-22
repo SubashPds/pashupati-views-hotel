@@ -43,19 +43,6 @@ class Policy extends Model
 
     public function safeDescriptionHtml(): string
     {
-        $html = (string) ($this->description ?? '');
-
-        if ($html === '') {
-            return '';
-        }
-
-        $allowedTags = '<p><br><strong><b><em><i><u><a><ul><ol><li><h1><h2><h3><h4><blockquote><span><div><table><thead><tbody><tr><td><th><img><figure><figcaption><small><sub><sup><code><pre><hr><strong><b><strike><mark>';
-
-        $html = preg_replace('/<\s*(script|iframe|object|embed|style|svg|math|form|input|button|textarea|select|option)\b[^>]*>.*?<\s*\/\s*\1\s*>/is', '', $html) ?? $html;
-        $html = preg_replace('/\s+on[a-zA-Z0-9_-]+\s*=\s*(?:"[^"]*"|\'[^\']*\'|[^\s>]+)/i', '', $html) ?? $html;
-        $html = preg_replace('/href\s*=\s*(?:"|\')?\s*(?:javascript:|data:)[^\s"\'>]+/i', '', $html) ?? $html;
-        $html = preg_replace('/src\s*=\s*(?:"|\')?\s*(?:javascript:|data:)[^\s"\'>]+/i', '', $html) ?? $html;
-
-        return strip_tags($html, $allowedTags);
+        return \App\Support\SafeHtml::clean($this->description);
     }
 }

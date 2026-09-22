@@ -31,7 +31,7 @@
                 </button>
             </form>
             <a href="{{ route('admin.testimonials.edit', $t) }}" class="px-3 py-1 text-xs font-medium bg-white/8 hover:bg-white/15 text-gray-300 rounded-lg transition-colors">Edit</a>
-            <form method="POST" action="{{ route('admin.testimonials.destroy', $t) }}" onsubmit="return confirm('Delete?')">
+            <form method="POST" action="{{ route('admin.testimonials.destroy', $t) }}" data-confirm="Delete?">
                 @csrf @method('DELETE')
                 <button type="submit" class="px-3 py-1 text-xs font-medium bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-lg transition-colors">Delete</button>
             </form>

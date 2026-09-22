@@ -16,6 +16,7 @@ RUN docker-php-ext-install pdo_mysql bcmath sockets zip pcntl \
     && docker-php-ext-enable opcache
 
 RUN printf 'upload_max_filesize=50M\npost_max_size=55M\n' > /usr/local/etc/php/conf.d/uploads.ini
+RUN printf 'expose_php=Off\ndisplay_errors=Off\nlog_errors=On\ncgi.fix_pathinfo=0\n' > /usr/local/etc/php/conf.d/security.ini
 
 RUN groupadd -g 1000 www \
     && useradd -u 1000 -ms /bin/bash -g www www

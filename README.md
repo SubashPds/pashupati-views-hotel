@@ -58,6 +58,10 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
+## Security deployment
+
+Read [the security deployment guide](docs/security.md) before deploying. It covers the required host/TLS configuration, replacing the former seeded administrator password, separate database credentials, firewall setup, and verification limits.
+
 ## Card image previews
 
 Homepage gallery, room, and package cards use cached WebP previews (up to 800 × 800 pixels); detail views and the gallery viewer open the original media. New gallery uploads and room/package cover uploads generate previews automatically. Generation requires PHP GD with WebP support or ImageMagick's `magick`/`convert` executable on `PATH`. Without either, images fall back to their original URLs.

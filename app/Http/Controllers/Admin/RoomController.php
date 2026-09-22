@@ -110,7 +110,7 @@ class RoomController extends Controller
             'short_description' => 'nullable|string|max:500',
             'description'       => 'nullable|string',
             'cover_image'       => 'nullable|image|max:6096',
-            'gallery_images'    => 'nullable|array',
+            'gallery_images'    => 'nullable|array|max:20',
             'gallery_images.*'  => 'required|image|mimes:jpg,jpeg,png,webp|max:6096',
             'amenities_raw'     => 'nullable|string',
             'is_active'         => 'boolean',

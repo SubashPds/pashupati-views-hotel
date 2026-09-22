@@ -19,7 +19,7 @@
             <p class="text-sm text-gray-400 break-words">{{ Str::limit($promotion->description, 120) }}</p>
             <div class="flex gap-4 items-center">
                 <a href="{{ route('admin.promotions.edit', $promotion) }}" class="p-2 text-violet-300 hover:text-white">Edit</a>
-                <form method="POST" action="{{ route('admin.promotions.destroy', $promotion) }}" onsubmit="return confirm('Delete this promotion and its image?')">
+                <form method="POST" action="{{ route('admin.promotions.destroy', $promotion) }}" data-confirm="Delete this promotion and its image?">
                     @csrf @method('DELETE')
                     <button class="p-2 text-red-300 hover:text-white">Delete</button>
                 </form>

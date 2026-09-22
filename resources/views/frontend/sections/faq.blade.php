@@ -32,7 +32,7 @@
                         id="{{ $faqId }}-btn"
                         aria-expanded="false"
                         aria-controls="{{ $faqId }}-panel"
-                        onclick="toggleFaq('{{ $faqId }}')"
+                        data-toggle-faq="{{ $faqId }}"
                         class="w-full flex items-center justify-between gap-4 px-6 py-5 text-left group">
                     <span class="text-navy font-semibold text-sm sm:text-base leading-snug group-hover:text-amber-800 transition-colors">
                         {{ $faq->question }}
@@ -87,7 +87,7 @@
 </section>
 
 @push('scripts')
-<script>
+<script nonce="{{ Vite::cspNonce() }}">
 function toggleFaq(id) {
     const panel  = document.getElementById(id + '-panel');
     const btn    = document.getElementById(id + '-btn');

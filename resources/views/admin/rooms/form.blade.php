@@ -8,7 +8,7 @@
 
 @push('head')
 {{-- CKEditor 5 CDN --}}
-<script src="https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.umd.js"></script>
+<script nonce="{{ Vite::cspNonce() }}" src="https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.umd.js"></script>
 <link  href="https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.css" rel="stylesheet">
 @endpush
 
@@ -154,7 +154,7 @@
 
 @if($room->exists)
     @foreach($room->images as $img)
-    <form id="delete-room-image-{{ $img->id }}" method="POST" action="{{ route('admin.rooms.images.destroy', $img) }}" onsubmit="return confirm('Remove image?')">
+    <form id="delete-room-image-{{ $img->id }}" method="POST" action="{{ route('admin.rooms.images.destroy', $img) }}" data-confirm="Remove image?">
         @csrf
         @method('DELETE')
     </form>
@@ -162,7 +162,7 @@
 @endif
 
 @push('scripts')
-<script type="module">
+<script nonce="{{ Vite::cspNonce() }}" type="module">
     const { ClassicEditor, Autoformat, Bold, Italic, Underline, Essentials, Heading, Link, List, Paragraph, Table } = CKEDITOR;
     ClassicEditor.create(document.querySelector('#description'), {
         plugins: [Essentials, Bold, Italic, Underline, Heading, List, Link, Paragraph, Autoformat, Table],

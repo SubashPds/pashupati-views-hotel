@@ -54,6 +54,7 @@ class AppServiceProvider extends ServiceProvider
             'public-currency' => [20, 100],
             'public-login' => [5, 30],
             'public-logout' => [20, 100],
+            'public-details' => [60, 600],
         ] as $name => [$perMinute, $perHour]) {
             RateLimiter::for($name, fn (Request $request) => [
                 // Both forms and failed validation attempts share the same IP quota.
@@ -62,6 +63,15 @@ class AppServiceProvider extends ServiceProvider
                 Limit::perHour($perHour)->by('hour:'.$request->ip())->response($response),
             ]);
         }
+
+        RateLimiter::for('login-account', function (Request $request) use ($response) {
+            $email = $request->input('email');
+            $key = hash('sha256', is_string($email) ? strtolower(trim($email)) : 'invalid');
+            return [
+                Limit::perMinute(10)->by('minute:'.$key)->response($response),
+                Limit::perHour(100)->by('hour:'.$key)->response($response),
+            ];
+        });
     }
 
     private function bindRepo()

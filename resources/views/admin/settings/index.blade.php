@@ -4,7 +4,7 @@
 @section('breadcrumb','Admin / Settings')
 
 @push('head')
-<script src="https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.umd.js"></script>
+<script nonce="{{ Vite::cspNonce() }}" src="https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.umd.js"></script>
 <link  href="https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.css" rel="stylesheet">
 @endpush
 
@@ -123,7 +123,7 @@
 </form>
 
 @push('scripts')
-<script>
+<script nonce="{{ Vite::cspNonce() }}">
     // Tab switching
     document.querySelectorAll('.settings-tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {

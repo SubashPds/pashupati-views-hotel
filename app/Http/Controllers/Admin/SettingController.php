@@ -87,9 +87,9 @@ class SettingController extends Controller
             }],
             'currency_npr_per_inr' => 'sometimes|required|numeric|between:0.0001,1000000',
             'currency_npr_per_usd' => 'sometimes|required|numeric|between:0.0001,1000000',
-            'social_facebook' => 'nullable|url|max:255',
-            'social_instagram' => 'nullable|url|max:255',
-            'social_tiktok' => 'nullable|url|max:255',
+            'social_facebook' => 'nullable|url:http,https|max:255',
+            'social_instagram' => 'nullable|url:http,https|max:255',
+            'social_tiktok' => 'nullable|url:http,https|max:255',
         ]);
 
         if ($request->exists('contact_email')) {
