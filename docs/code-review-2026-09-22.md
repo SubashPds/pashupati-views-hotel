@@ -58,6 +58,10 @@ Found **12 actionable failure risks: 3 high priority and 9 medium priority**. Th
 
    **Fix:** use a dedicated validated status action, or explicitly distinguish status-only requests and normalize the boolean.
 
+   **Remediated — 22 September 2026:** the update action recognizes a status-only request only when `is_active` is the sole field apart from `_token` and `_method`. It validates and normalizes the boolean in both update paths. Browser status buttons now work, JSON content edits retain their title and description changes, and edits that omit status preserve the current value. Only validated fields are saved.
+
+   **Regression verification:** `tests/Feature/PolicyUpdateTest.php` passes **17 tests, 118 assertions**, covering browser toggles and edits, JSON integer/boolean statuses, invalid values, and incomplete edits. The full PHP suite has **170 passed, 6 failed, 1,632 assertions**; the six failures are the same pre-existing failures listed below.
+
 6. **Medium — Duplicate package names cause a server error and orphan uploads.**
 
    Locations: [app/Http/Controllers/Admin/PackageController.php:25](</home/subash/Subash/pashupati views hotel/app/Http/Controllers/Admin/PackageController.php:25>), [app/Models/Package.php:40](</home/subash/Subash/pashupati views hotel/app/Models/Package.php:40>), [database/migrations/2026_09_10_000002_create_packages_table.php:14](</home/subash/Subash/pashupati views hotel/database/migrations/2026_09_10_000002_create_packages_table.php:14>).

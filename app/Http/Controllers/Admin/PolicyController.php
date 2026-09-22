@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Policy;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class PolicyController extends Controller
 {
@@ -22,20 +22,24 @@ class PolicyController extends Controller
 
     public function update(Request $request, Policy $policy): RedirectResponse
     {
-        // Handle status toggle
-        if ($request->has('is_active') && $request->only('is_active') === ['is_active' => 0] || $request->only('is_active') === ['is_active' => 1]) {
-            // When only is_active is sent (from the toggle button), don't validate other fields
-            $policy->update(['is_active' => (bool) $request->input('is_active')]);
+        // Browser toggle forms also submit CSRF and method-spoofing fields.
+        if (array_keys($request->except(['_token', '_method'])) === ['is_active']) {
+            $request->validate(['is_active' => 'required|boolean']);
+            $policy->update(['is_active' => $request->boolean('is_active')]);
+
             return back()->with('success', 'Status updated.');
         }
 
-        // Normal form submission - validate title and description
-        $request->validate([
+        $validated = $request->validate([
             'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
+            'is_active'   => 'sometimes|required|boolean',
         ]);
 
-        $policy->update($request->only('title', 'description', 'is_active'));
+        if (array_key_exists('is_active', $validated)) {
+            $validated['is_active'] = $request->boolean('is_active');
+        }
+        $policy->update($validated);
 
         return redirect()->route('admin.policies.index')->with('success', $policy->title . ' updated successfully.');
     }
