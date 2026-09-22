@@ -72,6 +72,10 @@ Found **12 actionable failure risks: 3 high priority and 9 medium priority**. Th
 
    **Fix:** validate the normalized slug before uploads, allocate unique slugs when appropriate, and handle the database unique constraint to cover concurrent requests. Clean up files on failed creation.
 
+   **Remediated — 22 September 2026:** package creation derives and checks the normalized slug before uploading files. Names that collide with an existing package, including inactive packages, receive a validation error on `name`, matching the room form's behavior. If a competing insert claims the slug after the check, the media transaction rolls back and cleans up new uploads and previews before returning the same validation error. Unrelated database constraint failures remain errors.
+
+   **Regression verification:** `tests/Feature/PackageCreationTest.php` passes **12 tests, 105 assertions**, covering normalized duplicates, browser/JSON validation responses, a simulated competing insert, upload cleanup, and successful creation and edits. The full PHP suite has **182 passed, 6 failed, 1,737 assertions**; the six failures are the same pre-existing failures listed below.
+
 7. **Medium — Clearing optional fields causes database constraint errors.**
 
    Locations: [app/Http/Controllers/Admin/ServiceController.php:24](</home/subash/Subash/pashupati views hotel/app/Http/Controllers/Admin/ServiceController.php:24>), [app/Http/Controllers/Admin/PackageController.php:119](</home/subash/Subash/pashupati views hotel/app/Http/Controllers/Admin/PackageController.php:119>), [app/Http/Controllers/Admin/FaqController.php:24](</home/subash/Subash/pashupati views hotel/app/Http/Controllers/Admin/FaqController.php:24>), [app/Http/Controllers/Admin/GalleryController.php:54](</home/subash/Subash/pashupati views hotel/app/Http/Controllers/Admin/GalleryController.php:54>).

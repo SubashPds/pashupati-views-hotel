@@ -6,7 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Package;
 use App\Models\PackageImage;
 use App\Services\MediaFiles;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use RuntimeException;
 
 class PackageController extends Controller
@@ -25,20 +28,30 @@ class PackageController extends Controller
     public function store(Request $request)
     {
         $data = $this->validatePackage($request);
+        $data['slug'] = Str::slug($data['name']);
+        $this->ensureSlugAvailable($data['slug']);
 
         $data['includes']   = $this->parseLines($request->input('includes_raw'));
         $data['highlights'] = $this->parseLines($request->input('highlights_raw'));
 
-        MediaFiles::transaction(function (MediaFiles $files) use ($request, $data) {
-            if ($request->hasFile('cover_image')) {
-                $data['cover_image'] = $files->store($request->file('cover_image'), 'packages', preview: true);
-            }
-            $package = new Package($data);
-            if (! $package->save()) {
-                throw new RuntimeException('The package could not be saved.');
-            }
-            $this->handleGalleryUploads($request, $package, $files);
-        });
+        try {
+            MediaFiles::transaction(function (MediaFiles $files) use ($request, $data) {
+                if ($request->hasFile('cover_image')) {
+                    $data['cover_image'] = $files->store($request->file('cover_image'), 'packages', preview: true);
+                }
+                $package = new Package($data);
+                if (! $package->save()) {
+                    throw new RuntimeException('The package could not be saved.');
+                }
+                $this->handleGalleryUploads($request, $package, $files);
+            });
+        } catch (UniqueConstraintViolationException $exception) {
+            // A competing request may claim the slug after validation. Check
+            // after rollback and upload cleanup; preserve unrelated errors.
+            $this->ensureSlugAvailable($data['slug']);
+
+            throw $exception;
+        }
 
         return redirect()->route('admin.packages.index')->with('success', 'Package created successfully.');
     }
@@ -91,6 +104,15 @@ class PackageController extends Controller
     }
 
     // ── Helpers ─────────────────────────────────────────────────────────────
+
+    private function ensureSlugAvailable(string $slug): void
+    {
+        if (Package::where('slug', $slug)->useWritePdo()->exists()) {
+            throw ValidationException::withMessages([
+                'name' => 'A package with this name or a similar name already exists. Please choose a different name.',
+            ]);
+        }
+    }
 
     public function destroyImage(PackageImage $image)
     {
