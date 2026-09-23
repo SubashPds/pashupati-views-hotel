@@ -107,6 +107,10 @@ Found **12 actionable failure risks: 3 high priority and 9 medium priority**. Th
 
    **Fix:** align limits with the intended business values and schema, and add a small MySQL integration check for database-specific constraints.
 
+   **Remediated — 23 September 2026:** FAQ questions are limited to 255 characters, package guest counts to 1–127, and room/package prices to 0–99,999,999.99 with at most two decimal places. The same limits apply to create and update requests, and the form controls now expose the matching bounds. Existing optional-field behavior is preserved.
+
+   **Regression verification:** `tests/Feature/DatabaseValidationLimitsTest.php` passes **22 tests, 204 assertions**. `bash tests/mysql/validation-limits.sh` passed all **5 schema boundary checks on MySQL 8.0.46**, using the actual application migrations in disposable containers: boundary values saved, while overflow inserts and updates failed in strict mode. The full PHP suite has **228 passed, 6 failed, 2,149 assertions**; the six failures are the same pre-existing failures listed below.
+
 9. **Medium — Keyboard submission closes the booking dialog and hides feedback.**
 
    Location: [resources/views/layouts/app.blade.php:465](</home/subash/Subash/pashupati views hotel/resources/views/layouts/app.blade.php:465>).
@@ -115,7 +119,11 @@ Found **12 actionable failure risks: 3 high priority and 9 medium priority**. Th
 
    **Reproduced in Chrome:** pressing Enter on Send Enquiry changed the dialog from open to closed. The intercepted request returned a validation error, but its feedback was invisible inside the closed dialog. No JavaScript exception was raised.
 
-   **Fix:** check `event.target === bookingDialog` before applying the backdrop-coordinate test. Verify Enter, Space, pointer submission, and validation feedback.
+   **Fix:** prevent clicks from dismissing the booking form unintentionally. Verify Enter, Space, pointer submission, and validation feedback.
+
+   **Remediated — 23 September 2026:** removed the backdrop click handler so outside clicks and keyboard activation of controls inside the dialog keep it open. Submission progress, validation errors, success feedback, and entered values remain visible. The close button and Escape key still dismiss the dialog.
+
+   **Regression verification:** `node tests/browser/booking-dialog.mjs` reproduced the Enter failure before the fix and passes afterward at **390px and 1440px**. Its **16 submission cases** cover Enter and Space on the submit button, implicit Enter from a field, and pointer submission with both validation and success responses. It also checks pending requests, focus on invalid fields, outside clicks preserving the open form and entered values, dismissal through the close button/Escape, and scroll restoration. All requests are intercepted locally. `npm run build` and the JavaScript test suite pass.
 
 10. **Medium — Email delivery delays and failures are tied to the public enquiry request.**
 

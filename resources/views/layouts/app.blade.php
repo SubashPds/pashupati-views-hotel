@@ -462,10 +462,6 @@
         bookingDialog?.addEventListener('close', () => {
             document.body.style.overflow = '';
         });
-        bookingDialog?.addEventListener('click', e => {
-            const rect = bookingDialog.getBoundingClientRect();
-            if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) closeBooking();
-        });
 
         // ── Mobile nav ─────────────────────────────────────────────────
         const mobileNav = document.getElementById('mobile-nav');
@@ -507,26 +503,31 @@
         window.addEventListener('pageshow', syncHeaderShadow);
         syncHeaderShadow();
 
-        // ── Show success flash after form submit then close dialog ──────
+        // ── Success feedback for AJAX and redirected enquiries ─────────
+        let enquirySuccessTimer;
+
+        function showEnquirySuccess(message) {
+            const toast = document.getElementById('enquiry-success-toast');
+            if (message) toast.querySelector('[data-enquiry-success-message]').textContent = message;
+            clearTimeout(enquirySuccessTimer);
+            toast.classList.remove('hidden');
+            enquirySuccessTimer = setTimeout(() => toast.classList.add('hidden'), 5000);
+            return toast;
+        }
+
         @if(session('enquiry_success'))
-        document.addEventListener('DOMContentLoaded', () => {
-            const el = document.getElementById('enquiry-success-toast');
-            if (el) {
-                el.classList.remove('hidden');
-                setTimeout(() => el.classList.add('hidden'), 5000);
-            }
-        });
+        document.addEventListener('DOMContentLoaded', () => showEnquirySuccess());
         @endif
     </script>
 
     {{-- Success toast --}}
     <div id="enquiry-success-toast"
-        class="hidden fixed bottom-24 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-6 py-3.5 rounded-2xl text-sm font-medium text-white shadow-2xl"
-        style="background:#1a5c2a; border:1px solid rgba(74,222,128,0.3);" role="alert">
-        <svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+        class="hidden fixed bottom-24 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 flex w-11/12 max-w-lg items-center gap-3 px-6 py-3.5 rounded-2xl text-sm font-medium text-white shadow-2xl"
+        style="background:#1a5c2a; border:1px solid rgba(74,222,128,0.3);" role="status" aria-live="polite" aria-atomic="true" tabindex="-1">
+        <svg class="w-5 h-5 shrink-0 text-green-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
         </svg>
-        Thank you! We've received your enquiry and will respond within 24 hours.
+        <span data-enquiry-success-message>Thank you! We've received your enquiry and will respond within 24 hours.</span>
     </div>
 
     @include('frontend.sections.offer')

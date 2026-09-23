@@ -127,7 +127,12 @@ forms.forEach((form, index) => {
                 currencyFeedbackTimer = setTimeout(() => { feedbackForm.querySelector('[data-form-feedback]').hidden = true; }, 5000);
             } else {
                 form.reset();
-                focusTarget = showFeedback(form, result.message, 'success');
+                if (form.id === 'booking-form') {
+                    window.closeBooking();
+                    focusTarget = window.showEnquirySuccess(result.message);
+                } else {
+                    focusTarget = showFeedback(form, result.message, 'success');
+                }
             }
         } catch {
             focusTarget = showFeedback(form, isCurrency

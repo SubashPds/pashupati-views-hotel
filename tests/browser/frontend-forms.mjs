@@ -89,7 +89,7 @@ try {
     await page.keyboard.press('Escape');
     await page.waitForTimeout(2100);
 
-    // Booking feedback stays inside the modal, where it is readable and announced.
+    // Validation stays inside the modal; success closes it and announces confirmation on the page.
     await page.evaluate(() => window.openBooking());
     const booking = page.locator('#booking-form');
     await booking.locator('[name="guest_name"]').fill('Booking Guest');
@@ -100,11 +100,11 @@ try {
     assert.equal(await booking.locator('[name="guest_name"]').inputValue(), 'Booking Guest');
     reply = { status: 201, body: { message: 'Thank you! Your enquiry was received.' } };
     await booking.locator('button[type="submit"]').click();
-    await page.waitForFunction(() => document.querySelector('#booking-form [data-form-feedback]').dataset.state === 'success');
-    assert.equal(await booking.locator('[data-form-feedback]').isVisible(), true);
-    assert.equal(await page.locator('#booking-dialog').evaluate(dialog => dialog.open), true);
+    await page.waitForFunction(() => !document.getElementById('booking-dialog').open);
+    assert.equal(await page.locator('#enquiry-success-toast').isVisible(), true);
+    assert.equal(await page.locator('#enquiry-success-toast').innerText(), reply.body.message);
+    assert.equal(await page.evaluate(() => document.body.style.overflow), '');
     assert.equal(await page.locator('#c-msg').inputValue(), 'Keep my message', 'Booking success must not reset contact inputs');
-    await page.keyboard.press('Escape');
 
     // These real requests change only the browser's preference cookie.
     const currency = page.locator('#display-currency');
