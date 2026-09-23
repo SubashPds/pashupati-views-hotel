@@ -389,6 +389,9 @@ dialog[open] {
 .offer-card-button:hover { background-color: #f4ead6; border-color: #856534; }
 .offer-card-button:focus-visible { outline: 2px solid #856534; outline-offset: 4px; }
 
+.ck-editor__editable{
+    color: black !important;
+}
 /* Standalone gallery: the hotel palette with larger, editorial photo cards. */
 .gallery-page { background: #faf8f3; }
 .gallery-intro {
